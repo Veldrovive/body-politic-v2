@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2bd43a4dbd1575d44a18fcb7248d7351
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Editor/InspectorIntegration/RenamingGUIOpeningHandler.cs
+  uploadId: 747178

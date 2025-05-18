@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 1439ef2c6d2b4d31b23361f289272d64
+timeCreated: 1725864253
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Internal/FailModifyPrefabReason.cs
+  uploadId: 747178

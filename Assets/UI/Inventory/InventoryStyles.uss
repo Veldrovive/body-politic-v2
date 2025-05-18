@@ -1,0 +1,95 @@
+/* InventoryStyles.uss */
+/* Styles for the Inventory UI */
+
+/* Main container for the entire inventory UI */
+.inventory-container {
+    /* Positioning */
+    position: absolute; /* Allows absolute positioning */
+    bottom: 20px;      /* Distance from the bottom edge */
+    right: 20px;       /* Distance from the right edge */
+
+    /* Layout */
+    flex-direction: row-reverse; /* Arrange children horizontally */
+    align-items: center; /* Center children vertically */
+
+    /* Appearance */
+    padding: 10px;
+    /* Optional: Add a background or border to the main container if needed */
+    /* background-color: rgba(50, 50, 50, 0.5); */
+    /* border-color: rgb(100, 100, 100); */
+    /* border-width: 1px; */
+}
+
+/* Container specifically for the grid/list of inventory slots */
+.slots-container {
+    /* Layout */
+    flex-direction: row; /* Arrange slots horizontally */
+    flex-wrap: nowrap;     /* Allow slots to wrap if needed (adjust width below) */
+    /* Example: Set a max width if you want wrapping */
+    /* max-width: 300px; */
+
+    /* Spacing */
+    margin-right: 10px; /* Space between slots container and separator */
+}
+
+/* Vertical separator line */
+.separator {
+    width: 2px;              /* Width of the line */
+    height: 60px;            /* Height of the line (adjust as needed) */
+    background-color: rgb(150, 150, 150); /* Color of the line */
+    margin-left: 5px;        /* Space to the left */
+    margin-right: 15px;       /* Space to the right (before held item) */
+}
+
+/* Styling for each individual slot */
+.slot {
+    /* Size */
+    width: 50px;
+    height: 50px;
+
+    /* Spacing */
+    margin: 5px; /* Add some space around each slot */
+
+    /* Positioning children */
+    justify-content: center; /* Center icon horizontally */
+    align-items: center;   /* Center icon vertically */
+
+    /* Border */
+    border-color: rgb(180, 180, 180);
+    border-width: 1px;
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Background element within the slot */
+.slot-background {
+    /* Make it fill the parent slot */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    /* Appearance */
+    background-color: rgba(0, 0, 0, 0.6); /* Black with 60% opacity */
+    border-radius: 5px; /* Match parent's rounded corners */
+}
+
+/* Image element for the item icon */
+.item-icon {
+    /* Ensure the icon doesn't exceed the slot bounds */
+    max-width: 90%;
+    max-height: 90%;
+
+    /* Keep image sharp */
+    -unity-background-scale-mode: scale-to-fit;
+
+    /* Make sure it renders above the background */
+    /* UI Toolkit generally layers based on order, but explicit index can help */
+    /* z-index: 1; */ /* Usually not needed if ordered correctly in UXML */
+}
+
+/* Specific styling for the held item slot (if needed) */
+.held-item-slot {
+    /* You could add specific styles here, like a different border */
+    /* border-color: yellow; */
+}

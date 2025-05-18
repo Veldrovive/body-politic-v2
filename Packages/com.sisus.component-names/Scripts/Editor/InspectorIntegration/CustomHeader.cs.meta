@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 73822d72f628462ea68a6327f3bcd9f1
+timeCreated: 1722796620
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Editor/InspectorIntegration/CustomHeader.cs
+  uploadId: 747178

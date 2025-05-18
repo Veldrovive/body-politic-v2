@@ -1,0 +1,12 @@
+StateGraphView
+{
+    flex-grow: 1;
+}
+
+#Grid
+{
+    --thick-lines: 0;
+    --spacing: 15;
+    --grid-background-color: rgb(35, 35, 35);
+    --line-color: rgb(20, 20, 20);
+}

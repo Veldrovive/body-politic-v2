@@ -1,0 +1,26 @@
+{
+    "name": "ComponentNames.Editor",
+    "rootNamespace": "Sisus.ComponentNames.Editor",
+    "references": [
+        "ComponentNames",
+        "Unity.TextMeshPro",
+        "Unity.InternalAPIEditorBridgeDev.004"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.kybernetik.inspector-gadgets",
+            "expression": "",
+            "define": "INSPECTOR_GADGETS"
+        }
+    ],
+    "noEngineReferences": false
+}

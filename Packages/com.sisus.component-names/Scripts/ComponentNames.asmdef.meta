@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dd59ccde2a8bfc34fb17f834ba257ab2
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/ComponentNames.asmdef
+  uploadId: 747178

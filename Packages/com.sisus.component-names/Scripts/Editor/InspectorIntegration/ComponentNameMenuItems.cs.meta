@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 66707fc479769ed4087f52c290ccf1ce
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Editor/InspectorIntegration/ComponentNameMenuItems.cs
+  uploadId: 747178

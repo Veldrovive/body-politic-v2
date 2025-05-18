@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 0378c72eb17ea14438fa8dc8be45e845
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/Editor/SerializedPropertyExtensions.cs
+  uploadId: 747178

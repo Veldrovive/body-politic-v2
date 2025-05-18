@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4473d40f75444f2469c2d6e2140eda7c
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/README.md
+  uploadId: 747178

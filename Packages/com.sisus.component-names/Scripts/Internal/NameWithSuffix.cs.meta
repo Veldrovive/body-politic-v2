@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2f117372327cfee48bccf83701bd0af7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Internal/NameWithSuffix.cs
+  uploadId: 747178

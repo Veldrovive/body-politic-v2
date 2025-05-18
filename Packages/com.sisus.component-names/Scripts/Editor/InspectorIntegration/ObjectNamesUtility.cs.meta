@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a8a35c305cd28ad45b3233cb021b6804
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Editor/InspectorIntegration/ObjectNamesUtility.cs
+  uploadId: 747178

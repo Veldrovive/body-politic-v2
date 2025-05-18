@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 51bb1e78c84056b43b7c0ca8f766fbf3
+PackageManifestImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/package.json
+  uploadId: 747178

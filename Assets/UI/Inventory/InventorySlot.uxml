@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:Style src="InventoryStyles.uss" />
+
+    <ui:VisualElement name="SlotRoot" class="slot">
+        <ui:VisualElement name="SlotBackground" class="slot-background"/>
+        <ui:Image name="ItemIcon" class="item-icon"/>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: b6eed49204c2c2d438e33586aa1f2fbb
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/Editor/ColorPickerUtility.cs
+  uploadId: 747178

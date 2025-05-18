@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 5a4e5533394edd84baf5c317063d5197
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/Editor/ComponentHeaderWrapper.cs
+  uploadId: 747178

@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 959b0262f22d48298bf46c2b7048e8e1
+timeCreated: 1725864677
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.component-names/Scripts/Internal/ModifyPrefabResult.cs
+  uploadId: 747178

@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: a9ef80fad4454f3e80adcdf3de96e28e
+timeCreated: 1734090159
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/Editor/GameObjectHeaderWrapper.cs
+  uploadId: 747178

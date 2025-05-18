@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 1068055334babe6499e7706a30508a07
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/Editor/InspectorInjectors/ComponentHeaderWrapperToInspectorInjector.cs
+  uploadId: 747178

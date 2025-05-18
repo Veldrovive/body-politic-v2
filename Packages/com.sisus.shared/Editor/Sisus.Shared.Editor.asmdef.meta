@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e09ef82d669dd094dbdcce2c6a4094d1
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212478
+  packageName: Component Names
+  packageVersion: 1.2.1
+  assetPath: Packages/com.sisus.shared/Editor/Sisus.Shared.Editor.asmdef
+  uploadId: 747178
