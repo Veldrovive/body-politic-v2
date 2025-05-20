@@ -19,6 +19,27 @@ public class StateGraphEditorNode : Node
 
     private Dictionary<NodePortInfo, Port> m_portMap;
 
+    private Type typeInfo;
+    private NodeInfoAttribute info;
+
+    private void SetTitle()
+    {
+        if (m_graphNode is StateNode stateNode && !string.IsNullOrEmpty(stateNode.GenericConfiguration.StateName))
+        {
+            title = $"{stateNode.GenericConfiguration.StateName} ({typeInfo.Name})";
+        } else if (m_graphNode is JumpOutputNode jumpOutNode && !string.IsNullOrEmpty(jumpOutNode.JumpKey))
+        {
+            title = $"Jump from: {jumpOutNode.JumpKey}";
+        } else if (m_graphNode is JumpInputNode jumpIntNode && !string.IsNullOrEmpty(jumpIntNode.JumpKey))
+        {
+            title = $"Jump to: {jumpIntNode.JumpKey}";
+        }
+        else
+        {
+            title = info.Title;
+        }
+    }
+
     public StateGraphEditorNode(StateGraphNode nodeInstance, SerializedProperty nodeSerializedProperty)
     {
         AddToClassList("state-graph-node");
@@ -27,22 +48,15 @@ public class StateGraphEditorNode : Node
         m_ports = new List<Port>();
         m_portMap = new Dictionary<NodePortInfo, Port>();
 
-        Type typeInfo = m_graphNode.GetType(); // Use the instance
-        NodeInfoAttribute info = typeInfo.GetCustomAttribute<NodeInfoAttribute>();
+        typeInfo = m_graphNode.GetType(); // Use the instance
+        info = typeInfo.GetCustomAttribute<NodeInfoAttribute>();
 
         if (info.NodeWidth != null)
         {
             this.style.minWidth = info.NodeWidth.Value;
         }
 
-        if (nodeInstance is StateNode stateNode && !string.IsNullOrEmpty(stateNode.GenericConfiguration.StateName))
-        {
-            title = stateNode.GenericConfiguration.StateName;
-        }
-        else
-        {
-            title = info.Title;
-        }
+        SetTitle();
 
         string[] depths = info.MenuItem.Split('/');
         foreach (string depth in depths)
@@ -117,10 +131,7 @@ public class StateGraphEditorNode : Node
                 {
                     m_nodeSerializedProperty.serializedObject.ApplyModifiedProperties();
                     // Re-apply the title
-                    if (m_graphNode is StateNode stateNode && !string.IsNullOrEmpty(stateNode.GenericConfiguration.StateName))
-                    {
-                        title = stateNode.GenericConfiguration.StateName;
-                    }
+                    SetTitle();
                 }
             });
             inspector.style.paddingLeft = 5;

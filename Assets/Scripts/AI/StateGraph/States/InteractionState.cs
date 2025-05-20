@@ -41,18 +41,11 @@ public class InteractionStateConfiguration : AbstractStateConfiguration
 public enum InteractionStateOutcome
 {
     CompletedInteraction,
-    /// <summary>The configured or assigned target Interactable is null when activation is attempted.</summary>
-    TargetInteractableNull,
-    /// <summary>The configured or assigned Interaction Definition is null when activation is attempted.</summary>
-    InteractionDefinitionNull,
-    /// <summary>The initiating NPC is missing its NpcContext or NpcIdentity when activation is attempted.</summary>
-    InitiatorContextInvalid,
+    Error,
     /// <summary>The initiator failed the proximity check defined by the InteractionDefinitionSO.</summary>
     ProximityCheckFailed,
     /// <summary>The initiator failed the role check defined by the InteractionDefinitionSO.</summary>
     RoleCheckFailed,
-    /// <summary>A generic failure occurred during Interactable.TryInitiateInteraction (e.g., target busy, interaction disabled).</summary>
-    InitiationFailed,
 }
 
 public class InteractionState : GenericAbstractState<InteractionStateOutcome, InteractionStateConfiguration>
@@ -97,14 +90,14 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
         if (targetInteractable == null)
         {
             Debug.LogError($"InteractionState: Target Interactable is null or missing component on {targetInteractableGO.Value.name}.", this);
-            TriggerExit(InteractionStateOutcome.TargetInteractableNull);
+            TriggerExit(InteractionStateOutcome.Error);
             return;
         }
         
         if (interactionToPerform == null)
         {
             Debug.LogError($"InteractionState: Interaction Definition is null on {targetInteractableGO.Value.name}.", this);
-            TriggerExit(InteractionStateOutcome.InteractionDefinitionNull);
+            TriggerExit(InteractionStateOutcome.Error);
             return;
         }
         
@@ -113,7 +106,7 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
         if (npcContext.Identity == null)
         {
             Debug.LogError($"InteractionState: NpcContext is missing Identity on {npcContext.gameObject.name}.", this);
-            TriggerExit(InteractionStateOutcome.InitiatorContextInvalid);
+            TriggerExit(InteractionStateOutcome.Error);
             return;
         }
         
@@ -139,7 +132,8 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             // else if (initiateResult.FailureReasons.Contains(InteractionFailureReason.TargetBusy)) { ... }
             else // Treat other failures as generic initiation failures.
             {
-                TriggerExit(InteractionStateOutcome.InitiationFailed);
+                Debug.LogError($"InteractionState: Initiation failed for {interactionToPerform.DisplayName} on {targetInteractable.name}. Reason: {initiateResult.FailureReasons}", this);
+                TriggerExit(InteractionStateOutcome.Error);
             }
             return; // FailState handles exiting
         }

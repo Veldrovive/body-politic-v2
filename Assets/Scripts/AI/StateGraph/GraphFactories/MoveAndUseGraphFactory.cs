@@ -28,17 +28,11 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
         InteractionStateNode interactionStateNode = new(new InteractionStateConfiguration(config.TargetInteractable.gameObject, config.TargetInteractionDefinition));
         graph.AddNode(interactionStateNode);
         // InteractionState failures
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.TargetInteractableNull),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "I can't find the object.", 3f);
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.InteractionDefinitionNull),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "What was I doing?.", 3f);
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.InitiatorContextInvalid),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "Why am I?", 3f);
+        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.Error),
+            new ExitNode(), ExitNode.IN_PORT_NAME, "Something went wrong.", 3f);
         AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.ProximityCheckFailed),
             new ExitNode(), ExitNode.IN_PORT_NAME, "I can't reach that.", 3f);
         AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.RoleCheckFailed),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "I can't do that.", 3f);
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.InitiationFailed),
             new ExitNode(), ExitNode.IN_PORT_NAME, "I can't do that.", 3f);
         
         if (config.MoveToTargetTransform == null)
@@ -62,12 +56,8 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
             // MoveToState failures
             AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.DoorRoleFailed),
                 new ExitNode(), ExitNode.IN_PORT_NAME, "Looks like I can't open that door.", 3f);
-            AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.NavigationTimeout),
+            AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.Error),
                 new ExitNode(), ExitNode.IN_PORT_NAME, "I can't figure out where I'm going.", 3f);
-            AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.MovementExecutionFailed),
-                new ExitNode(), ExitNode.IN_PORT_NAME, "I can't get there.", 3f);
-            AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.TargetDestinationInvalid),
-                new ExitNode(), ExitNode.IN_PORT_NAME, "I can't get there.", 3f);
         
             // Connect the main flow "Start -> MoveTo -> Interact -> Exit"
             graph.ConnectStateFlow(new StartNode(), moveToStateNode);

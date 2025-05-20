@@ -60,7 +60,9 @@ public class StateGraphView : GraphView
         Add(background);
         background.SendToBack();
         
-        this.AddManipulator(new ContentZoomer());
+        ContentZoomer zoom = new ContentZoomer();
+        zoom.scaleStep = 0.02f;
+        this.AddManipulator(zoom);
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());

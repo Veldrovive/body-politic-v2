@@ -410,12 +410,34 @@ public class PlayerManager : MonoBehaviour
         bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
         bool interrupt = controller.IsInRoutine || overwrite;
         bool clearDeque = overwrite;
-        controller.EnqueueStateGraph(
-            factory,
-            interruptCurrent: interrupt,
-            saveThisGraphIfItGetsInterrupted: false,
-            clearDeque: clearDeque
-        );
+        // controller.EnqueueStateGraph(
+        //     factory,
+        //     interruptCurrent: interrupt,
+        //     saveThisGraphIfItGetsInterrupted: false,
+        //     clearDeque: clearDeque
+        // );
+        if (interrupt)
+        {
+            bool didInterrupt = controller.TryInterrupt(
+                factory,
+                saveThisGraphIfItGetsInterrupted: false,
+                clearDequeOnSuccess: clearDeque
+            );
+            if (didInterrupt)
+            {
+                // If we interrupted, we swap the controller to use player control
+                controller.IdleOnExit = true;  // Tells it not to resume routine on state exit
+            }
+        }
+        else
+        {
+            controller.EnqueueStateGraph(
+                factory,
+                interruptCurrent: false,
+                saveThisGraphIfItGetsInterrupted: false,
+                clearDeque: clearDeque
+            );
+        }
     }
 
     /// <summary>
@@ -478,12 +500,34 @@ public class PlayerManager : MonoBehaviour
             // adding to the queue
             // Also if we are in the routine graph we want to interrupt it
             bool interrupt = controller.IsInRoutine || controller.CurrentStateGraph?.id == config.GraphId || overwrite;
-            controller.EnqueueStateGraph(
-                factory,
-                interruptCurrent: interrupt,
-                saveThisGraphIfItGetsInterrupted: false,
-                clearDeque: overwrite
-            );
+            // controller.EnqueueStateGraph(
+            //     factory,
+            //     interruptCurrent: interrupt,
+            //     saveThisGraphIfItGetsInterrupted: false,
+            //     clearDeque: overwrite
+            // );
+            if (interrupt)
+            {
+                bool didInterrupt = controller.TryInterrupt(
+                    factory,
+                    saveThisGraphIfItGetsInterrupted: false,
+                    clearDequeOnSuccess: overwrite
+                );
+                if (didInterrupt)
+                {
+                    // If we interrupted, we swap the controller to use player control
+                    controller.IdleOnExit = true;  // Tells it not to resume routine on state exit
+                }
+            }
+            else
+            {
+                controller.EnqueueStateGraph(
+                    factory,
+                    interruptCurrent: false,
+                    saveThisGraphIfItGetsInterrupted: false,
+                    clearDeque: overwrite
+                );
+            }
         }
 
         // // Get the ModeController

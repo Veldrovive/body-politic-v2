@@ -76,9 +76,7 @@ public class MoveToStateConfiguration : AbstractStateConfiguration
 public enum MoveToStateOutcome
 {
     Arrived,
-    TargetDestinationInvalid,
-    MovementExecutionFailed,
-    NavigationTimeout,
+    Error,
     DoorRoleFailed
 }
 
@@ -211,7 +209,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
             if (targettingType == MoveToStateTargettingType.Transform && targetTransform.Value == null)
             {
                 // The target transform is null, so we fail the state
-                TriggerExit(MoveToStateOutcome.TargetDestinationInvalid);
+                TriggerExit(MoveToStateOutcome.Error);
                 failed = true;
                 return;
             }
@@ -240,7 +238,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
                 if (Time.time - startTime > navigationTimeout)
                 {
                     // We have timed out, so we fail the state
-                    TriggerExit(MoveToStateOutcome.NavigationTimeout);
+                    TriggerExit(MoveToStateOutcome.Error);
                     failed = true;
                 }
             }
@@ -273,25 +271,25 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
             switch (reason)
             {
                 case MovementFailureReason.TargetTransformNull:
-                    TriggerExit(MoveToStateOutcome.TargetDestinationInvalid);
+                    TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.TargetPositionInvalid:
-                    TriggerExit(MoveToStateOutcome.TargetDestinationInvalid);
+                    TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.AgentNotOnNavMesh:
-                    TriggerExit(MoveToStateOutcome.MovementExecutionFailed);
+                    TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.NoValidPathFound:
-                    TriggerExit(MoveToStateOutcome.TargetDestinationInvalid);
+                    TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.LinkTraversalFailed:
                     TriggerExit(MoveToStateOutcome.DoorRoleFailed);
                     break;
                 case MovementFailureReason.RequestNull:
-                    TriggerExit(MoveToStateOutcome.MovementExecutionFailed);
+                    TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.InvalidRequestParameters:
-                    TriggerExit(MoveToStateOutcome.TargetDestinationInvalid);
+                    TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.Interrupted:
                     // This is not an error. We just ignore it.
@@ -304,7 +302,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
         else
         {
             Debug.LogError("MoveToState failed before planning was completed. This should not happen.");
-            TriggerExit(MoveToStateOutcome.MovementExecutionFailed);
+            TriggerExit(MoveToStateOutcome.Error);
         }
     }
 

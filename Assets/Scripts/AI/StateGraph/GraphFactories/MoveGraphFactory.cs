@@ -71,9 +71,7 @@ public class MoveGraphFactory : GenericAbstractGraphFactory<MoveGraphConfigurati
         
         // Connect up the move outcomes
         AddSayState(graph, moveToStateNode, config.ArrivedMessage, config.SayBubbleDuration, MoveToStateOutcome.Arrived);
-        AddSayState(graph, moveToStateNode, config.TargetDestinationInvalidMessage, config.SayBubbleDuration, MoveToStateOutcome.TargetDestinationInvalid);
-        AddSayState(graph, moveToStateNode, config.MovementExecutionFailedMessage, config.SayBubbleDuration, MoveToStateOutcome.MovementExecutionFailed);
-        AddSayState(graph, moveToStateNode, config.NavigationTimeoutMessage, config.SayBubbleDuration, MoveToStateOutcome.NavigationTimeout);
+        AddSayState(graph, moveToStateNode, config.TargetDestinationInvalidMessage, config.SayBubbleDuration, MoveToStateOutcome.Error);
         AddSayState(graph, moveToStateNode, config.DoorRoleFailedMessage, config.SayBubbleDuration, MoveToStateOutcome.DoorRoleFailed);
     }
 }
