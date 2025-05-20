@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -200,7 +201,7 @@ public class NpcMovementManager : MonoBehaviour
     private Vector3? lastTargetPosition;
     
     public event Action OnRequestCompleted;
-    public event Action<MovementFailureReason> OnRequestFailed;  // Raised when the request fails. Or when it is interrupted.
+    public event Action<MovementFailureReason, object> OnRequestFailed;  // Raised when the request fails. Or when it is interrupted.
 
     [NonSerialized] public Vector3 velocity;  // Usually pegged to the NavMeshAgent velocity, but set manually during link traversal
 
@@ -479,7 +480,7 @@ public class NpcMovementManager : MonoBehaviour
                 // From https://discussions.unity.com/t/mis-feature-in-navmeshagent-regarding-off-mesh-links/742068/7
                 // we can do this by "Warp()"ing to the current location and then resetting the path
                 navMeshAgent.Warp(transform.position);
-                EndRequestWithError(MovementFailureReason.LinkTraversalFailed);  // This calls the reset path method
+                EndRequestWithError(MovementFailureReason.LinkTraversalFailed, GetMisingLinkRoles(currLink));  // This calls the reset path method
                 return;
             }
             else
@@ -676,6 +677,32 @@ public class NpcMovementManager : MonoBehaviour
         }
 
         return !doorComponent.CanEnter(npcContext);
+    }
+
+    private List<NpcRoleSO> GetMisingLinkRoles(OffMeshLinkData link)
+    {
+        if (!link.valid)
+        {
+            // There is no link
+            return null;
+        }
+        
+        NavMeshLink linkComponent = link.owner as NavMeshLink;
+        if (linkComponent == null)
+        {
+            Debug.LogWarning($"NpcMovementManager: Link component is null. This should not happen.", this);
+            return null;
+        }
+        
+        GameObject linkParent = linkComponent.transform.parent.gameObject;
+        RoleDoor doorComponent = linkParent.GetComponent<RoleDoor>();
+        if (doorComponent == null)
+        {
+            // Then this isn't a role door. let them pass
+            return null;
+        }
+
+        return doorComponent.GetMissingRoles(npcContext);
     }
     
     /// <summary>
@@ -950,10 +977,10 @@ public class NpcMovementManager : MonoBehaviour
         // Debug.Log("NpcMovementManager: Stopped.", this);
     }
     
-    private void EndRequestWithError(MovementFailureReason reason)
+    private void EndRequestWithError(MovementFailureReason reason, object failureData = null)
     {
         Cleanup();
-        OnRequestFailed?.Invoke(reason);
+        OnRequestFailed?.Invoke(reason, failureData);
     }
     
     private void EndRequestWithCompletetion()

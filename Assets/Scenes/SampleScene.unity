@@ -273,7 +273,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_nodes.Array.size
-      value: 23
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: 'm_nodes.Array.data[2]'
@@ -301,67 +301,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: 'm_nodes.Array.data[8]'
-      value: 6648118317909016751
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[9]'
       value: 6648118317909016798
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[10]'
+      propertyPath: 'm_nodes.Array.data[9]'
       value: 6648118317909016799
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[11]'
+      propertyPath: 'm_nodes.Array.data[10]'
       value: 6648118317909016800
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[12]'
+      propertyPath: 'm_nodes.Array.data[11]'
       value: 6648118317909016801
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[13]'
+      propertyPath: 'm_nodes.Array.data[12]'
       value: 6648118317909016802
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[14]'
+      propertyPath: 'm_nodes.Array.data[13]'
       value: 6648118321112416325
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[15]'
+      propertyPath: 'm_nodes.Array.data[14]'
       value: 6648118321112416326
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[16]'
+      propertyPath: 'm_nodes.Array.data[15]'
       value: 6648118321112416327
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[17]'
+      propertyPath: 'm_nodes.Array.data[16]'
       value: 6648118321112416328
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[18]'
+      propertyPath: 'm_nodes.Array.data[17]'
       value: 6648118321112416329
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[19]'
+      propertyPath: 'm_nodes.Array.data[18]'
       value: 6648118321112416330
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[20]'
+      propertyPath: 'm_nodes.Array.data[19]'
       value: 6648118321112416331
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[21]'
+      propertyPath: 'm_nodes.Array.data[20]'
       value: 6648118321112416332
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: 'm_nodes.Array.data[22]'
+      propertyPath: 'm_nodes.Array.data[21]'
       value: 6648118321112416340
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'm_nodes.Array.data[22]'
+      value: 6648118342207406148
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'm_nodes.Array.data[23]'
+      value: 6648118342207406149
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.size
-      value: 63
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: 'managedReferences[6648118317909016646]'
@@ -452,6 +456,14 @@ PrefabInstance:
       value: Assembly-CSharp MoveToStateNode
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'managedReferences[6648118342207406148]'
+      value: Assembly-CSharp SayRoleMissingListenerNode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'managedReferences[6648118342207406149]'
+      value: Assembly-CSharp SayRoleMissingListenerNode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[0].inputPort.nodeId
       value: f582feba-687c-4486-847a-9af9e18c8dec
       objectReference: {fileID: 0}
@@ -529,11 +541,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[18].inputPort.nodeId
-      value: e1b5d449-11bc-417f-9a69-84ab608224f9
+      value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[19].inputPort.nodeId
-      value: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
+      value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[1].outputPort.nodeId
@@ -541,43 +553,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[20].inputPort.nodeId
-      value: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[21].inputPort.nodeId
-      value: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[22].inputPort.nodeId
-      value: 1ace092a-e792-422d-8f50-4082305b3f8a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[23].inputPort.nodeId
-      value: 1ace092a-e792-422d-8f50-4082305b3f8a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[24].inputPort.nodeId
       value: c5d2e04a-f503-44c5-b214-a0484554e647
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[25].inputPort.nodeId
+      propertyPath: m_connections.Array.data[21].inputPort.nodeId
       value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[26].inputPort.nodeId
+      propertyPath: m_connections.Array.data[22].inputPort.nodeId
       value: f582feba-687c-4486-847a-9af9e18c8dec
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[27].inputPort.nodeId
+      propertyPath: m_connections.Array.data[23].inputPort.nodeId
       value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[24].inputPort.nodeId
+      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[25].inputPort.nodeId
+      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[26].inputPort.nodeId
+      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[27].inputPort.nodeId
+      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[28].inputPort.nodeId
-      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[29].inputPort.nodeId
-      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      value: 1206478b-373a-479b-b3c2-55a5731ca633
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[2].outputPort.nodeId
@@ -589,15 +601,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[31].inputPort.nodeId
-      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
+      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[32].inputPort.nodeId
-      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
+      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[33].inputPort.nodeId
-      value: 1206478b-373a-479b-b3c2-55a5731ca633
+      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[34].inputPort.nodeId
@@ -613,15 +625,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[37].inputPort.nodeId
-      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
+      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[38].inputPort.nodeId
-      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
+      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[39].inputPort.nodeId
-      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
+      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[3].outputPort.nodeId
@@ -629,7 +641,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[40].inputPort.nodeId
-      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
+      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[41].inputPort.nodeId
@@ -637,35 +649,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[42].inputPort.nodeId
-      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[43].inputPort.nodeId
-      value: 0bd5396a-c27f-448e-b4fe-7917b36936e6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[44].inputPort.nodeId
-      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[45].inputPort.nodeId
-      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[46].inputPort.nodeId
       value: 71cac189-9df6-4828-bced-dc94c37d0416
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[47].inputPort.nodeId
+      propertyPath: m_connections.Array.data[43].inputPort.nodeId
       value: 012c4bea-b23f-43aa-9488-8e17677e142e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[48].inputPort.nodeId
+      propertyPath: m_connections.Array.data[44].inputPort.nodeId
       value: f582feba-687c-4486-847a-9af9e18c8dec
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[49].inputPort.nodeId
+      propertyPath: m_connections.Array.data[45].inputPort.nodeId
       value: f582feba-687c-4486-847a-9af9e18c8dec
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[46].inputPort.nodeId
+      value: f582feba-687c-4486-847a-9af9e18c8dec
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[47].inputPort.nodeId
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[48].inputPort.nodeId
+      value: 756cdb06-8477-4248-8901-de73b4b22500
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[49].inputPort.nodeId
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[4].outputPort.nodeId
@@ -673,23 +685,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[50].inputPort.nodeId
-      value: f582feba-687c-4486-847a-9af9e18c8dec
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[51].inputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
+      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[52].inputPort.nodeId
-      value: 756cdb06-8477-4248-8901-de73b4b22500
+      value: 67efdcb0-091d-4096-a956-933387d143ca
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[53].inputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
+      value: 67efdcb0-091d-4096-a956-933387d143ca
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[54].inputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
+      value: 67efdcb0-091d-4096-a956-933387d143ca
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[55].inputPort.nodeId
@@ -697,19 +709,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[56].inputPort.nodeId
-      value: 67efdcb0-091d-4096-a956-933387d143ca
+      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[57].inputPort.nodeId
-      value: 67efdcb0-091d-4096-a956-933387d143ca
+      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[58].inputPort.nodeId
-      value: 67efdcb0-091d-4096-a956-933387d143ca
+      value: ef68ac2a-64fd-4ea3-b53a-6ff770b45d40
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[59].inputPort.nodeId
-      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
+      value: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[5].outputPort.nodeId
@@ -717,11 +729,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[60].inputPort.nodeId
-      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
+      value: 584478ca-2a27-4d5b-b832-9a120d751415
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[61].inputPort.nodeId
-      value: f246f0fb-3a1c-4eeb-a800-6c1d8c75315e
+      value: 6fcd8aeb-b736-4320-bac8-fb0fcf85387b
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[62].inputPort.nodeId
@@ -900,6 +912,14 @@ PrefabInstance:
       value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_guid
+      value: 584478ca-2a27-4d5b-b832-9a120d751415
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_guid
+      value: 6fcd8aeb-b736-4320-bac8-fb0fcf85387b
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[10].outputPort.nodeId
       value: 67efdcb0-091d-4096-a956-933387d143ca
       objectReference: {fileID: 0}
@@ -933,63 +953,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[18].outputPort.nodeId
-      value: b019dfec-0150-47e0-8a4d-10bedc2ecfd4
+      value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[19].outputPort.nodeId
-      value: e1b5d449-11bc-417f-9a69-84ab608224f9
+      value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[20].outputPort.nodeId
-      value: e1b5d449-11bc-417f-9a69-84ab608224f9
+      value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[21].outputPort.nodeId
-      value: e1b5d449-11bc-417f-9a69-84ab608224f9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[22].outputPort.nodeId
-      value: 1ace092a-e792-422d-8f50-4082305b3f8a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[23].outputPort.nodeId
-      value: 1ace092a-e792-422d-8f50-4082305b3f8a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[24].outputPort.nodeId
-      value: 1ace092a-e792-422d-8f50-4082305b3f8a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[25].outputPort.nodeId
       value: c8ad8d9b-a5fe-4a73-ba56-72ba6e55a68a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[26].outputPort.nodeId
+      propertyPath: m_connections.Array.data[22].outputPort.nodeId
       value: c713ddf9-48c2-4e8e-9e06-48f35bbbf2d8
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[27].outputPort.nodeId
+      propertyPath: m_connections.Array.data[23].outputPort.nodeId
       value: 63362973-6dd0-492e-887f-f4e6909dd17a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[28].outputPort.nodeId
+      propertyPath: m_connections.Array.data[24].outputPort.nodeId
       value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[25].outputPort.nodeId
+      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[26].outputPort.nodeId
+      value: 756cdb06-8477-4248-8901-de73b4b22500
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[27].outputPort.nodeId
+      value: 756cdb06-8477-4248-8901-de73b4b22500
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[28].outputPort.nodeId
+      value: 756cdb06-8477-4248-8901-de73b4b22500
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[29].outputPort.nodeId
-      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      value: 756cdb06-8477-4248-8901-de73b4b22500
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[30].outputPort.nodeId
-      value: 756cdb06-8477-4248-8901-de73b4b22500
+      value: 1206478b-373a-479b-b3c2-55a5731ca633
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[31].outputPort.nodeId
-      value: 756cdb06-8477-4248-8901-de73b4b22500
+      value: 1206478b-373a-479b-b3c2-55a5731ca633
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[32].outputPort.nodeId
-      value: 756cdb06-8477-4248-8901-de73b4b22500
+      value: 1206478b-373a-479b-b3c2-55a5731ca633
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[33].outputPort.nodeId
@@ -997,115 +1017,115 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[34].outputPort.nodeId
-      value: 1206478b-373a-479b-b3c2-55a5731ca633
+      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[35].outputPort.nodeId
-      value: 1206478b-373a-479b-b3c2-55a5731ca633
+      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[36].outputPort.nodeId
-      value: 1206478b-373a-479b-b3c2-55a5731ca633
+      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[37].outputPort.nodeId
-      value: 756cdb06-8477-4248-8901-de73b4b22500
+      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[38].outputPort.nodeId
-      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
+      value: 71cac189-9df6-4828-bced-dc94c37d0416
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[39].outputPort.nodeId
-      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
+      value: 71cac189-9df6-4828-bced-dc94c37d0416
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[40].outputPort.nodeId
-      value: 566ab658-27b1-4fcc-a65c-3ddd54426eba
+      value: 71cac189-9df6-4828-bced-dc94c37d0416
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[41].outputPort.nodeId
-      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
+      value: 71cac189-9df6-4828-bced-dc94c37d0416
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[42].outputPort.nodeId
-      value: 71cac189-9df6-4828-bced-dc94c37d0416
+      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[43].outputPort.nodeId
-      value: 71cac189-9df6-4828-bced-dc94c37d0416
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[44].outputPort.nodeId
-      value: 71cac189-9df6-4828-bced-dc94c37d0416
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[45].outputPort.nodeId
-      value: 71cac189-9df6-4828-bced-dc94c37d0416
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[46].outputPort.nodeId
-      value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[47].outputPort.nodeId
       value: 1ace092a-e792-422d-8f50-4082305b3f8a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[48].outputPort.nodeId
+      propertyPath: m_connections.Array.data[44].outputPort.nodeId
       value: 012c4bea-b23f-43aa-9488-8e17677e142e
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[45].outputPort.nodeId
+      value: 012c4bea-b23f-43aa-9488-8e17677e142e
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[46].outputPort.nodeId
+      value: 012c4bea-b23f-43aa-9488-8e17677e142e
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[47].outputPort.nodeId
+      value: 71cac189-9df6-4828-bced-dc94c37d0416
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[48].outputPort.nodeId
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[49].outputPort.nodeId
-      value: 012c4bea-b23f-43aa-9488-8e17677e142e
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[50].outputPort.nodeId
-      value: 012c4bea-b23f-43aa-9488-8e17677e142e
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[51].outputPort.nodeId
-      value: 71cac189-9df6-4828-bced-dc94c37d0416
+      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[52].outputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[53].outputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[54].outputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[55].outputPort.nodeId
-      value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[56].outputPort.nodeId
       value: c1f0ed6e-2091-43ba-8b67-ce7d85dd01e3
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[57].outputPort.nodeId
+      propertyPath: m_connections.Array.data[53].outputPort.nodeId
       value: f582feba-687c-4486-847a-9af9e18c8dec
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[58].outputPort.nodeId
+      propertyPath: m_connections.Array.data[54].outputPort.nodeId
       value: b019dfec-0150-47e0-8a4d-10bedc2ecfd4
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[59].outputPort.nodeId
+      propertyPath: m_connections.Array.data[55].outputPort.nodeId
       value: e6efa337-0c21-46d9-9b74-643f5d7db6ce
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[60].outputPort.nodeId
+      propertyPath: m_connections.Array.data[56].outputPort.nodeId
       value: 71cac189-9df6-4828-bced-dc94c37d0416
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[61].outputPort.nodeId
+      propertyPath: m_connections.Array.data[57].outputPort.nodeId
       value: d7d9bd42-f89f-4e95-81da-48c30e6f3c0a
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[58].outputPort.nodeId
+      value: 756cdb06-8477-4248-8901-de73b4b22500
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[59].outputPort.nodeId
+      value: b019dfec-0150-47e0-8a4d-10bedc2ecfd4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[60].outputPort.nodeId
+      value: b019dfec-0150-47e0-8a4d-10bedc2ecfd4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[61].outputPort.nodeId
+      value: f582feba-687c-4486-847a-9af9e18c8dec
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[62].outputPort.nodeId
@@ -1313,6 +1333,16 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].typeName
       value: MoveToStateNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].typeName
+      value: SayRoleMissingListenerNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].typeName
+      value: SayRoleMissingListenerNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
@@ -1548,6 +1578,22 @@ PrefabInstance:
       value: 1814
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_position.x
+      value: 1164
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_position.y
+      value: 574
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_position.x
+      value: 232
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_position.y
+      value: 549
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[0].outputPort.portInfo.Name
       value: LoadIn
       objectReference: {fileID: 0}
@@ -1589,7 +1635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[19].inputPort.portInfo.Name
-      value: Restart
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[1].outputPort.portInfo.Name
@@ -1597,11 +1643,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[20].inputPort.portInfo.Name
-      value: Restart
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[21].inputPort.portInfo.Name
-      value: Restart
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[22].inputPort.portInfo.Name
@@ -1613,7 +1659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[24].inputPort.portInfo.Name
-      value: Jump
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[25].inputPort.portInfo.Name
@@ -1621,15 +1667,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[26].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[27].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[28].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[29].inputPort.portInfo.Name
@@ -1669,7 +1715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[37].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[38].inputPort.portInfo.Name
@@ -1693,19 +1739,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[42].inputPort.portInfo.Name
-      value: Jump
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[43].inputPort.portInfo.Name
-      value: Jump
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[44].inputPort.portInfo.Name
-      value: Jump
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[45].inputPort.portInfo.Name
-      value: Jump
+      value: In
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[46].inputPort.portInfo.Name
@@ -1733,7 +1779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[51].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[52].inputPort.portInfo.Name
@@ -1753,19 +1799,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[56].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[57].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[58].inputPort.portInfo.Name
-      value: In
+      value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[59].inputPort.portInfo.Name
-      value: Jump
+      value: Restart
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[5].outputPort.portInfo.Name
@@ -1773,11 +1819,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[60].inputPort.portInfo.Name
-      value: Jump
+      value: Say Role Missing
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[61].inputPort.portInfo.Name
-      value: Jump
+      value: Say Role Missing
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[62].inputPort.portInfo.Name
@@ -1901,7 +1947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[18].outputPort.portInfo.Name
-      value: DoorRoleFailed
+      value: LoadIn
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[19].outputPort.portInfo.Name
@@ -1909,47 +1955,47 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[20].outputPort.portInfo.Name
-      value: LoadIn
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[21].outputPort.portInfo.Name
-      value: Timeout
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[22].outputPort.portInfo.Name
-      value: LoadIn
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[23].outputPort.portInfo.Name
-      value: Interrupted
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[24].outputPort.portInfo.Name
       value: TriggerFound
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[25].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[21].outputPort.portInfo.Name
       value: Start
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[26].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[22].outputPort.portInfo.Name
       value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[27].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[23].outputPort.portInfo.Name
       value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[28].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[24].outputPort.portInfo.Name
       value: Interrupted
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[29].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[25].outputPort.portInfo.Name
       value: LoadIn
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[30].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[26].outputPort.portInfo.Name
       value: CompletedInteraction
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[27].outputPort.portInfo.Name
+      value: Interrupted
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[28].outputPort.portInfo.Name
+      value: LoadIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[29].outputPort.portInfo.Name
+      value: ProximityCheckFailed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[30].outputPort.portInfo.Name
+      value: Timeout
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[31].outputPort.portInfo.Name
@@ -1961,7 +2007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[33].outputPort.portInfo.Name
-      value: ProximityCheckFailed
+      value: RoleCheckFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[34].outputPort.portInfo.Name
@@ -1977,79 +2023,79 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[37].outputPort.portInfo.Name
-      value: RoleCheckFailed
+      value: DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[38].outputPort.portInfo.Name
-      value: Timeout
+      value: Interrupted
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[39].outputPort.portInfo.Name
-      value: Interrupted
+      value: LoadIn
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[40].outputPort.portInfo.Name
-      value: LoadIn
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[41].outputPort.portInfo.Name
-      value: DoorRoleFailed
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[42].outputPort.portInfo.Name
-      value: Interrupted
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[43].outputPort.portInfo.Name
-      value: LoadIn
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[44].outputPort.portInfo.Name
       value: ProximityCheckFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[45].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[41].outputPort.portInfo.Name
       value: RoleCheckFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[46].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[42].outputPort.portInfo.Name
       value: Arrived
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[47].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[43].outputPort.portInfo.Name
       value: TriggerNotFound
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[48].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[44].outputPort.portInfo.Name
       value: Interrupted
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[49].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[45].outputPort.portInfo.Name
       value: LoadIn
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[50].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[46].outputPort.portInfo.Name
       value: Timeout
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[51].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[47].outputPort.portInfo.Name
       value: CompletedInteraction
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[52].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[48].outputPort.portInfo.Name
       value: Arrived
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[53].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[49].outputPort.portInfo.Name
       value: Interrupted
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[54].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[50].outputPort.portInfo.Name
       value: LoadIn
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
-      propertyPath: m_connections.Array.data[55].outputPort.portInfo.Name
+      propertyPath: m_connections.Array.data[51].outputPort.portInfo.Name
       value: DoorRoleFailed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[52].outputPort.portInfo.Name
+      value: Error
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[53].outputPort.portInfo.Name
+      value: Error
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[54].outputPort.portInfo.Name
+      value: Error
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[55].outputPort.portInfo.Name
+      value: Error
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[56].outputPort.portInfo.Name
@@ -2065,15 +2111,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[59].outputPort.portInfo.Name
-      value: Error
+      value: DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[60].outputPort.portInfo.Name
-      value: Error
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[61].outputPort.portInfo.Name
-      value: Error
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[62].outputPort.portInfo.Name
@@ -2274,6 +2320,14 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].m_position.width
       value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_position.width
+      value: 142
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_position.width
+      value: 142
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[10].inputPort.portInfo.PortType
@@ -2477,11 +2531,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[60].inputPort.portInfo.PortType
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[61].inputPort.portInfo.PortType
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[62].inputPort.portInfo.PortType
@@ -2644,8 +2698,24 @@ PrefabInstance:
       value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_position.height
+      value: 77
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_position.height
+      value: 77
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[60].outputPort.portInfo.PortType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_connections.Array.data[61].outputPort.portInfo.PortType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].m_ports.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016647].m_ports.Array.size
@@ -2653,7 +2723,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016648].m_ports.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016649].m_ports.Array.size
@@ -2697,7 +2767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416325].m_ports.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416326].m_ports.Array.size
@@ -2729,7 +2799,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].m_ports.Array.size
-      value: 6
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_ports.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_ports.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.StateId
@@ -2977,7 +3055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].m_ports.Array.data[6].Name
-      value: DoorRoleFailed
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].m_ports.Array.data[7].Name
@@ -3029,7 +3107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016648].m_ports.Array.data[6].Name
-      value: DoorRoleFailed
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016648].m_ports.Array.data[7].Name
@@ -3197,7 +3275,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416325].m_ports.Array.data[6].Name
-      value: DoorRoleFailed
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416325].m_ports.Array.data[7].Name
@@ -3369,11 +3447,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].m_ports.Array.data[6].Name
-      value: DoorRoleFailed
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].m_ports.Array.data[7].Name
       value: In
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_ports.Array.data[0].Name
+      value: Say Role Missing
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_ports.Array.data[0].Name
+      value: Say Role Missing
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.TargettingType
@@ -3481,7 +3567,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].m_ports.Array.data[6].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].m_ports.Array.data[7].PortType
@@ -3537,7 +3623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016648].m_ports.Array.data[6].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016648].m_ports.Array.data[7].PortType
@@ -3705,7 +3791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416325].m_ports.Array.data[6].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416325].m_ports.Array.data[7].PortType
@@ -3881,11 +3967,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].m_ports.Array.data[6].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].m_ports.Array.data[7].PortType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406148].m_ports.Array.data[0].PortType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[6648118342207406149].m_ports.Array.data[0].PortType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.NumberOfSamplePoints
@@ -10140,6 +10234,10 @@ PrefabInstance:
     - target: {fileID: 6566685225217889436, guid: 76039abb0515e45cdbf825058c1195f8, type: 3}
       propertyPath: m_Name
       value: TestConsumable
+      objectReference: {fileID: 0}
+    - target: {fileID: 6566685225217889436, guid: 76039abb0515e45cdbf825058c1195f8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Object = UnityEngine.Object;
 
 public class StateGraph : MonoBehaviour
@@ -89,6 +90,88 @@ public class StateGraph : MonoBehaviour
         NodePortContext outputPortContext = outputNode.PortContext[connection.outputPort.portInfo];
         return (inputPortContext, outputPortContext);
     }
+
+    private Dictionary<string, List<(EventInfo, object, Delegate)>> savedDelegates = new Dictionary<string, List<(EventInfo, object, Delegate)>>();
+    public void LinkNodeOutgoingEvents(string nodeId, AbstractState state)
+    {
+        if (savedDelegates.ContainsKey(nodeId))
+        {
+            // We need to remove existing delegates. This should have been done when the state exited.
+            Debug.LogWarning($"StateGraph: {nodeId} already has delegates. They should have been removed when the state exited.");
+            RemoveNodeOutgoingEvents(nodeId);
+        }
+        
+        var (outgoingConnections, incomingConnections) = GetNodeConnectionsOfType(nodeId, PortType.EventOut);
+        // We are interested only in the outgoing connections
+        List<(EventInfo, object, Delegate)> eventDelegates = new List<(EventInfo, object, Delegate)>();
+        foreach (var outgoingConnection in outgoingConnections)
+        {
+            var (inputPortContext, outputPortContext) = GetConnectionPortContext(outgoingConnection);
+            
+            // Events are ugly as hell.
+            object publisher;
+            (string publisherType, EventInfo eventInfo) =
+                (ValueTuple<string, EventInfo>) outputPortContext.portContext;
+            if (publisherType == "state")
+            {
+                // Then the state that got passed in is the publisher
+                publisher = state;
+            }
+            else if (publisherType == "node")
+            {
+                // Then the node corresponding to the node on the output port is the publisher
+                publisher = GetNodeById(outgoingConnection.outputPort.nodeId);
+            }
+            else
+            {
+                // That's an error
+                Debug.LogError($"Publisher type {publisherType} is not supported");
+                continue;
+            }
+
+            object subscriber;
+            (string subscriberType, MethodInfo methodInfo) = (ValueTuple<string, MethodInfo>) inputPortContext.portContext;
+            if (subscriberType == "state")
+            {
+                // Then the state that got passed in is the subscriber
+                subscriber = state;
+            }
+            else if (subscriberType == "node")
+            {
+                // Then the node corresponding to the node on the input port is the subscriber
+                subscriber = GetNodeById(outgoingConnection.inputPort.nodeId);
+            }
+            else
+            {
+                // That's an error
+                Debug.LogError($"Subscriber type {subscriberType} is not supported");
+                continue;
+            }
+            
+            Type eventHandlerType = eventInfo.EventHandlerType;
+            Delegate handlerDelegate = methodInfo.CreateDelegate(eventHandlerType, subscriber);
+            eventInfo.AddEventHandler(publisher, handlerDelegate);
+            eventDelegates.Add((eventInfo, publisher, handlerDelegate));
+            
+            Debug.Log($"Outgoing connection from {nodeId} to {outgoingConnection.inputPort.nodeId} with port {outgoingConnection.inputPort.portInfo.Name}");
+        }
+        savedDelegates[nodeId] = eventDelegates;
+    }
+
+    public void RemoveNodeOutgoingEvents(string nodeId)
+    {
+        if (!savedDelegates.ContainsKey(nodeId))
+        {
+            return;
+        }
+
+        foreach (var (eventInfo, publisher, handlerDelegate) in savedDelegates[nodeId])
+        {
+            eventInfo.RemoveEventHandler(publisher, handlerDelegate);
+        }
+        savedDelegates.Remove(nodeId);
+    }
+
 
     /// <summary>
     /// Returns the node on the other side of the connection from the port with the given name.

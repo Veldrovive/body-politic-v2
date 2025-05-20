@@ -147,7 +147,7 @@ public abstract class StateGraphNode
                 eventPorts.Add(new NodePortContext(
                     new NodePortInfo(portName, PortType.EventIn),
                     portDataType,
-                    method
+                    ("node", method)
                 ));
             }
         }
@@ -201,7 +201,7 @@ public abstract class StateGraphNode
                 eventPorts.Add(new NodePortContext(
                     new NodePortInfo(portName, PortType.EventOut),
                     portDataType,
-                    eventInfo
+                    ("node", eventInfo)
                 ));
             }
         }

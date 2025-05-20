@@ -155,4 +155,16 @@ public class RoleDoor : MonoBehaviour
         }
         return npcContext.Identity.HasAnyRole(rolesCanEnter);
     }
+    
+    public List<NpcRoleSO> GetMissingRoles(NpcContext npcContext)
+    {
+        if (npcContext.Identity.HasAnyRole(rolesCanEnter))
+        {
+            // Then you aren't missing anything because you can enter
+            return new List<NpcRoleSO>();
+        }
+        
+        // Otherwise you are missing everything because if you had anything you would be let in
+        return rolesCanEnter;
+    }
 }

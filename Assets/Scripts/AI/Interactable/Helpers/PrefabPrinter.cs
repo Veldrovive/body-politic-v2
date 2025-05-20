@@ -117,7 +117,7 @@ public class PrefabPrinter : AbstractInteractionReactor
         if (printDefEnabled && !shouldBeEnabled)
         {
             // We need to disable the interaction
-            if (SetInteractionEnabled(printInteractionDefinition, false, true, "Item already present."))
+            if (SetInteractionEnabled(printInteractionDefinition, false, false, "Item already present."))
             {
                 printDefEnabled = false;
             }

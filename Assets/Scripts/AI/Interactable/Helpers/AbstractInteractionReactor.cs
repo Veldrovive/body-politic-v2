@@ -95,15 +95,9 @@ public abstract class AbstractInteractionReactor : MonoBehaviour
         return true;
     }
 
-    public bool SetInteractionEnabled(InteractionDefinitionSO interactionDef, bool isEnabled, bool isVisible = false,
-        string reason = null)
+    public bool SetInteractionEnabled(InteractionDefinitionSO interactionDef, bool isEnabled,
+        bool disabledImpliesHidden = true, string reason = null)
     {
-        InteractionEnableInfo info = new InteractionEnableInfo()
-        {
-            IsEnabled = isEnabled,
-            IsVisibleWhenDisabled = isVisible,
-            DisabledReason = reason
-        };
-        return GetInteractable().SetInteractionEnableInfo(interactionDef, info);
+        return GetInteractable().SetInteractionEnableInfo(interactionDef, isEnabled, disabledImpliesHidden, reason);
     }
 }

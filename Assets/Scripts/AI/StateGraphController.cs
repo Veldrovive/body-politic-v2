@@ -273,6 +273,52 @@ public class StateGraphController : MonoBehaviour
     }
 
     /// <summary>
+    /// Interrupts the current state graph if possible and proceeds normally.
+    /// </summary>
+    /// <returns></returns>
+    public bool TryProceed()
+    {
+        var (didInterrupt, interruptContext) = TryInterruptCurrentState();
+
+        if (didInterrupt)
+        {
+            // The current state was successfully interrupted.
+            // currentExecutionContext.CurrentState is now null.
+
+            if (interruptContext != null)
+            {
+                // An ExecutionContext to resume the interrupted graph was created.
+                // We need to store it appropriately.
+                if (interruptContext.Graph == routineStateGraph)
+                {
+                    savedRoutineContext = interruptContext;
+                }
+                // Actually, otherwise we should do nothing since we want to "Proceed" and never save. We only save
+                // for the routineStateGraph because if we don't it would cause strange behavior.
+                // else
+                // {
+                //     executionDequeue.AddFirst(interruptContext);
+                // }
+            }
+            // If interruptContext is null, the interrupted graph was either not savable,
+            // or had no valid interrupt transition. If it was ephemeral and not savable,
+            // TryInterruptCurrentState would have destroyed it.
+
+            // Signal that a new graph should be picked from the queue or routine.
+            currentExecutionContext = null;
+
+            // Process the next state/graph.
+            Update();
+            return true;
+        }
+        else
+        {
+            // The current state could not be interrupted.
+            return false;
+        }
+    }
+    
+    /// <summary>
     /// Removes all copies of state graphs that have this id from the queue. Does not interrupt ongoing state graphs.
     /// </summary>
     /// <param name="stateGraphId"></param>
@@ -413,6 +459,7 @@ public class StateGraphController : MonoBehaviour
         
         // Remove event listeners
         currentExecutionContext.CurrentState.OnExit -= HandleStateExit;
+        RemoveStateEventListeners(currentExecutionContext.NodeIdToExecute);
 
         // Destroy the component
         Destroy(currentExecutionContext.CurrentState);
@@ -420,7 +467,12 @@ public class StateGraphController : MonoBehaviour
         // Null the current state
         currentExecutionContext.CurrentState = null;
     }
-    
+
+    private void RemoveStateEventListeners(string nodeIdToExecute)
+    {
+        currentExecutionContext.Graph.RemoveNodeOutgoingEvents(nodeIdToExecute);
+    }
+
     private AbstractState ActivateNewState(StateNode nextStateNode)
     {
         // Check for any existing enabled components that derive from AbstractState
@@ -455,6 +507,8 @@ public class StateGraphController : MonoBehaviour
         
         // Create event listeners
         state.OnExit += HandleStateExit;
+
+        EnableStateEventListeners(nextStateNode, state);
         
         // Set the current state to be this state
         currentExecutionContext.CurrentState = state;
@@ -463,6 +517,11 @@ public class StateGraphController : MonoBehaviour
         state.enabled = true;
 
         return state;
+    }
+
+    private void EnableStateEventListeners(StateNode nextStateNode, AbstractState state)
+    {
+        currentExecutionContext.Graph.LinkNodeOutgoingEvents(nextStateNode.id, state);
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -247,6 +248,9 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
 
     #endregion
     
+    [EventOutputPort("On DoorRoleFailed")]
+    public event Action<List<NpcRoleSO>> OnDoorRoleFailed;
+    
     #region Event Handlers
 
     public override bool InterruptState()
@@ -261,7 +265,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
         TriggerExit(MoveToStateOutcome.Arrived);
     }
     
-    private void HandleRequestFailed(MovementFailureReason reason)
+    private void HandleRequestFailed(MovementFailureReason reason, object failureData)
     {
         // This is called when the movement request fails. This should only occur after the initial planning has
         // succeeded since it requires that SetMovementTarget has been called.
@@ -283,6 +287,15 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
                     TriggerExit(MoveToStateOutcome.Error);
                     break;
                 case MovementFailureReason.LinkTraversalFailed:
+                    try
+                    {
+                        List<NpcRoleSO> missingRoles = (List<NpcRoleSO>) failureData;
+                        OnDoorRoleFailed?.Invoke(missingRoles);
+                    }
+                    catch (InvalidCastException)
+                    {
+                        Debug.LogError("MoveToState: LinkTraversalFailed failureData is not a List<NpcRoleSO>");
+                    }
                     TriggerExit(MoveToStateOutcome.DoorRoleFailed);
                     break;
                 case MovementFailureReason.RequestNull:
