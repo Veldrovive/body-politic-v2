@@ -50,7 +50,7 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
     [Header("Execution Requirements & Effects")]
     [Tooltip("Maximum distance the initiator can be from the target to start the interaction.")]
     [SerializeField]
-    private float requiredProximity = 1.5f;
+    private float requiredProximity = 5f;
 
     // [Tooltip("Whether the action should only be visible in the inventory menu.")]
     // [SerializeField] private bool onlyAvailableInInventory = false;
@@ -176,7 +176,9 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
         bool proximityCheckPassed = true; // Assume pass if not required
         if (requiredProximity > 0 && !itemInHand && !itemInInventory)  // If it is in the inventory then it is close enough
         {
-            float distanceSqr = (initiator.transform.position - targetInteractable.transform.position).sqrMagnitude;
+            Vector3 initiatorPosition = new Vector3(initiator.transform.position.x, 0, initiator.transform.position.z);
+            Vector3 targetPosition = new Vector3(targetInteractable.transform.position.x, 0, targetInteractable.transform.position.z);
+            float distanceSqr = (initiatorPosition - targetPosition).sqrMagnitude;
             if (distanceSqr > (requiredProximity * requiredProximity))
             {
                 proximityCheckPassed = false;

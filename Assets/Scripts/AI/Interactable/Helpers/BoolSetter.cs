@@ -20,7 +20,7 @@ public class BoolSetter : AbstractInteractionReactor
         Toggle
     }
 
-    private void OnValidate()
+    private void Initialize()
     {
         if (targetInteractionDefinition == null)
         {
@@ -35,11 +35,21 @@ public class BoolSetter : AbstractInteractionReactor
         }
 
         SafelyRegisterInteractionLifecycleCallback(
-                interactionLifecycleTrigger, targetInteractionDefinition,
-                HandleLifecycleEvent
+            interactionLifecycleTrigger, targetInteractionDefinition,
+            HandleLifecycleEvent
         );
     }
-    
+
+    private void OnValidate()
+    {
+        Initialize();
+    }
+
+    private void Start()
+    {
+        Initialize();
+    }
+
     private void HandleLifecycleEvent(InteractionContext interactionContext)
     {
         if (targetBool == null)

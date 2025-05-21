@@ -6,8 +6,12 @@ using Sisus.ComponentNames;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// TODO: Implement a system for whether the interrupt is required to be immediate or not. Sometimes we only want the
-// interrupt to work if it can be done right now. Other times we want to interrupt even if it means waiting.
+// TODO: Increase complexity of interruption handling. The IsSavable system is not cutting it. I want to be able to
+// spawn interrupts that will not clear Non-savable graphs.
+// Also, CurrentState should not be in the execution context. They should be part of the StateGraphController itself
+// since the controller should only have one state at a time, not one state per graph.
+// We should have a explicit FSM with states. context should have ToExecuteNodeId that is nulled after the state is
+// created and a currentNodeId that we swap the id to after the state is created so that it is more explicit.
 
 [Serializable]
 public class ExecutionContext
@@ -37,7 +41,7 @@ public class StateGraphController : MonoBehaviour
     public bool IdleOnExit = false;
     
     private ExecutionContext currentExecutionContext;
-    private LinkedList<ExecutionContext> executionDequeue = new LinkedList<ExecutionContext>();
+    [SerializeField] private LinkedList<ExecutionContext> executionDequeue = new LinkedList<ExecutionContext>();
     private ExecutionContext savedRoutineContext;  // Special case where we save even after clear
 
     private bool shouldInterrupt = false;
@@ -260,7 +264,7 @@ public class StateGraphController : MonoBehaviour
 
         stateGraph.SetName($"Ephemeral State Graph (Immediate Interrupt): {stateGraph.id}");
 
-        bool success = TryInterrupt(stateGraph, saveThisGraphIfItGetsInterrupted, true, clearDequeOnSuccess);
+        bool success = TryInterrupt(stateGraph, saveThisGraphIfItGetsInterrupted, clearDequeOnSuccess, true);
 
         if (!success)
         {

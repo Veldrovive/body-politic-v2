@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
+  m_Name: ID_BreakToilet
+  m_EditorClassIdentifier: 
+  uiTitle: Break toilet
+  uiDescription: Pretty fun to break.
+  rolesCanExecuteNoSuspicion: []
+  rolesCanExecuteWithSuspicion:
+  - {fileID: 11400000, guid: a1ad6638461664f5c97c49503c66fb7d, type: 2}
+  rolesCanView: []
+  generallyVisible: 1
+  requiredProximity: 3
+  interactionAvailableFroms: 00000000
+  interactionDuration: 5
+  initiatorAnimationTrigger: 
+  targetAnimationTrigger: 
+  witnessSuspicionLevel: 1
+  humanReadableFailureReasons:
+  - Reason: 0
+    HumanReadableReason: It looks like this thrall doesn't have the ability to do
+      that.
+    Priority: 3
+  - Reason: 1
+    HumanReadableReason: I'm too far away to do that.
+    Priority: 0
+  - Reason: 2
+    HumanReadableReason: It looks like I can't do that right now.
+    Priority: 1
+  - Reason: 3
+    HumanReadableReason: I don't need to do that twice.
+    Priority: 5
+  - Reason: 4
+    HumanReadableReason: I can't use this unless it is on the ground.
+    Priority: 2
+  - Reason: 5
+    HumanReadableReason: I can't use this unless it is in my hand.
+    Priority: 2
+  - Reason: 6
+    HumanReadableReason: I can't use this unless it is in my inventory.
+    Priority: 2
+  - Reason: 7
+    HumanReadableReason: INTERNAL ERROR. PLEASE TELL AIDAN HOW TO REPRODUCE.
+    Priority: 4
+  debugPrompt: 

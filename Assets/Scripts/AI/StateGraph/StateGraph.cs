@@ -153,7 +153,7 @@ public class StateGraph : MonoBehaviour
             eventInfo.AddEventHandler(publisher, handlerDelegate);
             eventDelegates.Add((eventInfo, publisher, handlerDelegate));
             
-            Debug.Log($"Outgoing connection from {nodeId} to {outgoingConnection.inputPort.nodeId} with port {outgoingConnection.inputPort.portInfo.Name}");
+            // Debug.Log($"Outgoing connection from {nodeId} to {outgoingConnection.inputPort.nodeId} with port {outgoingConnection.inputPort.portInfo.Name}");
         }
         savedDelegates[nodeId] = eventDelegates;
     }
@@ -306,6 +306,11 @@ public class StateGraph : MonoBehaviour
             return;
         }
         m_nodes.Add(node);
+        if (node is EventListenerNode listener)
+        {
+            // These require us to set their npcContext
+            listener.SetNpcContext(GetComponent<NpcContext>());
+        }
         // Ensure ports are refreshed in case they weren't fully initialized before adding.
         // This is crucial for Connect methods to find ports.
         node.RefreshPorts();
@@ -476,6 +481,16 @@ public class StateGraph : MonoBehaviour
         // Add the connection
         m_connections.Add(connection);
         return true;
+    }
+
+    public bool ConnectEvent(StateGraphNode raiserNode, string raiserPortName, EventListenerNode listenerNode,
+        string listenerPortName)
+    {
+        // We can do this by making the NodePortInfos for the raiser and listener ports and then calling the generic ConnectStateFlow
+        NodePortInfo raiserPortInfo = new NodePortInfo(raiserPortName, PortType.EventOut);
+        NodePortInfo listenerPortInfo = new NodePortInfo(listenerPortName, PortType.EventIn);
+       
+        return ConnectStateFlow(raiserNode.id, raiserPortInfo, listenerNode.id, listenerPortInfo);
     }
     
     #endregion

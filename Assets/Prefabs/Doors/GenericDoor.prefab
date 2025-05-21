@@ -258,7 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slideDirection: 1
   slideDistance: 4.1
-  slideSpeed: 5
+  slideSpeed: 10
 --- !u!33 &4781830956424552510
 MeshFilter:
   m_ObjectHideFlags: 0

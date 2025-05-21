@@ -21,7 +21,7 @@ MonoBehaviour:
   generallyVisible: 1
   requiredProximity: 1.5
   interactionAvailableFroms: 00000000
-  interactionDuration: 0.25
+  interactionDuration: 0.5
   initiatorAnimationTrigger: 
   targetAnimationTrigger: PickUpHoldable
   witnessSuspicionLevel: 0

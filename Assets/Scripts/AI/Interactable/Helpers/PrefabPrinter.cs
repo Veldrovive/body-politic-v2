@@ -44,7 +44,7 @@ public class PrefabPrinter : AbstractInteractionReactor
 
     #region Unity Lifecycle
 
-    private void OnValidate()
+    private void Initialize()
     {
         // Check to make sure that the print definition is valid
         if (printInteractionDefinition == null)
@@ -59,8 +59,18 @@ public class PrefabPrinter : AbstractInteractionReactor
         }
         
         // Otherwise we are good to link up the events
-        SafelyRegisterInteractionLifecycleCallback(InteractionLifecycleEvent.OnEnd, printInteractionDefinition,
+        bool registered = SafelyRegisterInteractionLifecycleCallback(InteractionLifecycleEvent.OnEnd, printInteractionDefinition,
             TryPrint);
+    }
+
+    private void OnValidate()
+    {
+        Initialize();
+    }
+
+    private void Start()
+    {
+        Initialize();
     }
 
     private void Update()
@@ -85,7 +95,9 @@ public class PrefabPrinter : AbstractInteractionReactor
     public void TryPrint(InteractionContext context)
     {
         // Plan: Create the prefab and add it to the tracked produced items. Try cast to Consumable and infect if not null.
+        Debug.Log($"Prefab printer got called to print {prefabToPrint.name} at {printLocation.position}", this);
         GameObject printedObject = Instantiate(prefabToPrint, printLocation.position, printLocation.rotation);
+        Debug.Log($"Prefab printer created {printedObject.name} at {printLocation.position}", this);
         trackedProducedItems.Add(printedObject);
         
         // Check if the printed object is a consumable and infect it if so
@@ -117,6 +129,7 @@ public class PrefabPrinter : AbstractInteractionReactor
         if (printDefEnabled && !shouldBeEnabled)
         {
             // We need to disable the interaction
+            Debug.Log($"{gameObject.name} print interaction disabled due to item presence.", this);
             if (SetInteractionEnabled(printInteractionDefinition, false, false, "Item already present."))
             {
                 printDefEnabled = false;
@@ -126,6 +139,7 @@ public class PrefabPrinter : AbstractInteractionReactor
         else if (!printDefEnabled && shouldBeEnabled)
         {
             // We need to enable the interaction
+            Debug.Log($"{gameObject.name} print interaction enabled due to item absence.", this);
             if (SetInteractionEnabled(printInteractionDefinition, true))
             {
                 printDefEnabled = true;

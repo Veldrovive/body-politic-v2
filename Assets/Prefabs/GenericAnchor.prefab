@@ -50,5 +50,5 @@ MonoBehaviour:
   selectedGizmoRadius: 0.15
   labelOffsetMultiplier: 2
   alwaysShowLabel: 0
-  showAxes: 0
-  axisLength: 1
+  showAxes: 1
+  axisLength: 0.5

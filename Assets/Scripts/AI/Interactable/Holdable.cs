@@ -191,7 +191,7 @@ public class Holdable : Interactable
             }
             if(putDownDefinition != null)
             {
-                SetInteractionEnableInfo(putDownDefinition, IsHeld, true, "Item is not currently held.");
+                SetInteractionEnableInfo(putDownDefinition, true, true, "Item is not currently held.");
             }
 
             // Fire the pickup event AFTER state is fully updated

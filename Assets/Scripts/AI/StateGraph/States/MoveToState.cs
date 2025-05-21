@@ -248,6 +248,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
 
     #endregion
     
+    public static string ON_ROLE_DOOR_FAILED_PORT_NAME = "On DoorRoleFailed";
     [EventOutputPort("On DoorRoleFailed")]
     public event Action<List<NpcRoleSO>> OnDoorRoleFailed;
     

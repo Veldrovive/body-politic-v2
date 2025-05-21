@@ -50,7 +50,7 @@ public class ControlMenuDisplay
         _rootElement = menuElement ?? throw new ArgumentNullException(nameof(menuElement));
         
         // Set the button click callback based on the interaction status
-        if (interactionStatus != null && !interactionStatus.CanInteract)
+        if (interactionStatus != null && !interactionStatus.CanInteract(true))
         {
             // Then this interaction is disabled and we should use the disabld callback instead of execute
             if (disabledCallback != null)
@@ -112,7 +112,7 @@ public class ControlMenuDisplay
         SetContent(controlTrigger.Title, controlTrigger.Description);
         if (interactionStatus != null)
         {
-            UpdateStatusVisuals(interactionStatus.CanInteract, interactionStatus.IsSuspicious);   
+            UpdateStatusVisuals(interactionStatus.CanInteract(true), interactionStatus.IsSuspicious);   
         }
     }
 

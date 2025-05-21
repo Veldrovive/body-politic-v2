@@ -183,7 +183,7 @@ public class StateGraphEditorNode : Node
                     dir = Direction.Output;
                     capacity = Port.Capacity.Multi;  // Event provider can be listened to by multiple subscribers
                     orientation = Orientation.Vertical;
-                    container = outputContainer;
+                    container = mainContainer;
                     break;
                 case PortType.StateTransitionIn:
                     dir = Direction.Input;

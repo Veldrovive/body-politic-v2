@@ -54,7 +54,7 @@ public class Fixable : AbstractInteractionReactor
         }
     }
 
-    private void OnValidate()
+    private void Initialize()
     {
         areDefinitionsValid = true;
         // Make sure that the Interactable has the break and fix interactions
@@ -90,9 +90,15 @@ public class Fixable : AbstractInteractionReactor
         }
     }
 
+    private void OnValidate()
+    {
+        Initialize();
+    }
+
     private void Start()
     {
         SetIsBroken(false);
+        Initialize();
     }
 
     #endregion

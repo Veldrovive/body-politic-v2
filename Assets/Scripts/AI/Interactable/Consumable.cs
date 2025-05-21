@@ -32,7 +32,7 @@ public class Consumable : Holdable
         _consumeInstance = FindInteractionInstance(consumeInteractionDefinition);
         if (_consumeInstance == null && consumeInteractionDefinition != null)
         {
-            _consumeInstance = new InteractionInstance { InteractionDefinition = consumeInteractionDefinition };
+            _consumeInstance = new InteractionInstance() { InteractionDefinition = consumeInteractionDefinition };
             AddInteractionInstance(_consumeInstance); // Add the instance to the Interactable's list
         }
 
@@ -75,7 +75,7 @@ public class Consumable : Holdable
         base.HandlePickUp(context);
 
         // After being picked up (IsHeld is now true), enable the Consume interaction if it exists.
-        if (consumeInteractionDefinition != null && IsHeld) // Double check IsHeld in case base logic failed
+        if (consumeInteractionDefinition != null) // Double check IsHeld in case base logic failed
         {
             SetInteractionEnableInfo(consumeInteractionDefinition, true, true, "Item must be held to be consumed.");
         }

@@ -212,7 +212,7 @@ public class FixableManager : MonoBehaviour
         //     // The fixer rejected the interrupt. We should not use them.
         //     return null;
         // }
-        string graphId = GUID.Generate().ToString();
+        string graphId = System.Guid.NewGuid().ToString();
         MoveAndUseGraphFactory factory = new MoveAndUseGraphFactory(new MoveAndUseGraphConfiguration()
         {
             GraphId = graphId,

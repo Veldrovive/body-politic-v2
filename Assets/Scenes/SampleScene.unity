@@ -9661,7 +9661,7 @@ PrefabInstance:
     - target: {fileID: 3295620578101097601, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: 'rolesCanEnter.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: a1ad6638461664f5c97c49503c66fb7d, type: 2}
+      objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: GenericDoor
@@ -10237,7 +10237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6566685225217889436, guid: 76039abb0515e45cdbf825058c1195f8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

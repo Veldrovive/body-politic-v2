@@ -87,7 +87,19 @@ public class InteractionStatus
     public string HumanReadableFailureReason => GetHumanReadableFailureReasonString();
     
     /// <summary>True if the interaction can be successfully initiated right now. CanInteract is false if there is any failure reason besides ProximityFailed. That was is handled gracefully.</summary>
-    public bool CanInteract => !FailureReasons.Any(x => x.Reason != InteractionFailureReason.ProximityFailed);
+    // public bool CanInteract => !FailureReasons.Any(x => x.Reason != InteractionFailureReason.ProximityFailed);
+
+    public bool CanInteract(bool ignoreProximity = false)
+    {
+        if (ignoreProximity)
+        {
+            return !FailureReasons.Any(x => x.Reason != InteractionFailureReason.ProximityFailed);
+        }
+        else
+        {
+            return !FailureReasons.Any();
+        }
+    }
     
     
     // Optional context (can be useful for debugging or complex UI)
@@ -112,7 +124,7 @@ public class InteractionStatus
 
     override public string ToString()
     {
-        return $"CanInteraction: {CanInteract} - IsVisible: {IsVisible} - IsSuspicious: {IsSuspicious}";
+        return $"CanInteraction: {CanInteract()} ({CanInteract(true)} - IsVisible: {IsVisible} - IsSuspicious: {IsSuspicious}";
     }
 
     // Potential helper methods could be added here if needed, e.g.,

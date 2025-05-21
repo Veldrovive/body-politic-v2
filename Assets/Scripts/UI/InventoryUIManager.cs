@@ -251,6 +251,7 @@ public class InventoryUIManager : MonoBehaviour
         heldItemTriggers.Clear();
         heldItemSprite = null;
         _currentlyHoveredHoldable = null;
+        // Debug.Log($"Nulling _currentlyHoveredHoldable on clear inventory data.");
         RemoveControlMenus(); // Ensure menus are closed when data is cleared
     }
 
@@ -333,6 +334,7 @@ public class InventoryUIManager : MonoBehaviour
             RemoveControlMenus();
 
             _currentlyHoveredHoldable = holdable; // Update the currently hovered item
+            // Debug.Log($"Setting _currentlyHoveredHoldable due to pointer enter item box.");
 
             // Only display menus if the slot is not empty
             if (holdable != null)
@@ -382,6 +384,7 @@ public class InventoryUIManager : MonoBehaviour
             // or if the item disappears between pointer enter and geometry calculation.
             // Debug.LogWarning("HandleItemHover called with a null holdable.");
             _currentlyHoveredHoldable = null; // Ensure hover state is cleared
+            // Debug.Log($"Nulling _currentlyHoveredHoldable due to item hover over null item.");
             RemoveControlMenus(); // Clean up any potentially orphaned menus
             return;
         }
@@ -439,8 +442,8 @@ public class InventoryUIManager : MonoBehaviour
     /// <param name="hoverState">Current hover state including screen position.</param>
     private void HandleMouseMove(InputManager.HoverState hoverState)
     {
-        // Only process if control menus are currently open
-        if (!controlMenuOpen) return;
+        // Only process if control menus are currently open or if we are hovering over an item
+        if (!controlMenuOpen && !_currentlyHoveredHoldable) return;
 
         // Convert the mouse screen position to the UI panel's coordinate system
         Vector2? panelMousePositionNullable = ConvertScreenToPanelPosition(hoverState.ScreenPosition);
@@ -458,8 +461,16 @@ public class InventoryUIManager : MonoBehaviour
         if (!isInInventoryBBox && !isInControlMenuBBox)
         {
             // Debug.Log($"Mouse left UI bounds, removing control menus.\nMouse location {panelMousePosition}.\nInventory BBox {inventoryUIBBox}.\nMenu BBox {currentControlMenuBBox}.");
-            _currentlyHoveredHoldable = null; // Clear hover state as we left the area
-            RemoveControlMenus();
+            if (_currentlyHoveredHoldable != null)
+            {
+                _currentlyHoveredHoldable = null; // Clear hover state as we left the area
+                // Debug.Log($"Nulling _currentlyHoveredHoldable because control menu is open and we left the area.");    
+            }
+
+            if (controlMenuOpen)
+            {
+                RemoveControlMenus();
+            }
         }
     }
 
@@ -476,6 +487,7 @@ public class InventoryUIManager : MonoBehaviour
             // Still attempt to remove menus even if execution fails
             RemoveControlMenus();
             _currentlyHoveredHoldable = null; // Clear hover state after action
+            // Debug.Log($"Nulling _currentlyHoveredHoldable after failured to execute menu action.");
             return;
         }
 
@@ -484,8 +496,9 @@ public class InventoryUIManager : MonoBehaviour
         playerManager.HandleTriggerInteraction(triggerToExecute);
 
         // Close the control menus after executing the action
-        RemoveControlMenus();
-         _currentlyHoveredHoldable = null; // Clear hover state after action
+        RemoveControlMenus(); 
+        _currentlyHoveredHoldable = null; // Clear hover state after action
+        // Debug.Log($"Nulling _currentlyHoveredHoldable after interaction triggered.");
     }
 
     #endregion
@@ -509,6 +522,7 @@ public class InventoryUIManager : MonoBehaviour
         _slotElementToHoldableMap.Clear(); // Clear the mapping
         _heldItemSlotElement = null;
         _currentlyHoveredHoldable = null; // Reset hover state
+        // Debug.Log($"Nulling _currentlyHoveredHoldable on UI build from data.");
 
         // Find the containers within the UXML structure
         VisualElement slotsContainer = _rootVisualElement.Q<VisualElement>("SlotsContainer");
@@ -662,6 +676,11 @@ public class InventoryUIManager : MonoBehaviour
         }
 
         GameObject initiator = playerManager.CurrentFocusedNpc.gameObject;
+
+        foreach (PlayerControlTrigger trigger in triggers)
+        {
+            InteractionStatus testStatus = trigger.GetActionStatus(initiator);
+        }
 
         var triggersWithStatus = triggers
             .Where(t => t != null) // Ensure trigger itself isn't null

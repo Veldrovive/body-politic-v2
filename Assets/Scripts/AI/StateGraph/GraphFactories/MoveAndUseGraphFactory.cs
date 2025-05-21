@@ -49,9 +49,15 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
             MoveToStateNode moveToStateNode = new(new MoveToStateConfiguration(config.MoveToTargetTransform)
             {
                 RequireExactPosition = config.RequireExactPosition,
-                RequireFinalAlignment = config.RequireFinalAlignment
+                RequireFinalAlignment = config.RequireFinalAlignment,
+                AcceptanceRadius = 1.0f,
             });
             graph.AddNode(moveToStateNode);
+            
+            SayRoleMissingListenerNode roleAlertNode = new();
+            graph.AddNode(roleAlertNode);
+            graph.ConnectEvent(moveToStateNode, MoveToState.ON_ROLE_DOOR_FAILED_PORT_NAME, roleAlertNode,
+                SayRoleMissingListenerNode.SAY_ROLE_MISSING_PORT_NAME);
             
             // MoveToState failures
             AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.DoorRoleFailed),

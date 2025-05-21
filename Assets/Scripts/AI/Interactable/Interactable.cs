@@ -50,6 +50,19 @@ public class InteractionInstance
     public GameEventSO<InteractionContext> OnInteractionEndEvent;
     [Tooltip("Game Event SO to raise when interaction is interrupted.")]
     public GameEventSO<InteractionContext> OnInteractionInterruptedEvent;
+    
+    public InteractionInstance()
+    {
+        IsEnabled = true;
+        DisabledImpliesHidden = false;
+        DisabledReason = "";
+        OnInteractionStart = new UnityEvent<InteractionContext>();
+        OnInteractionEnd = new UnityEvent<InteractionContext>();
+        OnInteractionInterrupted = new UnityEvent<InteractionContext>();
+        OnInteractionStartEvent = null;
+        OnInteractionEndEvent = null;
+        OnInteractionInterruptedEvent = null;
+    }
 }
 
 
@@ -182,7 +195,7 @@ public class Interactable : MonoBehaviour
         InteractionStatus statusResult = chosenDefinition.GetStatus(initiator, this);
 
         // --- Handle Requirement Check Failure ---
-        if (!statusResult.CanInteract)
+        if (!statusResult.CanInteract())
         {
              #if UNITY_EDITOR || DEVELOPMENT_BUILD
              // Log detailed failure reasons only in relevant builds
@@ -238,7 +251,7 @@ public class Interactable : MonoBehaviour
     public void NotifyInteractionComplete(InteractionDefinitionSO completedDefinition, GameObject initiator)
     {
         if (completedDefinition == null || initiator == null) return; // Basic validation
-
+        
         InteractionInstance targetInstance = FindInteractionInstance(completedDefinition);
         if (targetInstance == null)
         {

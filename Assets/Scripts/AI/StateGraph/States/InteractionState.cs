@@ -116,23 +116,26 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             interactionToPerform,
             this.gameObject // Initiator GameObject
         );
-
-        if (!initiateResult.CanInteract)
+        
+        if (!initiateResult.CanInteract())
         {
             // Map the Interactable's failure reason to this State's error enum.
-            if (initiateResult.HasFailureReason(InteractionFailureReason.ProximityFailed))
+            if (initiateResult.HasFailureReason(InteractionFailureReason.InteractionDisabled))
             {
-                TriggerExit(InteractionStateOutcome.ProximityCheckFailed);
+                TriggerExit(InteractionStateOutcome.Error);
             }
             else if (initiateResult.HasFailureReason(InteractionFailureReason.RoleFailed))
             {
                 TriggerExit(InteractionStateOutcome.RoleCheckFailed);
             }
+            else if (initiateResult.HasFailureReason(InteractionFailureReason.ProximityFailed))
+            {
+                TriggerExit(InteractionStateOutcome.ProximityCheckFailed);
+            }
             // Add checks for other specific reasons like InteractionDisabled, TargetBusy etc. if needed
             // else if (initiateResult.FailureReasons.Contains(InteractionFailureReason.TargetBusy)) { ... }
             else // Treat other failures as generic initiation failures.
             {
-                Debug.LogError($"InteractionState: Initiation failed for {interactionToPerform.DisplayName} on {targetInteractable.name}. Reason: {initiateResult.FailureReasons}", this);
                 TriggerExit(InteractionStateOutcome.Error);
             }
             return; // FailState handles exiting
@@ -164,9 +167,6 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
         // Check if the interaction that just started is suspicious based on InteractionDefinitionSO settings.
         if (initiateResult.IsSuspicious)
         {
-            // TODO: Implement logic to add a temporary suspicion source to NpcSuspicionTracker if needed.
-            Debug.Log($"Interaction '{interactionToPerform.DisplayName}' initiated by {gameObject.name} on {targetInteractable.name} is suspicious.", this);
-             
             npcContext.SuspicionTracker?.AddSuspicionSource(StateId, interactionToPerform.WitnessSuspicionLevel, interactionTimer);
         }
         

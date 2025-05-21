@@ -121,7 +121,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     movementMarkerInstance.SetActive(true);
                     movementMarkerInstance.transform.position = mouseHoverMovementDestination.Value;
-                    Cursor.visible = false;
+                    // Cursor.visible = false;
                 }
                 Vector3 currentPosition = movementMarkerInstance.transform.position;
                 Vector3 newPosition = Vector3.Lerp(currentPosition, mouseHoverMovementDestination.Value, movementMarkerSnapSpeed * Time.deltaTime);
@@ -132,7 +132,7 @@ public class PlayerManager : MonoBehaviour
                 if (movementMarkerInstance.activeSelf)
                 {   
                     movementMarkerInstance.SetActive(false);
-                    Cursor.visible = true;
+                    // Cursor.visible = true;
                 }
             }
         }
@@ -364,7 +364,7 @@ public class PlayerManager : MonoBehaviour
     
         // Check if the specific action is actually possible right now
         InteractionStatus status = clickedTrigger.GetActionStatus(currentFocusedNpc.gameObject);
-        if (!status.CanInteract)
+        if (!status.CanInteract(true))
         {
              Debug.LogWarning($"Cannot interact with trigger '{clickedTrigger.gameObject.name}': Action not allowed for {currentFocusedNpc.gameObject.name}. Reasons: [{string.Join(", ", status.FailureReasons)}]", clickedTrigger);
              // Optionally provide UI feedback here

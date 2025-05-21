@@ -42,7 +42,13 @@ public class MoveGraphFactory : GenericAbstractGraphFactory<MoveGraphConfigurati
 
     protected override void ConstructGraphInternal(StateGraph graph)
     {
-        MoveToStateNode moveToStateNode;
+        MoveToStateNode moveToStateNode = new(config.moveToStateConfig);
+        graph.AddNode(moveToStateNode);
+        SayRoleMissingListenerNode roleAlertNode = new();
+        graph.AddNode(roleAlertNode);
+        graph.ConnectEvent(moveToStateNode, MoveToState.ON_ROLE_DOOR_FAILED_PORT_NAME, roleAlertNode,
+            SayRoleMissingListenerNode.SAY_ROLE_MISSING_PORT_NAME);
+        
         if (!string.IsNullOrEmpty(config.PreStartMessage))
         {
             // Then we start with a message while we start moving
@@ -56,15 +62,10 @@ public class MoveGraphFactory : GenericAbstractGraphFactory<MoveGraphConfigurati
             graph.AddNode(sayStateNode);
             graph.ConnectStateFlow(new StartNode(), sayStateNode);
             
-            moveToStateNode = new(config.moveToStateConfig);
-            graph.AddNode(moveToStateNode);
             graph.ConnectStateFlow(sayStateNode, SayStateOutcome.Timeout, moveToStateNode);
         }
         else
         {
-            // Then we just start with the move
-            moveToStateNode = new(config.moveToStateConfig);
-            graph.AddNode(moveToStateNode);
             graph.ConnectStateFlow(new StartNode(), moveToStateNode);
         }
         
