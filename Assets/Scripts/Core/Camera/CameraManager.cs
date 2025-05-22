@@ -17,7 +17,7 @@ public class CameraManager : MonoBehaviour
     // --- Following Settings ---
     [Header("Following Settings")]
     [Tooltip("The default offset from the target when following (used when LookFromTransform is null).")]
-    [SerializeField] private Vector3 followOffset = new Vector3(0, 10, -10);
+    [SerializeField] private Vector3 followOffset = new Vector3(0, 10, -3);
     [Tooltip("How quickly the camera moves to the target position (lower is faster).")]
     [SerializeField] private float smoothTime = 0.1f;
 
@@ -83,7 +83,7 @@ public class CameraManager : MonoBehaviour
     /// <param name="initialNpc">The initial NPC context, can be null.</param>
     private void InitializeFocus(NpcContext initialNpc)
     {
-         if (initialNpc != null)
+        if (initialNpc != null)
         {
             currentTargetNpcTransform = initialNpc.transform;
             // Debug.Log($"CameraManager initialized, following: {initialNpc.gameObject.name}", this);

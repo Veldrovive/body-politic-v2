@@ -23,6 +23,9 @@ public class FixableManager : MonoBehaviour
     [Tooltip("The SO used to denote that this NPC will receive fix requests.")]
     [SerializeField] private NpcRoleSO fixerRole;
     
+    [Tooltip("The amount of time the action camera should linger on the fixer.")]
+    [SerializeField] private float actionCameraDuration = 10f;
+    
     private HashSet<NpcContext> inUseFixers = new HashSet<NpcContext>();
     private Dictionary<Fixable, (FixingContext, Coroutine)> currentFixOperations = new Dictionary<Fixable, (FixingContext, Coroutine)>();
     
@@ -126,7 +129,11 @@ public class FixableManager : MonoBehaviour
 
             inUseFixers.Add(fixer);
             yield return null;  // Wait a frame to allow the fixer to start the step
-            // while (fixer.ModeController.ExecutingStep(fixingContext.StepGUID))
+            // TODO: Decide if this should instead be HasGraphInQueue so that we don't find a new fixer until
+            // the current one has completely removed the step from their queue. Right now when a fixer did something
+            // like get distracted by a coin or got infected the fix action would be removed entirely and we would
+            // find a new fixer. This is strange behavior. What we should probably do instead is make the fix graph
+            // saveable and check for existence in the queue instead of the current state graph.
             while (fixer.StateGraphController.CurrentStateGraph.id == fixingContext.StepGUID)
             {
                 if (isFixed) break;
@@ -220,7 +227,9 @@ public class FixableManager : MonoBehaviour
             RequireExactPosition = true,
             RequireFinalAlignment = true,
             TargetInteractable = fixable.GetInteractable(),
-            TargetInteractionDefinition = fixable.FixInteractionDefinition
+            TargetInteractionDefinition = fixable.FixInteractionDefinition,
+            
+            ActionCamConfig = new ActionCamSource(graphId, 0, fixer.transform, ActionCameraMode.ThirdPerson, actionCameraDuration)
         });
         if (!fixer.StateGraphController.TryInterrupt(factory, false, false))
         {

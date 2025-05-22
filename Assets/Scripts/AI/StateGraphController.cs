@@ -6,13 +6,6 @@ using Sisus.ComponentNames;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// TODO: Increase complexity of interruption handling. The IsSavable system is not cutting it. I want to be able to
-// spawn interrupts that will not clear Non-savable graphs.
-// Also, CurrentState should not be in the execution context. They should be part of the StateGraphController itself
-// since the controller should only have one state at a time, not one state per graph.
-// We should have a explicit FSM with states. context should have ToExecuteNodeId that is nulled after the state is
-// created and a currentNodeId that we swap the id to after the state is created so that it is more explicit.
-
 [Serializable]
 public class ExecutionContext
 {
@@ -323,33 +316,45 @@ public class StateGraphController : MonoBehaviour
     }
     
     /// <summary>
-    /// Removes all copies of state graphs that have this id from the queue. Does not interrupt ongoing state graphs.
+    /// Removes all copies of state graphs that have this id from the queue.
+    /// if includeCurrent is true and the current state graph has this id, it will be removed as well.
     /// </summary>
-    /// <param name="stateGraphId"></param>
-    /// <returns>True if any graphs were removed. False otherwise.</returns>
-    public bool RemoveStateGraphById(string stateGraphId)
+    /// <param name="toRemoveId"></param>
+    /// <returns>True if there are no more graphs in the queue (and current) that have this graph id.</returns>
+    public bool RemoveStateGraphById(string toRemoveId, bool includeCurrent = false)
     {
-        bool removed = false;
-        // Check the routine state graph
-        if (routineStateGraph?.id == stateGraphId)
+        if (toRemoveId == routineStateGraph.id)
         {
-            routineStateGraph = null;
-            removed = true;
+            // We cannot remove the routine state graph. This is a fatal error
+            Debug.LogError($"{gameObject.name} State Controller tried to remove the routine state graph. This is not allowed.");
+            return false;
+        }
+
+        if (includeCurrent && currentExecutionContext?.Graph.id == toRemoveId)
+        {
+            // Then we need to try to interrupt the current state graph
+            var (didInterrupt, interruptContext) = TryInterruptCurrentState();
+            if (!didInterrupt)
+            {
+                // Then this is a failure and we can exit now saying that we failed
+                return false;
+            }
+            // We don't need to save the interrupt context because we are specifically trying to remove this graph
         }
         
         // Check the queue
         LinkedListNode<ExecutionContext> node = executionDequeue.First;
         while (node != null)
         {
-            if (node.Value.Graph.id == stateGraphId)
+            if (node.Value.Graph.id == toRemoveId)
             {
                 executionDequeue.Remove(node);
-                removed = true;
             }
             node = node.Next;
         }
 
-        return removed;
+        // If we reached this point, there are no more state graphs with this id in the queue
+        return true;
     }
     
     /// <summary>

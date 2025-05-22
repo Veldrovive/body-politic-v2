@@ -9,6 +9,8 @@ public class MoveAndUseGraphConfiguration : AbstractGraphFactoryConfig
     public Transform MoveToTargetTransform;
     public bool RequireExactPosition;
     public bool RequireFinalAlignment;
+
+    public ActionCamSource ActionCamConfig = null;
 }
 
 public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGraphConfiguration>
@@ -39,8 +41,28 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
         {
             // Then we don't actually do the MoveToState. We go directly to the interaction state.
             // Connect the main flow "Start -> Interact -> Exit"
-            graph.ConnectStateFlow(new StartNode(), interactionStateNode);
-            graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+            if (config.ActionCamConfig != null)
+            {
+                // Then we insert an action camera node before we start interacting
+                ActionCameraStartStateNode cameraStartNode = new(new ActionCameraStartStateConfiguration(config.ActionCamConfig));
+                graph.AddNode(cameraStartNode);
+                ActionCameraEndStateNode cameraEndNode = new(new ActionCameraEndStateConfiguration(config.ActionCamConfig.SourceKey));
+                graph.AddNode(cameraEndNode);
+                
+                // graph.ConnectStateFlow(new StartNode(), interactionStateNode);
+                // graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+                
+                graph.ConnectStateFlow(new StartNode(), cameraStartNode);
+                graph.ConnectStateFlow(cameraStartNode, ActionCameraStartStateOutcome.SourceAdded, interactionStateNode);
+                graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, cameraEndNode);
+                graph.ConnectStateFlow(cameraEndNode, ActionCameraEndStateOutcome.SourceRemoved, new ExitNode());
+            }
+            else
+            {
+                // It's just the interaction
+                graph.ConnectStateFlow(new StartNode(), interactionStateNode);
+                graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+            }
         }
         else
         {
@@ -65,10 +87,28 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
             AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.Error),
                 new ExitNode(), ExitNode.IN_PORT_NAME, "I can't figure out where I'm going.", 3f);
         
-            // Connect the main flow "Start -> MoveTo -> Interact -> Exit"
-            graph.ConnectStateFlow(new StartNode(), moveToStateNode);
-            graph.ConnectStateFlow(moveToStateNode, MoveToStateOutcome.Arrived, interactionStateNode);
-            graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+            // Connect the main flow
+            if (config.ActionCamConfig != null)
+            {
+                // "Start -> Camera Activate -> MoveTo -> Interact -> Camera End -> Exit"
+                ActionCameraStartStateNode cameraStartNode = new(new ActionCameraStartStateConfiguration(config.ActionCamConfig));
+                graph.AddNode(cameraStartNode);
+                ActionCameraEndStateNode cameraEndNode = new(new ActionCameraEndStateConfiguration(config.ActionCamConfig.SourceKey));
+                graph.AddNode(cameraEndNode);
+                
+                graph.ConnectStateFlow(new StartNode(), cameraStartNode);
+                graph.ConnectStateFlow(cameraStartNode, ActionCameraStartStateOutcome.SourceAdded, moveToStateNode);
+                graph.ConnectStateFlow(moveToStateNode, MoveToStateOutcome.Arrived, interactionStateNode);
+                graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, cameraEndNode);
+                graph.ConnectStateFlow(cameraEndNode, ActionCameraEndStateOutcome.SourceRemoved, new ExitNode());
+            }
+            else
+            {
+                // "Start -> MoveTo -> Interact -> Exit"
+                graph.ConnectStateFlow(new StartNode(), moveToStateNode);
+                graph.ConnectStateFlow(moveToStateNode, MoveToStateOutcome.Arrived, interactionStateNode);
+                graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+            }
         }
     }
 
