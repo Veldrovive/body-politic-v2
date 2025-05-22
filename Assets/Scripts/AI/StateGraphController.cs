@@ -13,14 +13,16 @@ public class ExecutionContext
     public string NodeIdToExecute;  // Points to the StateNode that will execute on StateGraph execution
     public bool IsSavable;  // If true, this StateGraph context will be saved on interrupt
     public bool Ephemeral;  // If true, this StateGraph will be Destroyed upon exit or interrupt without save
+    public int Priority;  // If an interrupt occurs with a lower priority than this, it will be rejected
     [CanBeNull] public AbstractState CurrentState;
     
-    public ExecutionContext(StateGraph graph, string nodeIdToExecute, bool isSavable, bool ephemeral, AbstractState currentState = null)
+    public ExecutionContext(StateGraph graph, string nodeIdToExecute, bool isSavable, bool ephemeral, int priority = 0, AbstractState currentState = null)
     {
         Graph = graph;
         NodeIdToExecute = nodeIdToExecute;
         IsSavable = isSavable;
         Ephemeral = ephemeral;
+        Priority = priority;
         CurrentState = currentState;
     }
 }
@@ -50,9 +52,15 @@ public class StateGraphController : MonoBehaviour
     /// <param name="interruptCurrent"></param>
     /// <param name="saveThisGraphIfItGetsInterrupted"></param>
     /// <param name="clearDeque"></param>
-    public void EnqueueStateGraph(StateGraph graphToRun, bool interruptCurrent, bool saveThisGraphIfItGetsInterrupted,
-        bool clearDeque, bool ephemeral = false)
+    public bool EnqueueStateGraph(StateGraph graphToRun, bool interruptCurrent, bool saveThisGraphIfItGetsInterrupted,
+        bool clearDeque, bool ephemeral = false, int priority = 0)
     {
+        if (currentExecutionContext != null && interruptCurrent && priority < currentExecutionContext.Priority)
+        {
+            // Then we should not interrupt the current state graph as the current one has higher priority
+            return false;
+        }
+        
         if (clearDeque)
         {
             executionDequeue.Clear();
@@ -68,6 +76,7 @@ public class StateGraphController : MonoBehaviour
             initialNodeId,
             saveThisGraphIfItGetsInterrupted,
             ephemeral,
+            priority,
             null
         );
         
@@ -91,6 +100,7 @@ public class StateGraphController : MonoBehaviour
         
         // We also immediately call Update to try to handle the new state graph
         Update();
+        return true;
     }
 
     /// <summary>
@@ -102,14 +112,20 @@ public class StateGraphController : MonoBehaviour
     /// <param name="interruptCurrent"></param>
     /// <param name="saveThisGraphIfItGetsInterrupted"></param>
     /// <param name="clearDeque"></param>
-    public void EnqueueStateGraph(AbstractGraphFactory stateGraphFactory, bool interruptCurrent,
+    public bool EnqueueStateGraph(AbstractGraphFactory stateGraphFactory, bool interruptCurrent,
         bool saveThisGraphIfItGetsInterrupted,
-        bool clearDeque)
+        bool clearDeque, int priority = 0)
     {
+        if (currentExecutionContext != null && interruptCurrent && priority < currentExecutionContext.Priority)
+        {
+            // Then we should not interrupt the current state graph as the current one has higher priority
+            return false;
+        }
+        
         if (stateGraphFactory == null)
         {
             Debug.LogWarning($"{gameObject.name} State Controller tried to add a state graph factory that is null");
-            return;
+            return false;
         }
 
         Component addedComponent = gameObject.AddComponent(typeof(StateGraph));
@@ -117,7 +133,7 @@ public class StateGraphController : MonoBehaviour
         if (stateGraph == null)
         {
             Debug.LogWarning($"{gameObject.name} State Controller tried to add a state graph that is not a state graph");
-            return;
+            return false;
         }
         
         // Configure the state graph using the factory
@@ -129,13 +145,13 @@ public class StateGraphController : MonoBehaviour
         {
             Debug.LogError($"{gameObject.name} State Controller tried to configure a state graph but failed. Exception: {e}");
             Destroy(addedComponent);
-            return;
+            return false;
         }
         
         stateGraph.SetName($"Ephemeral State Graph: {stateGraph.id}");
         
         // Now we can add the state graph to the queue
-        EnqueueStateGraph(stateGraph, interruptCurrent, saveThisGraphIfItGetsInterrupted, clearDeque, true);
+        return EnqueueStateGraph(stateGraph, interruptCurrent, saveThisGraphIfItGetsInterrupted, clearDeque, true);
     }
     
     
@@ -149,7 +165,7 @@ public class StateGraphController : MonoBehaviour
     /// <param name="ephemeral">If true, the graphToRun will be destroyed upon exit or if interrupted without being saved.</param>
     /// <param name="clearDequeOnSuccess">If true and interruption succeeds, the existing execution queue will be cleared.</param>
     /// <returns>True if the current state was successfully interrupted and the new graph is initiated, false otherwise.</returns>
-    public bool TryInterrupt(StateGraph graphToRun, bool saveThisGraphIfItGetsInterrupted, bool clearDequeOnSuccess, bool ephemeral = false)
+    public bool TryInterrupt(StateGraph graphToRun, bool saveThisGraphIfItGetsInterrupted, bool clearDequeOnSuccess, bool ephemeral = false, int priority = 0)
     {
         if (graphToRun == null)
         {
@@ -157,7 +173,7 @@ public class StateGraphController : MonoBehaviour
             return false;
         }
 
-        var (didInterrupt, oldGraphContinuationContext) = TryInterruptCurrentState();
+        var (didInterrupt, oldGraphContinuationContext) = TryInterruptCurrentState(priority);
 
         if (didInterrupt)
         {
@@ -203,6 +219,7 @@ public class StateGraphController : MonoBehaviour
                 initialNodeId,
                 saveThisGraphIfItGetsInterrupted,
                 ephemeral,
+                priority,
                 null // CurrentState will be set by ProcessStateTransitions
             );
 
@@ -226,7 +243,7 @@ public class StateGraphController : MonoBehaviour
     /// <param name="saveThisGraphIfItGetsInterrupted">If the newly started graph is itself later interrupted, should it be saved?</param>
     /// <param name="clearDequeOnSuccess">If true and interruption succeeds, the existing execution queue will be cleared.</param>
     /// <returns>True if the current state was successfully interrupted and the new graph is initiated, false otherwise.</returns>
-    public bool TryInterrupt(AbstractGraphFactory stateGraphFactory, bool saveThisGraphIfItGetsInterrupted, bool clearDequeOnSuccess)
+    public bool TryInterrupt(AbstractGraphFactory stateGraphFactory, bool saveThisGraphIfItGetsInterrupted, bool clearDequeOnSuccess, int priority = 0)
     {
         if (stateGraphFactory == null)
         {
@@ -257,7 +274,7 @@ public class StateGraphController : MonoBehaviour
 
         stateGraph.SetName($"Ephemeral State Graph (Immediate Interrupt): {stateGraph.id}");
 
-        bool success = TryInterrupt(stateGraph, saveThisGraphIfItGetsInterrupted, clearDequeOnSuccess, true);
+        bool success = TryInterrupt(stateGraph, saveThisGraphIfItGetsInterrupted, clearDequeOnSuccess, true, priority);
 
         if (!success)
         {
@@ -273,9 +290,9 @@ public class StateGraphController : MonoBehaviour
     /// Interrupts the current state graph if possible and proceeds normally.
     /// </summary>
     /// <returns></returns>
-    public bool TryProceed()
+    public bool TryProceed(int priority = int.MaxValue)
     {
-        var (didInterrupt, interruptContext) = TryInterruptCurrentState();
+        var (didInterrupt, interruptContext) = TryInterruptCurrentState(priority);
 
         if (didInterrupt)
         {
@@ -361,7 +378,7 @@ public class StateGraphController : MonoBehaviour
     /// 
     /// </summary>
     /// <returns>The executionContext to add to the queue to return to the interrupted graph if needed</returns>
-    private (bool didInterrupt, ExecutionContext interruptContext) TryInterruptCurrentState()
+    private (bool didInterrupt, ExecutionContext interruptContext) TryInterruptCurrentState(int priority = int.MaxValue)
     {
         if (currentExecutionContext == null)
         {
@@ -374,6 +391,12 @@ public class StateGraphController : MonoBehaviour
             // Similar to last block, this is unexpected, but still counts as an interrupt
             Debug.LogWarning($"{gameObject.name} State Controller tried to interrupt a state graph but there is no current state");
             return (true, null);
+        }
+        
+        if (currentExecutionContext.Priority > priority)
+        {
+            // Then we should not interrupt the current state graph as the current one has higher priority
+            return (false, null);
         }
         
         // Now we get to actually trying to interrupt the state
@@ -403,6 +426,7 @@ public class StateGraphController : MonoBehaviour
                     nextNode.id,
                     currentExecutionContext.IsSavable,
                     currentExecutionContext.Ephemeral,
+                    currentExecutionContext.Priority,
                     null
                 );
                 return (true, interruptContext);
@@ -574,6 +598,7 @@ public class StateGraphController : MonoBehaviour
                                 initialNodeId,
                                 true,  // The routine state graph always saves on interrupt
                                 false, // The routine state graph is not ephemeral
+                                -1, // Routine has lowest possible priority
                                 null
                             );
                             // The next block will see that we now have a currentExecutionContext without a currentState
