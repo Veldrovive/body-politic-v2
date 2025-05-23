@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+public enum PlayerManagerSelectionMode
+{
+    TargetMove,
+    PlaceItem
+}
+
 /// <summary>
 /// Manages the player's current focus (NPC), handles input for focus switching
 /// and interactions, relays trigger events, and sends commands to the focused NPC's CharacterModeController.
@@ -23,13 +29,17 @@ public class PlayerManager : MonoBehaviour
     [Tooltip("List of NPCs the player can potentially control or focus on.")]
     [SerializeField] private List<NpcContext> controllableNpcs = new List<NpcContext>(); // [cite: 991]
 
+    [SerializeField] private float itemPlaceDistance = 3.0f;
+    
     // --- Keybinds ---
     [Header("Keybinds")]
     [Tooltip("Key to press to force the focused NPC back into Routine mode.")]
     [SerializeField] private KeyCode returnToRoutineKey = KeyCode.R;
     [Tooltip("Key to press to cycle focus to the next controllable NPC.")]
     [SerializeField] private KeyCode cycleFocusKey = KeyCode.N;
-     [Tooltip("Key to hold to overwrite the player controller queue instead of appending.")]
+    [Tooltip("Key to press to activate item placing mode.")]
+    [SerializeField] private KeyCode itemPlacingKey = KeyCode.B;
+    [Tooltip("Key to hold to overwrite the player controller queue instead of appending.")]
     [SerializeField] private KeyCode overwriteQueueModifier = KeyCode.LeftShift;
 
 
@@ -46,6 +56,7 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance { get; private set; } // [cite: 1003]
 
     // --- Private State ---
+    private PlayerManagerSelectionMode currentSelectionMode = PlayerManagerSelectionMode.TargetMove;
     private NpcContext currentFocusedNpc;
     public NpcContext CurrentFocusedNpc => currentFocusedNpc;
     
@@ -56,6 +67,9 @@ public class PlayerManager : MonoBehaviour
     /// Clicking on the ground will try to navigate to this position, not the mouse position.
     /// </summary>
     private Vector3? mouseHoverMovementDestination = null;
+
+    private Holdable itemPlaceHoldable = null;
+    private Vector3? itemPlacePosition = null;
 
     /// <summary> Initializes the Singleton, dependencies, focus, and validates references. </summary>
     void Awake() // [cite: 1006]
@@ -112,29 +126,36 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        // Visualize where the player is trying to move
-        if (movementMarkerInstance != null)
+        if (currentSelectionMode == PlayerManagerSelectionMode.TargetMove)
         {
-            if (mouseHoverMovementDestination.HasValue)
+            // Visualize where the player is trying to move
+            if (movementMarkerInstance != null)
             {
-                if (!movementMarkerInstance.activeSelf)
+                if (mouseHoverMovementDestination.HasValue)
                 {
-                    movementMarkerInstance.SetActive(true);
-                    movementMarkerInstance.transform.position = mouseHoverMovementDestination.Value;
-                    // Cursor.visible = false;
+                    if (!movementMarkerInstance.activeSelf)
+                    {
+                        movementMarkerInstance.SetActive(true);
+                        movementMarkerInstance.transform.position = mouseHoverMovementDestination.Value;
+                        // Cursor.visible = false;
+                    }
+                    Vector3 currentPosition = movementMarkerInstance.transform.position;
+                    Vector3 newPosition = Vector3.Lerp(currentPosition, mouseHoverMovementDestination.Value, movementMarkerSnapSpeed * Time.deltaTime);
+                    movementMarkerInstance.transform.position = newPosition;
                 }
-                Vector3 currentPosition = movementMarkerInstance.transform.position;
-                Vector3 newPosition = Vector3.Lerp(currentPosition, mouseHoverMovementDestination.Value, movementMarkerSnapSpeed * Time.deltaTime);
-                movementMarkerInstance.transform.position = newPosition;
-            }
-            else
-            {
-                if (movementMarkerInstance.activeSelf)
-                {   
-                    movementMarkerInstance.SetActive(false);
-                    // Cursor.visible = true;
+                else
+                {
+                    if (movementMarkerInstance.activeSelf)
+                    {   
+                        movementMarkerInstance.SetActive(false);
+                        // Cursor.visible = true;
+                    }
                 }
             }
+        }
+        else
+        {
+            movementMarkerInstance.SetActive(false);
         }
     }
 
@@ -205,30 +226,18 @@ public class PlayerManager : MonoBehaviour
     /// <summary> Handles click events for focus changes or interactions. </summary>
     void HandleClicked(InputManager.ClickState clickState) // [cite: 1061]
     {
-        
-        if (clickState.OverUI) return;
-        
-        // Try to get NPC component
-        NpcContext clickedNpc = clickState.ClickedObject?.GetComponent<NpcContext>();
-        // Try to get Trigger component
-        // TODO: XXX Uncomment when interactions are re-implemented
-        // PlayerControlTrigger clickedTrigger = clickState.ClickedObject?.GetComponent<PlayerControlTrigger>();
-        
-        if (clickedNpc != null && controllableNpcs.Contains(clickedNpc))
+        if (clickState.OverUI) return;  // This will be handled by the UI managers
+
+        if (clickState.Button == InputManager.MouseButton.Left)
         {
-            // Clicked on a controllable NPC -> Set focus
-            SetFocus(clickedNpc); // [cite: 1063]
-        }
-        // TODO: XXX Uncomment when interactions are re-implemented
-        // else if (clickedTrigger != null)
-        // {
-        //     // Clicked on a trigger -> Handle trigger interaction
-        //     HandleTriggerInteraction(clickedTrigger);
-        // }
-        else
-        {
-            // Clicked on the world -> Handle world interaction
-            HandleWorldInteraction(clickState.WorldPosition); // [cite: 1064]
+            if (currentSelectionMode == PlayerManagerSelectionMode.TargetMove)
+            {
+                SetCurrentNpcMoveTarget(); // Sets the current NPC's move target to the mouseHoverMovementDestination
+            }
+            else if (currentSelectionMode == PlayerManagerSelectionMode.PlaceItem)
+            {
+                DropHeldItemAndSetPosition();  // Places the currently held item at the itemPlacePosition
+            }
         }
     }
 
@@ -237,8 +246,16 @@ public class PlayerManager : MonoBehaviour
         if (hoverState.HasHit)
         {
             // Then we are hovering over something that is not UI
-            // TODO: Consider checking whether the hit GameObject has a NavMeshSurface component
-            HandleWorldHover(hoverState.WorldPosition);
+
+            if (currentSelectionMode == PlayerManagerSelectionMode.TargetMove)
+            {
+                // TODO: Consider checking whether the hit GameObject has a NavMeshSurface component
+                HandleMovementPositionTargetHover(hoverState.WorldPosition);
+            }
+            else if (currentSelectionMode == PlayerManagerSelectionMode.PlaceItem)
+            {
+                SetHeldItemPlacePosition(hoverState.WorldPosition);
+            }
         }
         else
         {
@@ -257,6 +274,10 @@ public class PlayerManager : MonoBehaviour
         else if (keyState.Key == returnToRoutineKey) // Use configured key
         {
             HandleReturnToRoutineCommand();
+        }
+        else if (keyState.Key == itemPlacingKey)
+        {
+            StartItemPlaceMode();
         }
         // Add other keybinds here if needed
     }
@@ -282,6 +303,8 @@ public class PlayerManager : MonoBehaviour
         NpcContext previousFocusedNpc = currentFocusedNpc;
         currentFocusedNpc = npcToFocus;
         // Debug.Log($"Player focus changed to: {currentFocusedNpc.gameObject.name}", this);
+        
+        EndItemPlaceMode();
 
         // Update visibility of nearby triggers based on the new NPC's context
         // UpdateActiveTriggersVisibility();
@@ -343,12 +366,7 @@ public class PlayerManager : MonoBehaviour
             SetFocus(controllableNpcs[0]);
         }
     }
-
-    //--------------------------------------------------------------------------
-    // Interaction Logic (Updated to use CharacterModeController)
-    //--------------------------------------------------------------------------
-
-    // TODO: XXX Uncomment when interactions are re-implemented
+    
     /// <summary>
     /// Handles interaction logic when a PlayerControlTrigger is clicked.
     /// Tells the focused NPC's CharacterModeController to switch to Player mode and execute the trigger's step.
@@ -370,33 +388,6 @@ public class PlayerManager : MonoBehaviour
              // Optionally provide UI feedback here
              return;
         }
-    
-    
-        // // Debug.Log($"Handling Trigger Interaction on {clickedTrigger.gameObject.name} by {currentFocusedNpc.gameObject.name}");
-        //
-        // // Get the StepDefinition from the trigger
-        // StepDefinition triggeredStep = clickedTrigger.GetStepDefinition(currentFocusedNpc); // [cite: 711]
-        // if (triggeredStep == null || triggeredStep.Count == 0)
-        // {
-        //      Debug.LogError($"Trigger '{clickedTrigger.gameObject.name}' failed to generate a valid StepDefinition.", clickedTrigger);
-        //      return;
-        // }
-        //
-        //
-        // // Get the ModeController from the focused NPC's context
-        // CharacterModeController modeController = currentFocusedNpc.ModeController;
-        // if (modeController == null)
-        // {
-        //     Debug.LogError($"Focused NPC '{currentFocusedNpc.gameObject.name}' is missing CharacterModeController.", currentFocusedNpc);
-        //     return;
-        // }
-        //
-        // // Determine if overwrite modifier is held
-        // bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
-        //
-        //
-        // // Attempt to switch to player control (or enqueue if already player controlled)
-        // modeController.AttemptSwitchToPlayerControl(triggeredStep, overwrite);
 
         AbstractGraphFactory factory = clickedTrigger.GetGraphDefinition(currentFocusedNpc);
         if (factory == null)
@@ -410,12 +401,6 @@ public class PlayerManager : MonoBehaviour
         bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
         bool interrupt = controller.IsInRoutine || overwrite;
         bool clearDeque = overwrite;
-        // controller.EnqueueStateGraph(
-        //     factory,
-        //     interruptCurrent: interrupt,
-        //     saveThisGraphIfItGetsInterrupted: false,
-        //     clearDeque: clearDeque
-        // );
         if (interrupt)
         {
             bool didInterrupt = controller.TryInterrupt(
@@ -444,7 +429,7 @@ public class PlayerManager : MonoBehaviour
     /// When the mouse hovers over a point in the world, this method can be used to handle any hover logic.
     /// </summary>
     /// <param name="worldHoverPosition"></param>
-    public void HandleWorldHover(Vector3 worldHoverPosition)
+    public void HandleMovementPositionTargetHover(Vector3 worldHoverPosition)
     {
         // Check whether we can navigate to the hovered position.
         // mouseHoverMovementDestination both provides a visual indication of where you are navigating to and
@@ -470,7 +455,7 @@ public class PlayerManager : MonoBehaviour
     /// Handles interaction logic when a point in the world is clicked.
     /// Generates a MoveTo step and tells the focused NPC's CharacterModeController to execute it.
     /// </summary>
-    public void HandleWorldInteraction(Vector3 worldPosition) // [cite: 1085]
+    public void SetCurrentNpcMoveTarget() // [cite: 1085]
     {
         if (currentFocusedNpc == null)
         {
@@ -500,12 +485,6 @@ public class PlayerManager : MonoBehaviour
             // adding to the queue
             // Also if we are in the routine graph we want to interrupt it
             bool interrupt = controller.IsInRoutine || controller.CurrentStateGraph?.id == config.GraphId || overwrite;
-            // controller.EnqueueStateGraph(
-            //     factory,
-            //     interruptCurrent: interrupt,
-            //     saveThisGraphIfItGetsInterrupted: false,
-            //     clearDeque: overwrite
-            // );
             if (interrupt)
             {
                 bool didInterrupt = controller.TryInterrupt(
@@ -529,50 +508,138 @@ public class PlayerManager : MonoBehaviour
                 );
             }
         }
-
-        // // Get the ModeController
-        // CharacterModeController modeController = currentFocusedNpc.ModeController;
-        // if (modeController == null)
-        // {
-        //     Debug.LogError($"Focused NPC '{currentFocusedNpc.gameObject.name}' is missing CharacterModeController.", currentFocusedNpc);
-        //     return;
-        // }
-        //
-        // // Debug.Log($"Handling World Interaction at {worldPosition} for {currentFocusedNpc.gameObject.name}");
-        //
-        // // --- Generate MoveTo Step ---
-        // // Create a temporary GameObject to hold the target transform for the MoveTo state.
-        // // This avoids polluting the scene hierarchy long-term.
-        // // We should destroy this object after the MoveToState is likely finished.
-        // // Managing this lifecycle is tricky. A better approach might be for MoveToState
-        // // to accept a Vector3 directly, or use a pooled object system.
-        // // For now, create and rely on MoveToState potentially handling/ignoring the dummy transform later.
-        // if (mouseHoverMovementDestination.HasValue)
-        // {
-        //     // GameObject dummyGO = new GameObject($"MoveTarget_{currentFocusedNpc.name}_{Time.frameCount}");
-        //     // dummyGO.transform.position = mouseHoverMovementDestination.Value;
-        //
-        //     // Debug.Log($"Creating MoveTo step for {currentFocusedNpc.gameObject.name} at {mouseHoverMovementDestination.Value}");
-        //     StepDefinition moveToStep = new StepDefinition(new AbstractCharStateConfiguration[]
-        //     {
-        //         // new MoveToStateConfiguration_v1(dummyGO.transform, desiredSpeed: MovementSpeed.Run)
-        //         new MoveToStateConfiguration(mouseHoverMovementDestination.Value)
-        //         {
-        //             DesiredSpeed = MovementSpeed.Run,
-        //             RequireExactPosition = true
-        //         }
-        //     });
-        //     
-        //     // Determine if overwrite modifier is held
-        //     bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
-        //
-        //     // Attempt to switch/enqueue
-        //     modeController.AttemptSwitchToPlayerControl(moveToStep, overwrite);
-        // }
-        // // --- End Generate MoveTo Step ---
-        
     }
 
+    public void SetHeldItemPlacePosition(Vector3 worldHoverPosition)
+    {
+        if (itemPlaceHoldable == null)
+        {
+            Debug.LogError("ItemPlaceHoldable is null. Cannot set item place position.", this);
+            return;
+        }
+        
+        // If we are outside of the item place distance, we null the item place position
+        if ((currentFocusedNpc.transform.position - worldHoverPosition).sqrMagnitude > itemPlaceDistance * itemPlaceDistance)
+        {
+            // We are outside of the radius
+            itemPlacePosition = null;
+            if(!itemPlaceHoldable.SetGhostPosition(Vector3.zero, itemPlaceHoldable.GetDefaultRotation()))
+            {
+                // This indicates that the item is not in a state where it can be placed. We should exit place mode.
+                Debug.LogError("Failed to set item to ghost position. Cannot place item.", this);
+                EndItemPlaceMode();
+            }
+        }
+        else
+        {
+            // We can set the item place position
+            itemPlacePosition = worldHoverPosition;
+            // itemPlaceHoldable.gameObject.transform.position = itemPlacePosition.Value;
+            if(!itemPlaceHoldable.SetGhostPosition(itemPlacePosition.Value, itemPlaceHoldable.GetDefaultRotation()))
+            {
+                // This indicates that the item is not in a state where it can be placed. We should exit place mode.
+                Debug.LogError("Failed to set item to ghost position. Cannot place item.", this);
+                EndItemPlaceMode();
+            }
+        }
+    }
+    
+    public void DropHeldItemAndSetPosition()
+    {
+        // EndItemPlaceMode will null the itemPlaceHoldable and itemPlacePosition so we need to store them
+        Holdable curHoldable = itemPlaceHoldable;
+        Vector3? itemPlacePos = itemPlacePosition;
+        EndItemPlaceMode();  // We do this to ensure that the item is in a state where we can drop it without causing issues
+
+        if (curHoldable == null)
+        {
+            Debug.LogError("ItemPlaceHoldable is null. Cannot drop item.", this);
+            return;
+        }
+        else if (!curHoldable.IsHeld)
+        {
+            // Somehow the item exited the held state? This is an error.
+            Debug.LogError("ItemPlaceHoldable is not held. Cannot drop item.", this);
+            return;
+        }
+
+        if (!itemPlacePos.HasValue)
+        {
+            // We don't have a valid position to drop the item at
+            Debug.LogError("ItemPlacePosition is null. Cannot drop item.", this);
+            return;
+        }
+        
+        // Now we can drop the item
+        curHoldable.PutDown(
+            currentFocusedNpc.gameObject,
+            itemPlacePos.Value,
+            curHoldable.GetDefaultRotation()
+        );
+    }
+
+    public void StartItemPlaceMode()
+    {
+        if (currentFocusedNpc == null)
+        {
+            // Nothing to do
+            Debug.LogWarning("Cannot start item place mode: No NPC focused.", this);
+            return;
+        }
+
+        Holdable heldItem = currentFocusedNpc.Inventory.GetInventoryData().HeldItem;
+        if (heldItem == null)
+        {
+            // Again, nothing to do
+            Debug.LogWarning("Cannot start item place mode: No item held.", this);
+            return;
+        }
+
+        if (!heldItem.SetVisualState(HoldableVisualState.Ghost))
+        {
+            Debug.LogError("Failed to set item to ghost state. Cannot start item place mode.", this);
+            return;
+        }
+        
+        if (!heldItem.SetGhostPosition(Vector3.zero, heldItem.GetDefaultRotation()))
+        {
+            // Position set immediately failed swap back to in hand and don't enter place mode
+            heldItem.SetVisualState(HoldableVisualState.InHand, heldItem.CurrentGripPoint);
+            Debug.LogError("Failed to set item to ghost position. Cannot start item place mode.", this);
+            return;
+        }
+        
+        itemPlaceHoldable = heldItem;
+        itemPlacePosition = null; // Reset the position
+        currentSelectionMode = PlayerManagerSelectionMode.PlaceItem;
+    }
+    
+    public void EndItemPlaceMode()
+    {
+        if (currentSelectionMode != PlayerManagerSelectionMode.PlaceItem)
+        {
+            // That was easy. We aren't in item place mode to begin with.
+            return;
+        }
+        
+        if (itemPlaceHoldable == null)
+        {
+            // We lost the reference to the item. This is an error.
+            Debug.LogError("ItemPlaceHoldable is null. Cannot end item place mode.", this);
+            return;
+        }
+
+        if (itemPlaceHoldable.CurrentVisualState == HoldableVisualState.Ghost)
+        {
+            // Then we need to manually exit the ghost state in the holdable
+            itemPlaceHoldable.SetVisualState(HoldableVisualState.InHand, itemPlaceHoldable.CurrentGripPoint);
+        }
+
+        currentSelectionMode = PlayerManagerSelectionMode.TargetMove;
+        itemPlaceHoldable = null;
+        itemPlacePosition = null;
+    }
+    
     /// <summary>
     /// Handles a command (via key press) for the focused NPC to return to its default routine.
     /// Tells the CharacterModeController to switch back to Routine mode.

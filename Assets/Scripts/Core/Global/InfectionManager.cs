@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,9 +22,16 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
     [Tooltip("If true, infecting an NPC will cause the camera to focus on them.")]
     [SerializeField] private bool focusOnInfection;
     
+    [Tooltip("If true, an action camera will be triggered on infection to follow the infected NPC.")]
+    [SerializeField] private bool triggerActionCameraOnInfection;
+    [SerializeField] private float infectionActionCameraDuration = 5f;
+    
     private PlayerManager playerManager;
 
     public static InfectionManager Instance { get; private set; }
+    
+    public event Action<NpcContext> OnNpcInfected;
+
     void Awake()
     {
         if (Instance != null) {
@@ -122,6 +130,15 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
         if (focusOnInfection)
         {
             playerManager?.SetFocus(infectedNpc);   
+        }
+        
+        OnNpcInfected?.Invoke(infectedNpc);
+
+        if (ActionCameraManager.Instance != null && triggerActionCameraOnInfection)
+        {
+            ActionCameraManager.Instance.AddActionCamSource(
+                new ActionCamSource("infection", 1, infectedNpc.transform, ActionCameraMode.ThirdPerson, infectionActionCameraDuration)
+            );
         }
     }
 }

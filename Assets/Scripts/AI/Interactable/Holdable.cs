@@ -3,6 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq; // Required for Action
 
+public enum HoldableVisualState
+{
+    InWorld,
+    InHand,
+    InInventory,
+    Ghost
+}
+
 /// <summary>
 /// Represents an instance of a holdable item in the scene.
 /// Manages its state (held, in inventory, on ground) and interaction consequences.
@@ -34,9 +42,30 @@ public class Holdable : Interactable
 
     // --- State Properties ---
     /// <summary>Gets whether this item is currently attached to a holder's hand.</summary>
-    public bool IsHeld { get; private set; }
+    public bool IsHeld => GetIsHeld(); // { get; private set; }
+    private bool GetIsHeld()
+    {
+        if (CurrentHolder == null) return false;
+        
+        if (!CurrentHolder.TryGetComponent<NpcContext>(out NpcContext npcContext)) return false;
+        
+        if (npcContext.Inventory == null) return false;
+
+        return npcContext.Inventory.HasItemInHand(this);
+    }
+
     /// <summary>Gets whether this item is currently stored in a holder's inventory slots (and thus visually inactive).</summary>
-    public bool IsInInventory { get; private set; }
+    public bool IsInInventory => GetIsInInventory(); // { get; private set; }
+    private bool GetIsInInventory()
+    {
+        if (CurrentHolder == null) return false;
+        
+        if (!CurrentHolder.TryGetComponent<NpcContext>(out NpcContext npcContext)) return false;
+        
+        if (npcContext.Inventory == null) return false;
+
+        return npcContext.Inventory.HasItemInInventory(this);
+    }
     /// <summary>Gets the GameObject currently holding this item (either in hand or inventory).</summary>
     public GameObject CurrentHolder { get; private set; }
 
@@ -51,6 +80,12 @@ public class Holdable : Interactable
     public event Action OnDropped;
 
     // --- Internal References ---
+    private HoldableVisualState _currentVisualState;
+    public HoldableVisualState CurrentVisualState => _currentVisualState;
+    
+    private Transform _currentGripPoint;
+    public Transform CurrentGripPoint => _currentGripPoint;
+    
     private InteractionInstance _pickUpInstance;
     private InteractionInstance _putDownInstance;
     private List<Collider> _colliders = new();
@@ -63,8 +98,8 @@ public class Holdable : Interactable
     /// </summary>
     protected virtual void Awake()
     {
-        IsHeld = false;
-        IsInInventory = false;
+        // IsHeld = false;
+        // IsInInventory = false;
         CurrentHolder = null;
 
         // Cache components
@@ -156,7 +191,7 @@ public class Holdable : Interactable
         // Ensure visual state is correct if not initially held
         if (!startedHeld)
         {
-            SetVisualState(false, false, null);
+            SetVisualState(HoldableVisualState.InWorld);
         }
     }
 
@@ -177,12 +212,19 @@ public class Holdable : Interactable
         if (acquireResult.success)
         {
             // Update internal state FIRST
-            IsHeld = acquireResult.wasHeld;
-            IsInInventory = !acquireResult.wasHeld;
+            // IsHeld = acquireResult.wasHeld;
+            // IsInInventory = !acquireResult.wasHeld;
             CurrentHolder = context.Initiator;
 
             // Apply visual/physics changes
-            SetVisualState(IsHeld, IsInInventory, acquireResult.handAttachPoint);
+            if (IsHeld)
+            {
+                SetVisualState(HoldableVisualState.InHand, acquireResult.handAttachPoint);
+            }
+            else
+            {
+                SetVisualState(HoldableVisualState.InInventory);
+            }
 
             // Update interaction availability: Cannot pick up again, can now put down (if held)
             if(pickUpDefinition != null)
@@ -200,16 +242,21 @@ public class Holdable : Interactable
         }
     }
 
+    public void HandlePutDown(InteractionContext context)
+    {
+        PutDown(context.Initiator);
+    }
+    
     /// <summary>
     /// Handles the logic when the 'Put Down' interaction successfully completes.
     /// Releases the item from the initiator's Inventory component and updates interaction enables.
     /// </summary>
-    public virtual void HandlePutDown(InteractionContext context)
+    public virtual bool PutDown(GameObject initiator, Vector3? placePosition = null, Quaternion? placeRotation = null)
     {
-        if (context.Initiator == null || CurrentHolder != context.Initiator) return;
+        if (initiator == null || CurrentHolder != initiator) return false;
 
-        NpcContext npcContext = context.Initiator.GetComponent<NpcContext>();
-        if (npcContext == null || npcContext.Inventory == null) return;
+        NpcContext npcContext = initiator.GetComponent<NpcContext>();
+        if (npcContext == null || npcContext.Inventory == null) return false;
 
         NpcInventory inventory = npcContext.Inventory;
         Holdable releasedItem = inventory.ReleaseHeldItem();
@@ -217,12 +264,12 @@ public class Holdable : Interactable
         if (releasedItem == this)
         {
             // Clear internal state FIRST
-            IsHeld = false;
-            IsInInventory = false;
+            // IsHeld = false;
+            // IsInInventory = false;
             CurrentHolder = null;
 
             // Apply visual/physics changes
-            SetVisualState(false, false, null);
+            SetVisualState(HoldableVisualState.InWorld);
 
             // Update interaction availability: Can pick up again, cannot put down
             if(pickUpDefinition != null)
@@ -246,12 +293,12 @@ public class Holdable : Interactable
         }
         else
         {
-            Debug.LogError($"'{context.Initiator.name}' tried to put down '{gameObject.name}', but Inventory.ReleaseHeldItem() returned '{releasedItem?.name ?? "null"}'. State mismatch!", this);
+            Debug.LogError($"'{initiator.name}' tried to put down '{gameObject.name}', but Inventory.ReleaseHeldItem() returned '{releasedItem?.name ?? "null"}'. State mismatch!", this);
             // Attempt recovery: force state and interaction enables
-            IsHeld = false;
-            IsInInventory = false;
+            // IsHeld = false;
+            // IsInInventory = false;
             CurrentHolder = null;
-            SetVisualState(false, false, null);
+            SetVisualState(HoldableVisualState.InWorld);
             if(pickUpDefinition != null)
             {
                 SetInteractionEnableInfo(pickUpDefinition, true, true, "Item is already held or in inventory.");
@@ -261,36 +308,98 @@ public class Holdable : Interactable
                 SetInteractionEnableInfo(putDownDefinition, false, true, "Item is not currently held.");
             }
         }
+        
+        if (placePosition != null && placeRotation != null)
+        {
+            transform.position = placePosition.Value;
+            transform.rotation = placeRotation.Value;
+        }
+        // else: SetVisualState(HoldableVisualState.InWorld) drops from the current position
+
+        return true;
     }
 
-
+    public bool SetGhostPosition(Vector3 position, Quaternion rotation)
+    {
+        if (_currentVisualState != HoldableVisualState.Ghost)
+        {
+            return false;
+        }
+        transform.position = position;
+        transform.rotation = rotation;
+        return true;
+    }
+    
     /// <summary>
     /// Manages the visual state (attachment, visibility) and physics/collider state based on whether the item is held, in inventory, or on the ground.
     /// Uses the 'gripPoint' child transform for alignment when held.
     /// </summary>
-    public virtual void SetVisualState(bool isHeld, bool isInInventory, Transform attachParent)
+    public virtual bool SetVisualState(HoldableVisualState newVisualState, Transform attachParent = null)
     {
-        if (isHeld && attachParent != null)
+        if (newVisualState == HoldableVisualState.InHand)
         {
+            if (attachParent == null)
+            {
+                Debug.LogError($"Cannot set '{gameObject.name}' to InHand: Attach Parent is null!", this);
+                return false;
+            }
             AlignGripPointWithParent(attachParent);
             transform.SetParent(attachParent, true);
+            _currentGripPoint = attachParent;
             if (_rigidbody != null)
             {
                 _rigidbody.isKinematic = true;
             }
-        } else {
-            if(transform.parent != null) transform.SetParent(null);
+            gameObject.SetActive(true);
+            SetColliderState(false);
+        }
+        else if (newVisualState == HoldableVisualState.InInventory)
+        {
+            transform.SetParent(null);
+            transform.position = Vector3.zero;
             if (_rigidbody != null)
             {
                 _rigidbody.isKinematic = false;
             }
+            gameObject.SetActive(false);
+            SetColliderState(false);
         }
-        gameObject.SetActive(!isInInventory);
+        else if (newVisualState == HoldableVisualState.InWorld)
+        {
+            transform.SetParent(null);
+            if (_rigidbody != null)
+            {
+                _rigidbody.isKinematic = false;
+            }
+            gameObject.SetActive(true);
+            SetColliderState(true);
+        }
+        else if (newVisualState == HoldableVisualState.Ghost)
+        {
+            transform.SetParent(null);
+            if (_rigidbody != null)
+            {
+                _rigidbody.isKinematic = true;
+            }
+            gameObject.SetActive(true);
+            SetColliderState(false);
+        }
+        else
+        {
+            Debug.LogError($"Invalid visual state '{newVisualState}' for '{gameObject.name}'.", this);
+            return false;
+        }
+        _currentVisualState = newVisualState;
+        return true;
+    }
+    
+    public void SetColliderState(bool isEnabled)
+    {
         if (_colliders.Count > 0)
         {
             foreach (Collider childCollider in _colliders)
             {
-                childCollider.enabled = !isHeld && !isInInventory;
+                childCollider.enabled = isEnabled;
             }
         }
     }
@@ -325,6 +434,10 @@ public class Holdable : Interactable
         transform.position = targetItemWorldPosition;
     }
 
+    public Quaternion GetDefaultRotation()
+    {
+        return Quaternion.identity;
+    }
 
     /// <summary>
     /// Gets the definition ScriptableObject associated with this holdable item.

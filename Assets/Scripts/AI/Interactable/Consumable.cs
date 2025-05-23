@@ -85,18 +85,21 @@ public class Consumable : Holdable
     /// Handles the logic when the 'Put Down' interaction successfully completes.
     /// Updates interaction enables, including disabling 'Consume'.
     /// </summary>
-    public override void HandlePutDown(InteractionContext context)
+    public override bool PutDown(GameObject initiator, Vector3? placePosition = null, Quaternion? placeRotation = null)
     {
-        // Disable Consume interaction *before* base logic potentially clears CurrentHolder/IsHeld state
-        if (consumeInteractionDefinition != null)
-        {
-            SetInteractionEnableInfo(consumeInteractionDefinition, false, true, "Item must be held to be consumed.");
-        }
-
         // Let the base class handle the core put down logic
-        base.HandlePutDown(context);
+        bool wasPutDown = base.PutDown(initiator, placePosition, placeRotation);
 
-        // Note: If base.HandlePutDown fails, the Consume interaction remains disabled, which is correct.
+        if (wasPutDown)
+        {
+            // Disable Consume interaction *before* base logic potentially clears CurrentHolder/IsHeld state
+            if (consumeInteractionDefinition != null)
+            {
+                SetInteractionEnableInfo(consumeInteractionDefinition, false, true, "Item must be held to be consumed.");
+            }
+        }
+        
+        return wasPutDown;
     }
 
     /// <summary>

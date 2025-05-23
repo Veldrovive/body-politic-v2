@@ -63,6 +63,19 @@ public class InteractableNpcDefaultHandler : AbstractInteractionReactor
             {
                 SetInteractionEnabled(infectNpcInteractionDefinition, true);
             }
+
+            if (InfectionManager.Instance != null)
+            {
+                InfectionManager.Instance.OnNpcInfected += (infectedNpc) =>
+                {
+                    if (infectedNpc == npcContext)
+                    {
+                        // Disable the interaction so it can't be used again
+                        SetInteractionEnabled(infectNpcInteractionDefinition, false, true, "Already infected.");
+                    }
+                };
+            }
+            
             SafelyRegisterInteractionLifecycleCallback(
                 InteractionLifecycleEvent.OnEnd, infectNpcInteractionDefinition,
                 HandleNpcInfected  // Inform the infection manager of infection
@@ -115,8 +128,6 @@ public class InteractableNpcDefaultHandler : AbstractInteractionReactor
             return;
         }
         InfectionManager.Instance.NotifyInfection(shotNpcContext);
-        // And we can disable the interaction so it can't be used again
-        SetInteractionEnabled(infectNpcInteractionDefinition, false, true, "Already infected.");
     }
 
     /// <summary>

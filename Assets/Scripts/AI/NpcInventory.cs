@@ -167,7 +167,7 @@ public class NpcInventory : MonoBehaviour, IRoleProvider
             _inventorySlots.Add(itemToStore);
 
             // Update visual state AFTER internal state change but BEFORE notification
-            itemToStore.SetVisualState(false, true, null); // Now in inventory
+            itemToStore.SetVisualState(HoldableVisualState.InInventory);
 
             NotifyPotentialRoleChange(); // Roles might change
             NotifyInventoryChanged(); // Notify UI of inventory change
@@ -219,7 +219,7 @@ public class NpcInventory : MonoBehaviour, IRoleProvider
             _heldItem = itemToRetrieve;          // Place it in the hand
 
             // Update visual state AFTER internal state change
-            itemToRetrieve.SetVisualState(true, false, _handAttachPoint); // Now held
+            itemToRetrieve.SetVisualState(HoldableVisualState.InHand, _handAttachPoint); // Now held
         }
         else // Hand is occupied AND storeHeldFirst is true
         {
@@ -233,8 +233,8 @@ public class NpcInventory : MonoBehaviour, IRoleProvider
                 _heldItem = itemToRetrieve;             // Put the retrieved item in the hand
 
                 // Update visual states AFTER internal state changes
-                currentHeldItem.SetVisualState(false, true, null);             // Old held item is now stored
-                itemToRetrieve.SetVisualState(true, false, _handAttachPoint); // New held item is now held
+                currentHeldItem.SetVisualState(HoldableVisualState.InInventory); // Old held item visually moves to inventory slot
+                itemToRetrieve.SetVisualState(HoldableVisualState.InHand, _handAttachPoint); // New held item visually moves to hand
             }
             else
             {
@@ -243,8 +243,8 @@ public class NpcInventory : MonoBehaviour, IRoleProvider
                 _heldItem = itemToRetrieve;                   // Put the retrieved item into the hand
 
                 // Update visual states AFTER internal state changes
-                currentHeldItem.SetVisualState(false, true, null);             // Old held item visually moves to inventory slot
-                itemToRetrieve.SetVisualState(true, false, _handAttachPoint); // New held item visually moves to hand
+                currentHeldItem.SetVisualState(HoldableVisualState.InInventory); // Old held item visually moves to inventory slot
+                itemToRetrieve.SetVisualState(HoldableVisualState.InHand, _handAttachPoint); // New held item visually moves to hand
             }
         }
 
