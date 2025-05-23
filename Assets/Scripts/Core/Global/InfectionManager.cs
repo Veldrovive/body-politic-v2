@@ -46,6 +46,10 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
 
     protected override void Start()
     {
+        // Filter out Npcs that are not enabled
+        allNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy || !npc.gameObject.activeSelf);
+        infectedNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy);
+        
         if (gameEvent == null)
         {
             InfectionDataEventSO infectionEvent = GlobalData.Instance?.InfectionEvent;

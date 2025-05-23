@@ -52,10 +52,10 @@ GameObject:
   - component: {fileID: 4493147730884358426}
   - component: {fileID: 576656727529733126}
   - component: {fileID: 3189426731784081209}
-  - component: {fileID: 6069972115561842295}
-  - component: {fileID: 1447074388558317057}
   - component: {fileID: 1384171195896954992}
   - component: {fileID: 4848299609032010763}
+  - component: {fileID: 6069972115561842295}
+  - component: {fileID: 1447074388558317057}
   m_Layer: 6
   m_Name: GenericNpc
   m_TagString: Untagged
@@ -296,6 +296,70 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1384171195896954992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945626931996106311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33487b5c54b840b2b6bf3cb1e535bd1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionInstances:
+  - DesignerNotes: 
+    InteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
+    IsEnabled: 1
+    DisabledImpliesHidden: 1
+    DisabledReason: 
+    OnInteractionStart:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInteractionEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInteractionInterrupted:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInteractionStateExited:
+      m_PersistentCalls:
+        m_Calls: []
+  - DesignerNotes: 
+    InteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+    IsEnabled: 1
+    DisabledImpliesHidden: 1
+    DisabledReason: 
+    OnInteractionStart:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInteractionEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInteractionInterrupted:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInteractionStateExited:
+      m_PersistentCalls:
+        m_Calls: []
+--- !u!114 &4848299609032010763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945626931996106311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19556bcbb45d4aa2a44be257e3dd6e56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infectNpcInteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
+  shootNpcInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+  shooterSuspicionThreshold: 5
+  shooterSuspicionValue: 9
+  shooterSuspicionDuration: 20
 --- !u!114 &6069972115561842295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,7 +392,48 @@ MonoBehaviour:
   m_nodes:
   - rid: 6648118317909016643
   - rid: 6648118317909016645
-  m_connections: []
+  - rid: 6648118405217386744
+  m_connections:
+  - inputPort:
+      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
+      portInfo:
+        Name: In
+        PortType: 1
+    outputPort:
+      nodeId: c8ad8d9b-a5fe-4a73-ba56-72ba6e55a68a
+      portInfo:
+        Name: Start
+        PortType: 0
+  - inputPort:
+      nodeId: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
+      portInfo:
+        Name: Restart
+        PortType: 1
+    outputPort:
+      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
+      portInfo:
+        Name: Timeout
+        PortType: 0
+  - inputPort:
+      nodeId: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
+      portInfo:
+        Name: Restart
+        PortType: 1
+    outputPort:
+      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
+      portInfo:
+        Name: LoadIn
+        PortType: 0
+  - inputPort:
+      nodeId: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
+      portInfo:
+        Name: Restart
+        PortType: 1
+    outputPort:
+      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
+      portInfo:
+        Name: Interrupted
+        PortType: 0
   references:
     version: 2
     RefIds:
@@ -361,70 +466,31 @@ MonoBehaviour:
           PortType: 1
         typeName: RestartNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
---- !u!114 &1384171195896954992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945626931996106311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33487b5c54b840b2b6bf3cb1e535bd1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionInstances:
-  - DesignerNotes: 
-    InteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
-    IsEnabled: 1
-    DisabledImpliesHidden: 0
-    DisabledReason: 
-    OnInteractionStart:
-      m_PersistentCalls:
-        m_Calls: []
-    OnInteractionEnd:
-      m_PersistentCalls:
-        m_Calls: []
-    OnInteractionInterrupted:
-      m_PersistentCalls:
-        m_Calls: []
-    OnInteractionStateExited:
-      m_PersistentCalls:
-        m_Calls: []
-  - DesignerNotes: 
-    InteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
-    IsEnabled: 1
-    DisabledImpliesHidden: 0
-    DisabledReason: 
-    OnInteractionStart:
-      m_PersistentCalls:
-        m_Calls: []
-    OnInteractionEnd:
-      m_PersistentCalls:
-        m_Calls: []
-    OnInteractionInterrupted:
-      m_PersistentCalls:
-        m_Calls: []
-    OnInteractionStateExited:
-      m_PersistentCalls:
-        m_Calls: []
---- !u!114 &4848299609032010763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945626931996106311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19556bcbb45d4aa2a44be257e3dd6e56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  infectNpcInteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
-  shootNpcInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
-  shooterSuspicionThreshold: 5
-  shooterSuspicionValue: 9
-  shooterSuspicionDuration: 20
+    - rid: 6648118405217386744
+      type: {class: WaitStateNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_guid: 182f2008-7cbe-4427-aeee-3253282c5368
+        m_position:
+          serializedVersion: 2
+          x: 377
+          y: 228
+          width: 223
+          height: 154
+        m_ports:
+        - Name: Interrupted
+          PortType: 0
+        - Name: LoadIn
+          PortType: 0
+        - Name: Timeout
+          PortType: 0
+        - Name: In
+          PortType: 1
+        typeName: WaitStateNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        configuration:
+          StateName: 
+          StateId: 476bc60f-4a90-472f-9cc6-9168a1bc387d
+          m_duration: 1
 --- !u!1 &2725557642565333427
 GameObject:
   m_ObjectHideFlags: 0
