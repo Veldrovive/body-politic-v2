@@ -81,6 +81,12 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
         return allNpcs.FindAll(npc => npc.Identity.HasAnyRole(roles));
     }
     
+    public bool IsNpcInfected(NpcContext npc)
+    {
+        // Check if the NPC is in the list of infected NPCs.
+        return infectedNpcs.Contains(npc);
+    }
+    
     public void RegisterNpc(NpcContext npc)
     {
         // Register the NPC in the InfectionManager.

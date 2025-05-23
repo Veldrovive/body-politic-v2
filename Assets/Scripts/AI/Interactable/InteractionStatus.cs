@@ -31,13 +31,15 @@ public enum InteractionFailureReason
     MustBeInInventory,
     /// <summary>There was an internal error or exception during the interaction check.</summary>
     InternalError,
+    /// <summary>Used for InteractableNPCs. Indicates that the InteractableNpc refused to interrupt into the animation state.</summary>
+    NpcInterruptFailed
 }
 
 [Serializable]
 public class HumanReadableFailureReason
 {
-    public InteractionFailureReason Reason;
     public string HumanReadableReason;
+    public InteractionFailureReason Reason;
     public float Priority;  // Defines which failure reason will be shown to the user
     
     public HumanReadableFailureReason(InteractionFailureReason reason, float priority, string humanReadableReason)

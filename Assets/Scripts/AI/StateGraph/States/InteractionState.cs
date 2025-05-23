@@ -81,6 +81,9 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
 
     #endregion
 
+    public static string ON_INTERACTION_REJECTED_PORT_NAME = "OnInteractionRejected";
+    [EventOutputPort("OnInteractionRejected")]
+    public event Action<string> OnInteractionRejected;
 
     #region Lifecycle
 
@@ -138,6 +141,7 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             {
                 TriggerExit(InteractionStateOutcome.Error);
             }
+            OnInteractionRejected?.Invoke(initiateResult.HumanReadableFailureReason);
             return; // FailState handles exiting
         }
         
@@ -154,7 +158,7 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             try
             {
                 // Set the animation trigger specified in the InteractionDefinitionSO.
-                npcContext.AnimationManager.SetTrigger(interactionToPerform.InitiatorAnimationTrigger);
+                npcContext.AnimationManager.Play(interactionToPerform.InitiatorAnimationTrigger);
             }
             catch (Exception e) // Catch potential errors if the trigger name is invalid or Animator setup issues occur.
             {
@@ -175,12 +179,18 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
         if (interactionTimer <= 0)
         {
             interactionInProgress = false; // Mark as not in progress before calling CompleteState.
-            // Notify target first
+            
             targetInteractable?.NotifyInteractionComplete(interactionToPerform, this.gameObject);
-            // Signal state success using the base method.
-            TriggerExit(InteractionStateOutcome.CompletedInteraction);
-
             npcContext.SuspicionTracker?.RemoveSuspicionSource(StateId);
+            
+            // Signal state success using the base controller.
+            TriggerExit(InteractionStateOutcome.CompletedInteraction);
+            
+            // We trigger and exited event after the exit so that if the target then sends an interrupt to the controller
+            // it will occur during the next state. This helps prevent infinite loops of interactions, but does not
+            // outright prevent them as the next state could interrupt back into this state potentially.
+            targetInteractable?.NotifyInteractionStateExited(interactionToPerform, this.gameObject);
+            
         }
     }
     
@@ -205,6 +215,11 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             npcContext.SuspicionTracker?.RemoveSuspicionSource(StateId);
             
             TriggerExit(InteractionStateOutcome.CompletedInteraction);
+            
+            // We trigger and exited event after the exit so that if the target then sends an interrupt to the controller
+            // it will occur during the next state. This helps prevent infinite loops of interactions, but does not
+            // outright prevent them as the next state could interrupt back into this state potentially.
+            targetInteractable?.NotifyInteractionStateExited(interactionToPerform, this.gameObject);
         }
     }
 
@@ -223,6 +238,21 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             // Notify the Interactable component that the interaction was cut short.
             // This allows the target to clean up its own state if necessary.
             targetInteractable?.NotifyInteractionInterrupted(interactionToPerform, this.gameObject);
+            
+            // End the animation if it was running.
+            if (npcContext.AnimationManager != null && !string.IsNullOrEmpty(interactionToPerform.InitiatorAnimationTrigger))
+            {
+                try
+                {
+                    // Reset the animation trigger to stop the animation.
+                    npcContext.AnimationManager.End(interactionToPerform.InitiatorAnimationTrigger);
+                }
+                catch (Exception e)
+                {
+                    // Log an error if stopping the animation fails.
+                    Debug.LogError($"Exception stopping initiator animation trigger '{interactionToPerform.InitiatorAnimationTrigger}' on Animator of {npcContext.gameObject.name}: {e.Message}", this);
+                }
+            }
         }
 
         npcContext.SuspicionTracker?.RemoveSuspicionSource(StateId);

@@ -104,5 +104,16 @@ public class NpcAnimationManager : MonoBehaviour
         _animator.SetTrigger(triggerName);
     }
     
+    public void Play(string animationName)
+    {
+        if (_animator == null) return;
+        _animator.Play(animationName);
+    }
+    
+    public bool End(string animationName)
+    {
+        throw new NotImplementedException();
+    }
+    
     #endregion
 }

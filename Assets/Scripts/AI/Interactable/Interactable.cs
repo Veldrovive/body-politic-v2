@@ -44,12 +44,8 @@ public class InteractionInstance
     public UnityEvent<InteractionContext> OnInteractionEnd;
     [Tooltip("Unity Event to raise when interaction is interrupted before completion.")]
     public UnityEvent<InteractionContext> OnInteractionInterrupted;
-    [Tooltip("Game Event SO to raise when interaction begins successfully.")]
-    public GameEventSO<InteractionContext> OnInteractionStartEvent;
-    [Tooltip("Game Event SO to raise when interaction ends successfully.")]
-    public GameEventSO<InteractionContext> OnInteractionEndEvent;
-    [Tooltip("Game Event SO to raise when interaction is interrupted.")]
-    public GameEventSO<InteractionContext> OnInteractionInterruptedEvent;
+    [Tooltip("Unity Event to raise when the initiator has exited the interaction state.")]
+    public UnityEvent<InteractionContext> OnInteractionStateExited;
     
     public InteractionInstance()
     {
@@ -59,9 +55,7 @@ public class InteractionInstance
         OnInteractionStart = new UnityEvent<InteractionContext>();
         OnInteractionEnd = new UnityEvent<InteractionContext>();
         OnInteractionInterrupted = new UnityEvent<InteractionContext>();
-        OnInteractionStartEvent = null;
-        OnInteractionEndEvent = null;
-        OnInteractionInterruptedEvent = null;
+        OnInteractionStateExited = new UnityEvent<InteractionContext>();
     }
 }
 
@@ -74,7 +68,7 @@ public class InteractionInstance
 public class Interactable : MonoBehaviour
 {
     [Tooltip("List of interactions available on this object.")]
-    [SerializeField] private List<InteractionInstance> interactionInstances = new List<InteractionInstance>();
+    [SerializeField] protected List<InteractionInstance> interactionInstances = new List<InteractionInstance>();
 
     /// <summary>
     /// Public read-only access to the interaction instances configured on this Interactable.
@@ -145,17 +139,7 @@ public class Interactable : MonoBehaviour
 
     // --- Interaction Lifecycle Methods ---
 
-    /// <summary>
-    /// Called by an initiator (e.g., InteractionState) to attempt starting an interaction.
-    /// Finds the interaction instance, checks requirements via InteractionDefinitionSO.GetStatus,
-    /// and fires OnInteractionStart events if successful based on the returned status.
-    /// </summary>
-    /// <param name="chosenDefinition">The specific interaction definition being attempted.</param>
-    /// <param name="initiator">The GameObject attempting the interaction.</param>
-    /// <returns>An InteractionStatus object detailing the outcome. Check status.CanInteract to see if initiation succeeded.</returns>
-    public InteractionStatus TryInitiateInteraction(
-        InteractionDefinitionSO chosenDefinition,
-        GameObject initiator)
+    protected InteractionStatus GetInteractionStatus(InteractionDefinitionSO chosenDefinition, GameObject initiator)
     {
         // --- Basic Input Validation ---
         if (chosenDefinition == null || initiator == null)
@@ -203,7 +187,27 @@ public class Interactable : MonoBehaviour
              string reasons = statusResult.GetHumanReadableFailureReasonString();
              Debug.Log($"{gameObject.name}: Initiator {initiator.name} cannot initiate interaction '{chosenDefinition.name}'. Reasons: [{reasons}]. Visible: {statusResult.IsVisible}", this);
              #endif
-            // Return the status object indicating failure (already populated by GetStatus)
+        }
+
+        return statusResult;
+    }
+    
+    /// <summary>
+    /// Called by an initiator (e.g., InteractionState) to attempt starting an interaction.
+    /// Finds the interaction instance, checks requirements via InteractionDefinitionSO.GetStatus,
+    /// and fires OnInteractionStart events if successful based on the returned status.
+    /// </summary>
+    /// <param name="chosenDefinition">The specific interaction definition being attempted.</param>
+    /// <param name="initiator">The GameObject attempting the interaction.</param>
+    /// <returns>An InteractionStatus object detailing the outcome. Check status.CanInteract to see if initiation succeeded.</returns>
+    public virtual InteractionStatus TryInitiateInteraction(
+        InteractionDefinitionSO chosenDefinition,
+        GameObject initiator, int priority = 0)
+    {
+        InteractionStatus statusResult = GetInteractionStatus(chosenDefinition, initiator);
+        if (!statusResult.CanInteract())
+        {
+            // Then we should not move forward with the interaction
             return statusResult;
         }
 
@@ -214,10 +218,10 @@ public class Interactable : MonoBehaviour
         InteractionContext context = new InteractionContext(initiator, this, chosenDefinition);
 
         // Fire Events
+        InteractionInstance targetInstance = FindInteractionInstance(chosenDefinition);
         try
         {
             targetInstance.OnInteractionStart?.Invoke(context);
-            targetInstance.OnInteractionStartEvent?.Raise(context);
         }
         catch (System.Exception e) {
             Debug.LogError($"Exception during OnInteractionStart event for {chosenDefinition.name} on {gameObject.name}: {e.Message}\n{e.StackTrace}", this);
@@ -230,8 +234,8 @@ public class Interactable : MonoBehaviour
             Animator targetAnimator = GetComponent<Animator>(); // Animator on this interactable object
             if (targetAnimator != null)
             {
-                try { targetAnimator.SetTrigger(chosenDefinition.TargetAnimationTrigger); }
-                catch (System.Exception e) { Debug.LogError($"Exception setting target animation trigger '{chosenDefinition.TargetAnimationTrigger}' on {gameObject.name}: {e.Message}", this); }
+                try { targetAnimator.Play(chosenDefinition.TargetAnimationTrigger); }
+                catch (System.Exception e) { Debug.LogError($"Exception playing animation '{chosenDefinition.TargetAnimationTrigger}' on {gameObject.name}: {e.Message}", this); }
             }
             #if UNITY_EDITOR || DEVELOPMENT_BUILD
             else { Debug.LogWarning($"{gameObject.name}: Interaction '{chosenDefinition.name}' specifies TargetAnimationTrigger '{chosenDefinition.TargetAnimationTrigger}', but no Animator component found on this object.", this); }
@@ -248,7 +252,7 @@ public class Interactable : MonoBehaviour
     /// </summary>
     /// <param name="completedDefinition">The definition of the interaction that completed.</param>
     /// <param name="initiator">The GameObject that completed the interaction.</param>
-    public void NotifyInteractionComplete(InteractionDefinitionSO completedDefinition, GameObject initiator)
+    public virtual void NotifyInteractionComplete(InteractionDefinitionSO completedDefinition, GameObject initiator)
     {
         if (completedDefinition == null || initiator == null) return; // Basic validation
         
@@ -265,11 +269,37 @@ public class Interactable : MonoBehaviour
         InteractionContext context = new InteractionContext(initiator, this, completedDefinition);
         try {
             targetInstance.OnInteractionEnd?.Invoke(context);
-            targetInstance.OnInteractionEndEvent?.Raise(context);
         } catch (System.Exception e) {
              Debug.LogError($"Exception during OnInteractionEnd event for {completedDefinition.name} on {gameObject.name}: {e.Message}\n{e.StackTrace}", this);
         }
 
+    }
+
+    /// <summary>
+    /// Called by the initiator when the interaction state exits after completion. It is safer to trigger an interrupt
+    /// on the controller after this event than it is after NotifyInteractionComplete as it will not immediately cause
+    /// and infinite loop in the state graph controller.
+    /// </summary>
+    /// <param name="completedDefinition"></param>
+    /// <param name="initiator"></param>
+    public virtual void NotifyInteractionStateExited(InteractionDefinitionSO completedDefinition, GameObject initiator)
+    {
+        if (completedDefinition == null || initiator == null) return; // Basic validation
+        
+        InteractionInstance targetInstance = FindInteractionInstance(completedDefinition);
+        if (targetInstance == null)
+        {
+            Debug.LogError($"{gameObject.name}: Cannot notify state exit for unknown interaction definition {completedDefinition.name}.", this);
+            return;
+        }
+
+        // Create context and fire events
+        InteractionContext context = new InteractionContext(initiator, this, completedDefinition);
+        try {
+            targetInstance.OnInteractionStateExited?.Invoke(context);
+        } catch (System.Exception e) {
+            Debug.LogError($"Exception during OnInteractionStateExited event for {completedDefinition.name} on {gameObject.name}: {e.Message}\n{e.StackTrace}", this);
+        }
     }
 
     /// <summary>
@@ -278,7 +308,7 @@ public class Interactable : MonoBehaviour
     /// </summary>
     /// <param name="interruptedDefinition">The definition of the interaction that was interrupted.</param>
     /// <param name="initiator">The GameObject that was performing the interaction.</param>
-    public void NotifyInteractionInterrupted(InteractionDefinitionSO interruptedDefinition, GameObject initiator)
+    public virtual void NotifyInteractionInterrupted(InteractionDefinitionSO interruptedDefinition, GameObject initiator)
     {
          if (interruptedDefinition == null || initiator == null) return; // Basic validation
 
@@ -291,7 +321,6 @@ public class Interactable : MonoBehaviour
          InteractionContext context = new InteractionContext(initiator, this, interruptedDefinition);
         try {
             targetInstance.OnInteractionInterrupted?.Invoke(context);
-            targetInstance.OnInteractionInterruptedEvent?.Raise(context);
         } catch (System.Exception e) {
              Debug.LogError($"Exception during OnInteractionInterrupted event for {interruptedDefinition.name} on {gameObject.name}: {e.Message}\n{e.StackTrace}", this);
         }

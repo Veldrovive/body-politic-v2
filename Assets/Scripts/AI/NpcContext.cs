@@ -83,4 +83,9 @@ public class NpcContext : MonoBehaviour
         EnsureLayerIsSet();
 #endif
     }
+
+    public void TriggerDeath()
+    {
+        Debug.LogError("TriggerDeath is not implemented yet.");
+    }
 }

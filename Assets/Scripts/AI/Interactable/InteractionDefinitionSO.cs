@@ -71,6 +71,7 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
     [Header("Human Readable Failure Reasons")]
     [Tooltip("List of human-readable failure reasons for this action.")]
     [SerializeField] private List<HumanReadableFailureReason> humanReadableFailureReasons = new List<HumanReadableFailureReason>();
+    public List<HumanReadableFailureReason> HumanReadableFailureReasons => humanReadableFailureReasons;
 
     [Header("Debugging")]
     [Tooltip("Optional prompt text for debugging purposes.")]
@@ -85,9 +86,28 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
         { InteractionFailureReason.MustBeInWorld, new HumanReadableFailureReason(InteractionFailureReason.MustBeInWorld, 2, "I can't use this unless it is on the ground.") },
         { InteractionFailureReason.MustBeInHand, new HumanReadableFailureReason(InteractionFailureReason.MustBeInHand, 2, "I can't use this unless it is in my hand.") },
         { InteractionFailureReason.MustBeInInventory, new HumanReadableFailureReason(InteractionFailureReason.MustBeInInventory, 2, "I can't use this unless it is in my inventory.") },
+        { InteractionFailureReason.NpcInterruptFailed, new HumanReadableFailureReason(InteractionFailureReason.NpcInterruptFailed, 6, "I couldn't get their attention.") },
         { InteractionFailureReason.InternalError, new HumanReadableFailureReason(InteractionFailureReason.InternalError, 4, "INTERNAL ERROR. PLEASE TELL AIDAN HOW TO REPRODUCE.") }
     };
 
+    public HumanReadableFailureReason GetHumanReadableFailureReason(InteractionFailureReason reason)
+    {
+        // Check if the reason is in the list
+        var hrFailureReason = humanReadableFailureReasons.FirstOrDefault(h => h.Reason == reason);
+        if (hrFailureReason != null)
+        {
+            return hrFailureReason;
+        }
+        else if (defaultFailureMessages.TryGetValue(reason, out var defaultReason))
+        {
+            return defaultReason;
+        }
+        else
+        {
+            Debug.LogWarning($"No human-readable failure reason found for {reason}. Using default.", this);
+            return new HumanReadableFailureReason(reason, 0, "Unknown reason");
+        }
+    }
 
     /// <summary>
     /// Checks the fundamental possibility and visibility of this action for a given initiator and target Interactable,
@@ -103,32 +123,11 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
         // status.TargetInteractable = targetInteractable; // Optional context
         NpcContext initiatorContext = initiator.GetComponent<NpcContext>();
 
-        HumanReadableFailureReason getHrFailureReason(InteractionFailureReason reason)
-        {
-            // Gets the human readable failure reason for the generic reason. If the failure reason is in 
-            // humanReadableFailureReasons then we use that one. Otherwise, we try to use defaultFailureMessages
-            // If it is also not in that, we create log a warning and return a default one.
-            var hrFailureReason = humanReadableFailureReasons.FirstOrDefault(h => h.Reason == reason);
-            if (hrFailureReason != null)
-            {
-                return hrFailureReason;
-            }
-            else if (defaultFailureMessages.TryGetValue(reason, out var defaultReason))
-            {
-                return defaultReason;
-            }
-            else
-            {
-                Debug.LogWarning($"No human-readable failure reason found for {reason}. Using default.", this);
-                return new HumanReadableFailureReason(reason, 0, "Unknown reason");
-            }
-        }
-
         // --- Basic Validation ---
         if (initiator == null || targetInteractable == null)
         {
             status.IsVisible = false; // Cannot determine visibility or interactability
-            status.AddFailureReason(getHrFailureReason(InteractionFailureReason.RoleFailed)); // Treat null inputs as failure
+            status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.RoleFailed)); // Treat null inputs as failure
             return status;
         }
         NPCIdentity initiatorIdentity = initiatorContext.Identity;
@@ -138,13 +137,13 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
             bool anyRolesDefined = rolesCanExecuteNoSuspicion.Any() || rolesCanExecuteWithSuspicion.Any() || rolesCanView.Any();
             if (anyRolesDefined) {
                 status.IsVisible = false; // Hide if roles matter but identity is missing
-                status.AddFailureReason(getHrFailureReason(InteractionFailureReason.RoleFailed));
+                status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.RoleFailed));
                 return status;
             }
             // If NO roles are defined at all, maybe proceed? Let's assume roles are usually needed.
             // For now, treat missing identity as RoleFailed if roles *could* be relevant.
             status.IsVisible = false; // Safer default
-            status.AddFailureReason(getHrFailureReason(InteractionFailureReason.RoleFailed));
+            status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.RoleFailed));
             return status;
         }
 
@@ -188,12 +187,12 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
         // --- Determine Final Status Flags ---
 
         // 1. Determine Failure Reasons (if any)
-        if (!hasExecutionRole)      status.AddFailureReason(getHrFailureReason(InteractionFailureReason.RoleFailed));
-        if (!proximityCheckPassed)  status.AddFailureReason(getHrFailureReason(InteractionFailureReason.ProximityFailed));
-        if (!isInstanceEnabled)     status.AddFailureReason(getHrFailureReason(InteractionFailureReason.InteractionDisabled));
-        if (failedInWorldCheck)     status.AddFailureReason(getHrFailureReason(InteractionFailureReason.MustBeInWorld));
-        if (failedInInventoryCheck) status.AddFailureReason(getHrFailureReason(InteractionFailureReason.MustBeInInventory));
-        if (failedInHandCheck)      status.AddFailureReason(getHrFailureReason(InteractionFailureReason.MustBeInHand));
+        if (!hasExecutionRole)      status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.RoleFailed));
+        if (!proximityCheckPassed)  status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.ProximityFailed));
+        if (!isInstanceEnabled)     status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.InteractionDisabled));
+        if (failedInWorldCheck)     status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.MustBeInWorld));
+        if (failedInInventoryCheck) status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.MustBeInInventory));
+        if (failedInHandCheck)      status.AddFailureReason(GetHumanReadableFailureReason(InteractionFailureReason.MustBeInHand));
 
         // 3. Determine IsVisible
         if (!hasExecutionRole && !canViewAction) {

@@ -134,7 +134,7 @@ public class FixableManager : MonoBehaviour
             // like get distracted by a coin or got infected the fix action would be removed entirely and we would
             // find a new fixer. This is strange behavior. What we should probably do instead is make the fix graph
             // saveable and check for existence in the queue instead of the current state graph.
-            while (fixer.StateGraphController.CurrentStateGraph.id == fixingContext.StepGUID)
+            while (fixer.StateGraphController.CurrentStateGraph?.id == fixingContext.StepGUID)
             {
                 if (isFixed) break;
                 
