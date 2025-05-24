@@ -49,6 +49,11 @@ public class ActionCameraStartState : GenericAbstractState<ActionCameraStartStat
             return;
         }
 
+        if (camConfig.Target == null)
+        {
+            camConfig.Target = gameObject.transform;
+        }
+
         if (string.IsNullOrEmpty(camConfig.SourceKey))
         {
             camConfig.SourceKey = $"NPC_CAM: {gameObject.name} ({gameObject.GetInstanceID()})";

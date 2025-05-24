@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI; // For NavMeshAgent
 
@@ -25,6 +26,8 @@ public class NpcContext : MonoBehaviour
     public NavMeshAgent NavMeshAgent { get; private set; }
     public NpcDetectorReactor DetectorReactor { get; private set; }
     public InteractableNpc InteractableNpc { get; private set; }
+    
+    private Dictionary<string, object> arbitraryAccessData { get; set; }
 
     private static string NPC_LAYER_NAME = "NPC";
 
@@ -33,6 +36,8 @@ public class NpcContext : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        arbitraryAccessData = new Dictionary<string, object>();
+        
         Identity = GetComponent<NPCIdentity>();
         Inventory = GetComponent<NpcInventory>();
         StateGraphController = GetComponent<StateGraphController>();
@@ -95,5 +100,42 @@ public class NpcContext : MonoBehaviour
         MovementManager.enabled = false;
         DetectorReactor.enabled = false;
         InteractableNpc.enabled = false;
+    }
+    
+    public void SetArbitraryAccessData(string key, object value)
+    {
+        arbitraryAccessData[key] = value;
+    }
+    
+    public object GetArbitraryAccessData(string key, object defaultValue)
+    {
+        if (arbitraryAccessData.TryGetValue(key, out var value))
+        {
+            return value;
+        }
+        else
+        {
+            return defaultValue;
+        }
+    }
+    
+    public TStoredDataType GetArbitraryAccessData<TStoredDataType>(string key, TStoredDataType defaultValue)
+    {
+        if (arbitraryAccessData.TryGetValue(key, out var value))
+        {
+            if (value is TStoredDataType storedValue)
+            {
+                return storedValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Key '{key}' found but value is not of type {typeof(TStoredDataType)}.", this);
+                return defaultValue;
+            }
+        }
+        else
+        {
+            return defaultValue;
+        }
     }
 }

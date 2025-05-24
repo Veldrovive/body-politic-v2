@@ -48,4 +48,56 @@ public abstract class GenericAbstractState<TOutcomeEnum, TConfiguration> : Abstr
     {
         return InterruptState();
     }
+    
+    protected void SetGlobalData(string key, object value)
+    {
+        if (npcContext != null)
+        {
+            npcContext.SetArbitraryAccessData(key, value);
+        }
+        else
+        {
+            Debug.LogError("NpcContext is not set. Cannot set global data.");
+        }
+    }
+    
+    protected void SetStateData(string key, object value)
+    {
+        if (npcContext != null)
+        {
+            string stateKey = $"{StateId}_{key}";
+            npcContext.SetArbitraryAccessData(stateKey, value);
+        }
+        else
+        {
+            Debug.LogError("NpcContext is not set. Cannot set state data.");
+        }
+    }
+    
+    protected TStoredDataType GetGlobalData<TStoredDataType>(string key, TStoredDataType defaultValue)
+    {
+        if (npcContext != null)
+        {
+            return npcContext.GetArbitraryAccessData<TStoredDataType>(key, defaultValue);
+        }
+        else
+        {
+            Debug.LogError("NpcContext is not set. Cannot get global data.");
+            return default;
+        }
+    }
+    
+    protected TStoredDataType GetStateData<TStoredDataType>(string key, TStoredDataType defaultValue)
+    {
+        if (npcContext != null)
+        {
+            string stateKey = $"{StateId}_{key}";
+            return npcContext.GetArbitraryAccessData<TStoredDataType>(stateKey, defaultValue);
+        }
+        else
+        {
+            Debug.LogError("NpcContext is not set. Cannot get state data.");
+            return default;
+        }
+    }
 }
