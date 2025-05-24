@@ -124,16 +124,11 @@ public class Consumable : Holdable
             {
                 // Notify the manager about the potential infection event
                 InfectionManager.Instance.NotifyInfection(npcContext);
-                Debug.Log($"'{context.Initiator.name}' consumed infected item '{gameObject.name}'. Notified InfectionManager.", this);
             }
             else
             {
                 Debug.LogError($"Consumable '{gameObject.name}' is infected, but InfectionManager.Instance is null. Cannot notify.", this);
             }
-        }
-        else
-        {
-             Debug.Log($"'{context.Initiator.name}' consumed item '{gameObject.name}'.", this);
         }
         
         // If the item definition is of the derived class ConsumableDefinitionSO, then it also has a .ConsumedRole

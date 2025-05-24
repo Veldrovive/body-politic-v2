@@ -110,9 +110,12 @@ public class NpcAnimationManager : MonoBehaviour
         _animator.Play(animationName);
     }
     
-    public bool End(string animationName)
+    public bool End()
     {
-        throw new NotImplementedException();
+        if (_animator == null) return false;
+        _animator.Rebind();
+        _animator.Update(0f);
+        return true;
     }
     
     #endregion

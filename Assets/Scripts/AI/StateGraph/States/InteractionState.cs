@@ -215,6 +215,10 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             npcContext.SuspicionTracker?.RemoveSuspicionSource(StateId);
             
             TriggerExit(InteractionStateOutcome.CompletedInteraction);
+            if (interactionToPerform.EndAnimationOnFinish)
+            {
+                npcContext.AnimationManager.End();
+            }
             
             // We trigger and exited event after the exit so that if the target then sends an interrupt to the controller
             // it will occur during the next state. This helps prevent infinite loops of interactions, but does not
@@ -242,15 +246,9 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             // End the animation if it was running.
             if (npcContext.AnimationManager != null && !string.IsNullOrEmpty(interactionToPerform.InitiatorAnimationTrigger))
             {
-                try
+                if (interactionToPerform.EndAnimationOnInterrupt)
                 {
-                    // Reset the animation trigger to stop the animation.
-                    npcContext.AnimationManager.End(interactionToPerform.InitiatorAnimationTrigger);
-                }
-                catch (Exception e)
-                {
-                    // Log an error if stopping the animation fails.
-                    Debug.LogError($"Exception stopping initiator animation trigger '{interactionToPerform.InitiatorAnimationTrigger}' on Animator of {npcContext.gameObject.name}: {e.Message}", this);
+                    npcContext.AnimationManager.End();                    
                 }
             }
         }

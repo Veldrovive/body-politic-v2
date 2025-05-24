@@ -65,6 +65,12 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
     [SerializeField] private string initiatorAnimationTrigger;
     [Tooltip("Animation trigger to play on the target object when the interaction starts.")]
     [SerializeField] private string targetAnimationTrigger;
+    [Tooltip("Whether to end the animation immediately when the interaction is finished.")]
+    [SerializeField] private bool endAnimationOnFinish = false;
+    public bool EndAnimationOnFinish => endAnimationOnFinish;
+    [Tooltip("Whether to end the animation immediately when the interaction is interrupted.")]
+    [SerializeField] private bool endAnimationOnInterrupt = true;
+    public bool EndAnimationOnInterrupt => endAnimationOnInterrupt;
     [Tooltip("The level of suspicion generated if this interaction is witnessed.")]
     [SerializeField] private int witnessSuspicionLevel = 0;
     
@@ -159,7 +165,7 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
         // Get the enabled info struct we discussed adding to Interactable
         // InteractionEnableInfo enableInfo = targetInteractable.GetInteractionEnableInfo(this);
         InteractionInstance interactionInstance = targetInteractable.FindInteractionInstance(this);
-        bool isInstanceEnabled = interactionInstance.IsEnabled;
+        bool isInstanceEnabled = targetInteractable.enabled && interactionInstance.IsEnabled;
         bool isVisibleWhenDisabled = !interactionInstance.DisabledImpliesHidden;
 
         // --- Check 2: Role Requirements ---

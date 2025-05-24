@@ -429,6 +429,8 @@ public class StateGraphController : MonoBehaviour
                     currentExecutionContext.Priority,
                     null
                 );
+                // We also null the currentExecutionContext so that we can start the next state graph
+                currentExecutionContext = null;
                 return (true, interruptContext);
             }
             // Otherwise we don't need to save the context. We just return true
@@ -442,6 +444,8 @@ public class StateGraphController : MonoBehaviour
                     // that since it is also ephemeral we should destroy the underlying graph
                     Destroy(currentExecutionContext.Graph);
                 }
+                // We should also null the currentExecutionContext so that we can start the next state graph
+                currentExecutionContext = null;
                 return (true, null);
             }
         }
@@ -723,140 +727,6 @@ public class StateGraphController : MonoBehaviour
             // else: We leave shouldInterrupt true so that we will try again next frame
         }
         
-        // if (currentExecutionContext == null)
-        // {
-        //     // Then we are not executing anything. If there is something in the queue we should start executing it
-        //     // If there isn't we either start the routine state graph keep currentExecutionContext = null which is
-        //     // the idle state
-        //     if (executionDequeue.Count == 0)
-        //     {
-        //         if (!IdleOnExit)
-        //         {
-        //             // Then we should try to resume the routine state graph.
-        //             if (savedRoutineContext != null)
-        //             {
-        //                 // Then we have a place to resume from
-        //                 currentExecutionContext = savedRoutineContext;
-        //             }
-        //             else
-        //             {
-        //                 if (routineStateGraph == null)
-        //                 {
-        //                     // Welp, this is an error
-        //                     Debug.LogError($"{gameObject.name} State Controller tried to start the routine state graph but it is null");
-        //                 }
-        //                 else
-        //                 {
-        //                     // Then we are just starting the routine state from scratch
-        //                     StartNode startNode = routineStateGraph.GetStartNode();
-        //                     StateGraphNode postStartNode = routineStateGraph.GetStartNodeConnection(startNode);
-        //                     string initialNodeId = postStartNode.id;
-        //                     currentExecutionContext = new ExecutionContext(
-        //                         routineStateGraph,
-        //                         initialNodeId,
-        //                         true,  // The routine state graph always saves on interrupt
-        //                         false,  // The routine state graph is not ephemeral
-        //                         null
-        //                     );
-        //                     // The next block will see that we now have a currentExecutionContext without a currentState
-        //                     // and will begin execution of the next state in the graph
-        //                 }
-        //             }
-        //         }
-        //         // else: we are idle and should continue to do nothing until the queue is not empty or idleOnExit is false
-        //     }
-        //     else
-        //     {
-        //         // Then we have something in the queue to execute. We remove it from the queue and set it as the current
-        //         // execution context
-        //         currentExecutionContext = executionDequeue.First.Value;
-        //         executionDequeue.RemoveFirst();
-        //         if (currentExecutionContext.CurrentState != null)
-        //         {
-        //             // This is an error, we should never have a current state when we are starting a new execution context
-        //             Debug.LogWarning($"{gameObject.name} State Controller tried to start a new execution context but the current state is not null");
-        //             currentExecutionContext.CurrentState = null;
-        //         }
-        //     }
-        // }
-        //
-        // if (currentExecutionContext != null && currentExecutionContext.CurrentState == null)
-        // {
-        //     // Then we are done with the current state and should move to the next one.
-        //     // If the next node is an ExitNode, this signals that we are done with the current state graph
-        //     // By nulling the currentExecutionContext it will tell logic next frame that we should start the next
-        //     // state graph
-        //     
-        //     // Other systems have set currentExecutionContext.NodeIdToExecute to the next node to execute. Our job is just
-        //     // to read the actual node, check what kind of node it is, and act accordingly.
-        //     StateGraphNode nextNode = currentExecutionContext.Graph.GetNodeById(currentExecutionContext.NodeIdToExecute);
-        //     if (nextNode == null)
-        //     {
-        //         // Whoops, we tried to start a node that doesn't exist. This is a bug in the state graph
-        //         Debug.LogWarning($"{gameObject.name} State Controller tried to start a node that doesn't exist. NodeId: {currentExecutionContext.NodeIdToExecute}");
-        //         // We should just null the currentExecutionContext and move on
-        //         currentExecutionContext = null;
-        //     }
-        //     else if (nextNode is ExitNode)
-        //     {
-        //         // Then we are done with the current state graph. We should null the currentExecutionContext
-        //         if (currentExecutionContext.Graph == routineStateGraph)
-        //         {
-        //             Debug.LogWarning($"{gameObject.name} State Controller tried to exit the routine state graph. This is not intended. Use a RestartNode to restart the routine state graph");
-        //         }
-        //         // We now have to check if this state graph was ephemeral
-        //         if (currentExecutionContext.Ephemeral)
-        //         {
-        //             // Then this StateGraph is intended to be removed when it exits... which is now. Say goodbye.
-        //             Destroy(currentExecutionContext.Graph);
-        //         }
-        //         currentExecutionContext = null;
-        //     }
-        //     else
-        //     {
-        //         // Then our next node should be a StateNode. However, there is a special case
-        //         if (nextNode is RestartNode)
-        //         {
-        //             // This denotes that we should move back to the start node. We can handle this by setting NodeIdToExecute
-        //             // to the initial node and then setting nextNode to this node
-        //             StartNode startNode = currentExecutionContext.Graph.GetStartNode();
-        //             StateGraphNode postStartNode = currentExecutionContext.Graph.GetStartNodeConnection(startNode);
-        //             string initialNodeId = postStartNode.id;
-        //             currentExecutionContext.NodeIdToExecute = initialNodeId;
-        //             nextNode = currentExecutionContext.Graph.GetNodeById(initialNodeId);
-        //         }
-        //         
-        //         // Actually there are two special cases now
-        //         if (nextNode is JumpInputNode jumpNode)
-        //         {
-        //             // This special node allows us to configurably jump to another node. This allows us to separate complex
-        //             // logic physically in the graph so that the main flow is easier to see
-        //             StateGraphNode jumpExitNode = currentExecutionContext.Graph.FindJumpExitNode(jumpNode.JumpKey);
-        //             if (jumpExitNode == null)
-        //             {
-        //                 // THis is a fatal error. We should never have a jump input node that doesn't have a corresponding exit node
-        //                 Debug.LogError($"{gameObject.name} State Controller tried to start a jump input node but there is no exit node. NodeId: {currentExecutionContext.NodeIdToExecute}");
-        //                 // We should just null the currentExecutionContext and move on
-        //                 currentExecutionContext = null;
-        //                 return;
-        //             }
-        //             string nextNodeId = jumpExitNode.id;
-        //             currentExecutionContext.NodeIdToExecute = nextNodeId;
-        //             nextNode = currentExecutionContext.Graph.GetNodeById(nextNodeId);
-        //         }
-        //
-        //         if (nextNode is StateNode nextStateNode)
-        //         {
-        //             ActivateNewState(nextStateNode);
-        //         }
-        //         else
-        //         {
-        //             // This is a bug in the state graph. We should never restart to something that is not a state node
-        //             Debug.LogWarning($"{gameObject.name} State Controller tried to start a node that is not a state node. NodeId: {currentExecutionContext.NodeIdToExecute}");
-        //             currentExecutionContext = null;
-        //         }
-        //     }
-        // }
         ProcessStateTransitions();
 
         if (toAddInterruptContext != null)
@@ -914,5 +784,50 @@ public class StateGraphController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void OnDestroy()
+    {
+        // 1. Clean up the currently active state, if any.
+        // This ensures no state logic continues to run after the controller is destroyed
+        // and that event listeners are detached.
+        if (currentExecutionContext != null && currentExecutionContext.CurrentState != null)
+        {
+            CleanupCurrentState();
+        }
+
+        // 2. Prepare the currentExecutionContext for persistence or cleanup.
+        // If the controller is destroyed, the current execution is effectively interrupted.
+        if (currentExecutionContext != null)
+        {
+            if (currentExecutionContext.IsSavable)
+            {
+                currentExecutionContext.CurrentState = null; // Should be redundant if CleanupCurrentState was called and currentExecutionContext was not nulled by it.
+
+                if (currentExecutionContext.Graph == routineStateGraph)
+                {
+                    savedRoutineContext = currentExecutionContext;
+                }
+                else
+                {
+                    executionDequeue.AddFirst(currentExecutionContext);
+                }
+            }
+            else // Current context is not savable
+            {
+                // If it's not savable and also ephemeral, the underlying StateGraph component
+                // should be destroyed, as it's not meant to persist beyond its execution
+                // if not explicitly saved.
+                if (currentExecutionContext.Ephemeral && currentExecutionContext.Graph != null)
+                {
+                    // StateGraph is a Component (MonoBehaviour), so Destroy works.
+                    Destroy(currentExecutionContext.Graph);
+                }
+            }
+
+            // After handling (saving or deciding to discard), the controller instance
+            // is no longer actively executing this context.
+            currentExecutionContext = null;
+        }
     }
 }

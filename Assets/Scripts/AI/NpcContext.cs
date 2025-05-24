@@ -12,6 +12,7 @@ using UnityEngine.AI; // For NavMeshAgent
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(NpcAnimationManager))]
 [RequireComponent(typeof(NpcDetectorReactor))]
+[RequireComponent(typeof(InteractableNpc))]
 public class NpcContext : MonoBehaviour
 {
     public NPCIdentity Identity { get; private set; }
@@ -23,6 +24,7 @@ public class NpcContext : MonoBehaviour
     public NpcAnimationManager AnimationManager { get; private set; }
     public NavMeshAgent NavMeshAgent { get; private set; }
     public NpcDetectorReactor DetectorReactor { get; private set; }
+    public InteractableNpc InteractableNpc { get; private set; }
 
     private static string NPC_LAYER_NAME = "NPC";
 
@@ -40,6 +42,7 @@ public class NpcContext : MonoBehaviour
         AnimationManager = GetComponent<NpcAnimationManager>();
         NavMeshAgent = GetComponent<NavMeshAgent>();
         DetectorReactor = GetComponent<NpcDetectorReactor>();
+        InteractableNpc = GetComponent<InteractableNpc>();
         
         
         // Register with the InfectionManager
@@ -86,6 +89,11 @@ public class NpcContext : MonoBehaviour
 
     public void TriggerDeath()
     {
-        Debug.LogError("TriggerDeath is not implemented yet.");
+        AnimationManager.Play("Death");
+
+        StateGraphController.enabled = false;
+        MovementManager.enabled = false;
+        DetectorReactor.enabled = false;
+        InteractableNpc.enabled = false;
     }
 }

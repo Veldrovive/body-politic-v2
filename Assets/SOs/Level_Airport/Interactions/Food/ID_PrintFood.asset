@@ -21,9 +21,11 @@ MonoBehaviour:
   generallyVisible: 1
   requiredProximity: 3
   interactionAvailableFroms: 00000000
-  interactionDuration: 1
-  initiatorAnimationTrigger: 
+  interactionDuration: 3.233
+  initiatorAnimationTrigger: PushButton
   targetAnimationTrigger: 
+  endAnimationOnFinish: 1
+  endAnimationOnInterrupt: 1
   witnessSuspicionLevel: 0
   humanReadableFailureReasons:
   - HumanReadableReason: It won't work for me.
@@ -50,4 +52,7 @@ MonoBehaviour:
   - HumanReadableReason: INTERNAL ERROR. PLEASE TELL AIDAN HOW TO REPRODUCE.
     Reason: 7
     Priority: 4
+  - HumanReadableReason: I couldn't get their attention.
+    Reason: 8
+    Priority: 6
   debugPrompt: 

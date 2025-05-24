@@ -66,7 +66,12 @@ public class InteractableNpc : Interactable
         string graphId = Guid.NewGuid().ToString();
         AnimateGraphFactory factory = new(new AnimateGraphConfiguration()
         {
-            animateStateConfig = new(chosenDefinition.TargetAnimationTrigger, chosenDefinition.InteractionDuration),
+            animateStateConfig = new(
+                chosenDefinition.TargetAnimationTrigger,
+                chosenDefinition.InteractionDuration,
+                chosenDefinition.EndAnimationOnFinish,
+                chosenDefinition.EndAnimationOnInterrupt
+            ),
             GraphId = graphId
         });
         if (!npcContext.StateGraphController.TryInterrupt(factory, false, false, priority))

@@ -24,6 +24,8 @@ MonoBehaviour:
   interactionDuration: 8
   initiatorAnimationTrigger: Infect
   targetAnimationTrigger: GetInfected
+  endAnimationOnFinish: 1
+  endAnimationOnInterrupt: 1
   witnessSuspicionLevel: 10
   humanReadableFailureReasons:
   - HumanReadableReason: It looks like this thrall doesn't have the ability to do
