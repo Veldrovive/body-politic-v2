@@ -5,20 +5,30 @@ using UnityEngine;
 [NodeInfo("Say Role Missing", "Event Listener/Say Role Missing")]
 public class SayRoleMissingListenerNode : EventListenerNode
 {
+    private static string DEFAULT_SINGULAR_ROLE_TEMPLATE = "Looks like I have to be a {role}";
+    private static string DEFAULT_PLURAL_ROLES_TEMPLATE = "Looks like I have to be a {roles}";
+    
     [Header("Message Templates")]
     [SerializeField]
     [Tooltip("Template string for a single missing role. Use {role} as a placeholder for the role name.")]
-    private string singularRoleTemplate = "Looks like I have to be a {role}";
+    private string singularRoleTemplate = DEFAULT_SINGULAR_ROLE_TEMPLATE;
 
     [SerializeField]
     [Tooltip("Template string for multiple missing roles. Use {roles} as a placeholder for the list of role names.")]
-    private string pluralRolesTemplate = "Looks like I have to be a {roles}";
+    private string pluralRolesTemplate = DEFAULT_PLURAL_ROLES_TEMPLATE;
     
     public static string SAY_ROLE_MISSING_PORT_NAME = "Say Role Missing";
     [EventInputPort("Say Role Missing")]
     public void HandleRoleMising(List<NpcRoleSO> roles)
     {
-        Debug.Log($"SayRoleMissingListenerNode: {roles.Count} roles are missing.");
+        if (string.IsNullOrEmpty(singularRoleTemplate))
+        {
+            singularRoleTemplate = DEFAULT_SINGULAR_ROLE_TEMPLATE;
+        }
+        if (string.IsNullOrEmpty(pluralRolesTemplate))
+        {
+            pluralRolesTemplate = DEFAULT_PLURAL_ROLES_TEMPLATE;
+        }
         CreatePlayerVisibleSpeechBubble(roles);
     }
     

@@ -34,8 +34,6 @@ public class ActionCamSource
         Target = target;
         Mode = mode;
         MaxDuration = maxDuration;
-            
-        startTime = Time.time;
     }
 
     public ActionCamSource()
@@ -45,6 +43,11 @@ public class ActionCamSource
         Target = null;
         Mode = ActionCameraMode.ThirdPerson;
         MaxDuration = -1f;
+    }
+    
+    public void ResetStartTime()
+    {
+        startTime = Time.time;
     }
         
     public bool IsExpired()
@@ -92,6 +95,7 @@ public class ActionCameraManager : MonoBehaviour
 
     public void AddActionCamSource(ActionCamSource source)
     {
+        source.ResetStartTime();
         if (!actionCamSources.ContainsKey(source.SourceKey))
         {
             actionCamSources.Add(source.SourceKey, source);

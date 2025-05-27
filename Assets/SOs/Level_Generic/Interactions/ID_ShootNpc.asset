@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
   rolesCanExecuteWithSuspicion: []
   rolesCanView: []
-  generallyVisible: 1
+  generallyVisible: 0
   requiredProximity: 50
   interactionAvailableFroms: 00000000
   interactionDuration: 0.5

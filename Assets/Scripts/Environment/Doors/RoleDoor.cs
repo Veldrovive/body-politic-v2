@@ -21,14 +21,14 @@ public class RoleDoor : MonoBehaviour
     
     [Header("Movers")]
     [Tooltip("Reference to door mover components.")]
-    [SerializeField] private List<BasicDoorMover> doorMovers = new List<BasicDoorMover>();
+    [SerializeField] private List<AbstractDoorOpener> doorMovers = new List<AbstractDoorOpener>();
     
     
     private DoorRoleDetector doorRoleDetector;
+    private bool shouldBeCheckingRoles = false;  // True whenever there is an NPC in the detector zone.
     
     private bool isOpen = false;
     public bool IsOpen => isOpen;
-    public bool IsMoving => doorMovers.TrueForAll(mover => mover.IsMoving);
     
     private Vector3 closedPosition;
     private Vector3 openPosition;
@@ -39,13 +39,13 @@ public class RoleDoor : MonoBehaviour
         doorRoleDetector = GetComponent<DoorRoleDetector>();
         
         // We should initialize the door movers here
-        // There is a child object that has the name "Movers" that then has children with the "BasicDoorMover" component
+        // There is a child object that has the name "Movers" that then has children with the "AbstractDoorOpener" component
         // For each of these that are not already in the list, add them to the list
         // We don't want to override the list in case there are extra movers somewhere else
         if (doorMovers.Count == 0)
         {
-            BasicDoorMover[] movers = GetComponentsInChildren<BasicDoorMover>();
-            foreach (BasicDoorMover mover in movers)
+            AbstractDoorOpener[] movers = GetComponentsInChildren<AbstractDoorOpener>();
+            foreach (AbstractDoorOpener mover in movers)
             {
                 if (!doorMovers.Contains(mover))
                 {
@@ -72,7 +72,7 @@ public class RoleDoor : MonoBehaviour
         // Debug.Log($"{gameObject.name} door opening");
 
         isOpen = true;
-        foreach (BasicDoorMover doorMover in doorMovers)
+        foreach (AbstractDoorOpener doorMover in doorMovers)
         {
             doorMover.Open();
         }
@@ -83,7 +83,7 @@ public class RoleDoor : MonoBehaviour
         // Debug.Log($"{gameObject.name} door closing");
 
         isOpen = false;
-        foreach (BasicDoorMover doorMover in doorMovers)
+        foreach (AbstractDoorOpener doorMover in doorMovers)
         {
             doorMover.Close();
         }
@@ -125,6 +125,7 @@ public class RoleDoor : MonoBehaviour
         // Debug.Log($"{context.name} entered the door detector for {gameObject.name}");
         
         CheckShouldBeOpen();
+        shouldBeCheckingRoles = true;
     }
 
     private void HandleDetectorExit(DetectedNpcData detectedNpc)
@@ -133,6 +134,10 @@ public class RoleDoor : MonoBehaviour
         // Debug.Log($"{context.name} exited the door detector for {gameObject.name}");
         
         CheckShouldBeOpen();
+        if (doorRoleDetector.NpcCount == 0)
+        {
+            shouldBeCheckingRoles = false;
+        }
     }
 
     public bool CanEnter(NpcContext npcContext)
@@ -166,5 +171,17 @@ public class RoleDoor : MonoBehaviour
         
         // Otherwise you are missing everything because if you had anything you would be let in
         return rolesCanEnter;
+    }
+
+    private void Update()
+    {
+        if (shouldBeCheckingRoles)
+        {
+            CheckShouldBeOpen();
+            if (doorRoleDetector.NpcCount == 0)
+            {
+                shouldBeCheckingRoles = false;
+            }
+        }
     }
 }

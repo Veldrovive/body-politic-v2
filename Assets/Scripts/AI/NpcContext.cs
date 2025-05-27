@@ -31,6 +31,8 @@ public class NpcContext : MonoBehaviour
 
     private static string NPC_LAYER_NAME = "NPC";
 
+    public Transform InfectPoint;
+
     /// <summary>
     /// Gets references to all essential NPC components. Logs errors if components are missing.
     /// </summary>

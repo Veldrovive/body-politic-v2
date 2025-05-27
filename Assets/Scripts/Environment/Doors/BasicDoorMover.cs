@@ -10,7 +10,7 @@ enum SlideDirection
     Right
 }
 
-public class BasicDoorMover : MonoBehaviour
+public class BasicDoorMover : AbstractDoorOpener
 {
     [Header("Movement Settings")]
     [SerializeField]
@@ -24,12 +24,9 @@ public class BasicDoorMover : MonoBehaviour
     private Vector3 openPosition;
     private Vector3 targetPosition;
     private bool isMoving = false;
-    private bool isOpen = false;
-    
-    public bool IsOpen => isOpen;
     public bool IsMoving => isMoving;
     
-    public void Open()
+    public override void Open()
     {
         if (isOpen && !isMoving) return;
 
@@ -38,25 +35,13 @@ public class BasicDoorMover : MonoBehaviour
         isMoving = true;
     }
     
-    public void Close()
+    public override void Close()
     {
         if (!isOpen && !isMoving) return;
 
         targetPosition = closedPosition;
         isOpen = false;
         isMoving = true;
-    }
-    
-    public void Toggle()
-    {
-        if (isOpen)
-        {
-            Close();
-        }
-        else
-        {
-            Open();
-        }
     }
     
     void Awake()

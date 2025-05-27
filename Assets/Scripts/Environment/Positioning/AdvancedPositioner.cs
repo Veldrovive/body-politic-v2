@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -54,6 +55,16 @@ public class AdvancedPositioner : MonoBehaviour
     [Tooltip("Layers that the linecast should consider as obstacles. Ensure your 'wall' or 'obstacle' GameObjects are on one of these layers.")]
     public LayerMask collisionLayers; // This LayerMask will be used by Physics.Linecast
 
+    private Vector3 curPosition;
+    private Quaternion curRotation;
+
+    private void Awake()
+    {
+        curPosition = transform.position; // Store the initial position of this GameObject.
+        curRotation = transform.rotation; // Store the initial rotation of this GameObject.
+    }
+
+
     /// <summary>
     /// Called every frame, if the MonoBehaviour is enabled.
     /// Handles the positioning of this GameObject based on the selected mode, target, and obstacle detection settings.
@@ -88,7 +99,7 @@ public class AdvancedPositioner : MonoBehaviour
 
             case PositioningMode.FollowRadius:
                 // For FollowRadius, the desired position is on a sphere around the target.
-                Vector3 directionToSelf = transform.position - targetObject.position;
+                Vector3 directionToSelf = curPosition - targetObject.position;
                 float currentDistance = directionToSelf.magnitude;
 
                 // if (currentDistance < Mathf.Epsilon) // Mathf.Epsilon is a very small float, used for comparing floats to zero.
@@ -106,7 +117,7 @@ public class AdvancedPositioner : MonoBehaviour
                 if (currentDistance < followRadius)
                 {
                     // Great! Nothing to do. We still set the desired position so that it will keep in LoS of the target
-                    desiredPosition = transform.position;
+                    desiredPosition = curPosition;
                 }
                 else
                 {
@@ -120,7 +131,7 @@ public class AdvancedPositioner : MonoBehaviour
                 // This path should not be reached if all enum cases are handled.
                 Debug.LogError("Unhandled PositioningMode in AdvancedPositioner.", this);
                 // Set desiredPosition to current position to avoid uninitialized variable error if something goes wrong.
-                desiredPosition = transform.position; 
+                desiredPosition = curPosition; 
                 break;
         }
 
@@ -165,5 +176,8 @@ public class AdvancedPositioner : MonoBehaviour
 
         // Apply the final calculated position to this GameObject's transform.
         transform.position = finalPosition;
+        
+        curPosition = transform.position;
+        curRotation = transform.rotation;
     }
 }

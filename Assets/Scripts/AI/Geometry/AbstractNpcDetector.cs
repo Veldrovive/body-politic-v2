@@ -47,6 +47,8 @@ public abstract class AbstractNpcDetector : MonoBehaviour // Consider adding ", 
     public event Action<DetectedNpcData> OnNpcExitedZoneEvent;
 
     // ******* External Event Handlers (Called by ZoneColliderBridge) ********
+    
+    public int NpcCount => detectedNpcs.Count; // Read-only property to get the number of currently detected NPCs
 
     /// <summary>
     /// Called by a ZoneColliderBridge when an NPC enters its specific trigger volume.

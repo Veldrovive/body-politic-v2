@@ -117,7 +117,11 @@ public class NpcDetectorReactor : LoSNpcDetector
         Debug.Log($"Test reaction triggered on {gameObject.name} for {targetNpc.name}.");
         MoveGraphFactory factory = new(new MoveGraphConfiguration()
         {
-            moveToStateConfig = new MoveToStateConfiguration(targetNpc.transform),
+            moveToStateConfig = new MoveToStateConfiguration(targetNpc.transform)
+            {
+                RequireExactPosition = false,
+                AcceptanceRadius = 1f,
+            },
             ArrivedMessage = "I guess it's fine...",
             PreStartMessage = "Hey, what are you doing?!",
         });
