@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public enum DetectionReactionType
 {
     Test,  // Triggers a visible reaction
-    Curious, // Trigger CuriousState
+    Curious,
+    Follow,
     RatOut, // Triggers RatOutState
     Panic, // Triggers PanicState
 }
@@ -47,6 +48,7 @@ public class NpcDetectorReactor : LoSNpcDetector
         ownNpcContext = GetComponent<NpcContext>();
         // We sort in descending order to make it easier to find the highest min suspicion
         sortedReactionDefinitions = new List<DetectionReactionDefinition>(reactionDefinitions);
+        sortedReactionDefinitions.Sort((a, b) => b.MinSuspicion.CompareTo(a.MinSuspicion));
     }
     
     protected override void Update()
@@ -92,6 +94,12 @@ public class NpcDetectorReactor : LoSNpcDetector
                     // Call the test reaction handler
                     HandleTestReaction(mostSuspiciousNpcContext);
                     break;
+                case DetectionReactionType.Curious:
+                    HandleCuriousReaction(mostSuspiciousNpcContext);
+                    break;
+                case DetectionReactionType.Follow:
+                    HandleFollowReaction(mostSuspiciousNpcContext);
+                    break;
                 default:
                     Debug.LogError($"Unhandled reaction type: {highestReaction.ReactionType}");
                     break;
@@ -128,5 +136,49 @@ public class NpcDetectorReactor : LoSNpcDetector
         TriggerOverride(factory);
     }
 
+    private void HandleCuriousReaction(NpcContext targetNpc)
+    {
+        LookTowardGraphFactory factory = new(new LookTowardGraphConfiguration()
+        {
+            TargetingType = FollowStateTargetingType.Transform,
+            TargetTransform = new TransformReference(targetNpc.transform),
+
+            SightDistance = 10f,
+            MaxDuration = 10f,
+            MaxDurationWithoutLoS = 2f,
+
+            EntryMessage = "What was that?",
+            EntryMessageDuration = 2f,
+            EntryWaitDuration = 0f, // Immediately start looking while talking
+
+            ExitMessage = "Hmm.",
+            ExitMessageDuration = 1.5f,
+            ExitWaitDuration = 1.5f,
+        });
+        TriggerOverride(factory);
+    }
+    
+    private void HandleFollowReaction(NpcContext targetNpc)
+    {
+        FollowGraphFactory factory = new(new FollowGraphConfiguration()
+        {
+            TargetingType = FollowStateTargetingType.Transform,
+            TargetTransform = new TransformReference(targetNpc.transform),
+            FollowDistance = 5f,
+            MaxDuration = 15f,
+            MaxDurationWithoutLoS = 5f,
+            Speed = MovementSpeed.Walk,
+
+            EntryMessage = "Hmm...",
+            EntryMessageDuration = 2f,
+            EntryWaitDuration = 0f, // Immediately start following while talking
+
+            ExitMessage = "I guess its ok.",
+            ExitMessageDuration = 2f,
+            ExitWaitDuration = 2f, // Immediately exit the graph
+        });
+        TriggerOverride(factory);
+    }
+    
     #endregion
 }

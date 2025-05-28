@@ -456,12 +456,12 @@ public class StateGraph : MonoBehaviour
         // Check that these ports exist
         if (!outputNode.PortContext.ContainsKey(outputPortInfo))
         {
-            Debug.LogError($"Output port {outputPortInfo.Name} not found on node {outputNodeId} in graph {displayName}. Cannot connect.");
+            Debug.LogError($"Output port {outputPortInfo.Name} not found on node {outputNode.GetType()}-{outputNodeId} in graph {displayName}. Cannot connect.");
             return false;
         }
         if (!inputNode.PortContext.ContainsKey(inputPortInfo))
         {
-            Debug.LogError($"Input port {inputPortInfo.Name} not found on node {inputNodeId} in graph {displayName}. Cannot connect.");
+            Debug.LogError($"Input port {inputPortInfo.Name} not found on node {inputNode.GetType()}-{inputNodeId} in graph {displayName}. Cannot connect.");
             return false;
         }
         

@@ -26,7 +26,7 @@ public class DoorOpener : AbstractDoorOpener
     private Vector3 openPosition;
     private Vector3 targetPosition;
 
-    private MeshRenderer renderer;
+    private MeshRenderer _renderer;
     private float? closedAlpha;
     private float? openAlpha;
     private float? targetAlpha;
@@ -62,10 +62,10 @@ public class DoorOpener : AbstractDoorOpener
         openPosition = closedPosition + directionVector * slideDistance;
         
         // Get the material and set the alpha values
-        renderer = GetComponent<MeshRenderer>();
-        if (renderer != null && renderer.material != null)
+        _renderer = GetComponent<MeshRenderer>();
+        if (_renderer != null && _renderer.material != null)
         {
-            Color color = renderer.material.color;
+            Color color = _renderer.material.color;
             closedAlpha = color.a;
             openAlpha = fadedAlpha;
             targetAlpha = closedAlpha; // Start with closed alpha
@@ -100,13 +100,13 @@ public class DoorOpener : AbstractDoorOpener
 
         if (isAnimating)
         {
-            if (renderer != null)
+            if (_renderer != null)
             {
                 if (targetAlpha.HasValue)
                 {
-                    Color color = renderer.material.color;
+                    Color color = _renderer.material.color;
                     color.a = Mathf.MoveTowards(color.a, targetAlpha.Value, (1.0f / fadeDuration) * Time.deltaTime);
-                    renderer.material.color = color;
+                    _renderer.material.color = color;
 
                     if (Mathf.Approximately(color.a, targetAlpha.Value))
                     {

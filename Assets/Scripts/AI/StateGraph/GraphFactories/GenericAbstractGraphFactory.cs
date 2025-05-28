@@ -59,8 +59,13 @@ public abstract class GenericAbstractGraphFactory<TConfig> : AbstractGraphFactor
     }
 
     protected void AddConnectionThroughSay(StateGraph graph, StateGraphNode source, string sourcePortName,
-        StateGraphNode destination, string destinationPortName, string message, float messageDuration)
+        StateGraphNode destination, string destinationPortName, string message, float messageDuration, float? waitDuration = null)
     {
+        if (!waitDuration.HasValue)
+        {
+            waitDuration = messageDuration;
+        }
+        
         // We automatically add the source and destination nodes to the graph if they are no already present
         if (graph.GetNodeById(source.id) == null)
         {
@@ -76,7 +81,7 @@ public abstract class GenericAbstractGraphFactory<TConfig> : AbstractGraphFactor
             m_logLevel = LogLevel.Info,
             m_textDuration = messageDuration,
             m_textToSay = message,
-            m_waitDuration = messageDuration
+            m_waitDuration = waitDuration.Value
         });
         
         graph.AddNode(sayStateNode);

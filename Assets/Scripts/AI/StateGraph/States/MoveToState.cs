@@ -119,7 +119,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
     [Header("Finalization")]
     [Tooltip("The distance to stop at. If the target is within this distance, we will stop moving.")]
     [SerializeField] private float stoppingDistance = 0.1f;
-    [Tooltip("The angle speed to align to the target. If the target is within this angle, we will stop moving.")]
+    [Tooltip("The angle speed to align to the target.")]
     [SerializeField] private float alignmentAngularSpeed = 360f;
     [Tooltip("The angle tolerance to align to the target. If the target is within this angle, we will stop moving.")]
     [SerializeField] private float alignmentAngleTolerance = 1.0f;

@@ -51,6 +51,7 @@ public enum MovementFailureReason
 public class NpcMovementRequest
 {
     public Vector3? TargetPosition { get; private set; } = null;
+    public Quaternion? TargetRotation { get; private set; } = null;
     public Transform TargetTransform { get; private set; } = null;
     public Vector3 TargetOffset { get; set; } = Vector3.zero;
     public TargetOffsetFrame OffsetFrame { get; set; } = TargetOffsetFrame.Global;
@@ -199,6 +200,8 @@ public class NpcMovementManager : MonoBehaviour
     private float replanAtTargetMoveDistanceSqr;
     private float lastRemainingDistance = 0f;
     private Vector3? lastTargetPosition;
+    
+    public bool HasMovementRequest => currentMovementRequest != null;
     
     public event Action OnRequestCompleted;
     public event Action<MovementFailureReason, object> OnRequestFailed;  // Raised when the request fails. Or when it is interrupted.
