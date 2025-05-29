@@ -41,6 +41,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private KeyCode itemPlacingKey = KeyCode.B;
     [Tooltip("Key to hold to overwrite the player controller queue instead of appending.")]
     [SerializeField] private KeyCode overwriteQueueModifier = KeyCode.LeftShift;
+    
+    [Header("Configuration")]
+    [SerializeField] MovementSpeed defaultMovementSpeed;
 
 
     // --- Events ---
@@ -471,7 +474,7 @@ public class PlayerManager : MonoBehaviour
                 GraphId = "PlayerMoveToCommandGraph",
                 moveToStateConfig = new MoveToStateConfiguration(mouseHoverMovementDestination.Value)
                 {
-                    DesiredSpeed = MovementSpeed.Run,
+                    DesiredSpeed = defaultMovementSpeed,
                     RequireExactPosition = true
                 }
             };

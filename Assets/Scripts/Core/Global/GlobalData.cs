@@ -16,6 +16,9 @@ public class GlobalData : MonoBehaviour
 
     [Tooltip("The event used to trigger camera mode changes.")]
     [SerializeField] public CameraModeRequestEventSO CameraModeRequestEvent;
+    
+    [Tooltip("The event used to trigger sound events.")]
+    [SerializeField] public SoundEventSO SoundEvent;
 
     public static GlobalData Instance { get; private set; }
 

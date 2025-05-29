@@ -175,6 +175,7 @@ MonoBehaviour:
   PlayerIdentity: {fileID: 11400000, guid: c5f214389aac7473f8304ce6b401d3fb, type: 2}
   InfectionEvent: {fileID: 11400000, guid: b2d0179eea23a4d389a3d13be4f6f1f3, type: 2}
   CameraModeRequestEvent: {fileID: 11400000, guid: ad3ed1f77dd99490bbcc928fe7e95df1, type: 2}
+  SoundEvent: {fileID: 11400000, guid: 7d0544ca3d89e485c96c5955407f130f, type: 2}
 --- !u!114 &8917888051748937010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +205,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 193
   maxRaycastDistance: 100
-  ignoreUIOnHover: 1
+  ignoreUIOnHover: 0
 --- !u!114 &6335414319268155121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,6 +222,8 @@ MonoBehaviour:
   allNpcs: []
   infectedNpcs: []
   focusOnInfection: 0
+  triggerActionCameraOnInfection: 1
+  infectionActionCameraDuration: 5
 --- !u!114 &3116719903882094897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,11 +238,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputManager: {fileID: 8106561755936268605}
   movementMarkerPrefab: {fileID: 4578786293534885563, guid: 084ca064cc18444f8c2c208f3cdb5e8a, type: 3}
-  movementMarkerSnapSpeed: 100
+  movementMarkerSnapSpeed: 20
   defaultFocusedNpc: {fileID: 0}
   controllableNpcs: []
+  itemPlaceDistance: 3
   returnToRoutineKey: 114
   cycleFocusKey: 110
+  itemPlacingKey: 98
   overwriteQueueModifier: 304
 --- !u!114 &3809693611007301062
 MonoBehaviour:
@@ -254,6 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixerRole: {fileID: 11400000, guid: 4cf2f2f8875944372a5f1024c5133a0e, type: 2}
+  actionCameraDuration: 10
 --- !u!1 &5169808644709739513
 GameObject:
   m_ObjectHideFlags: 0

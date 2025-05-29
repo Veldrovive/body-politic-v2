@@ -30,3 +30,6 @@ public class UnityEventCameraModeRequest : UnityEvent<CameraModeRequest> { }
 
 [Serializable]
 public class UnityEventInfectionData : UnityEvent<InfectionData> { }
+
+[Serializable]
+public class UnityEventSoundData : UnityEvent<SoundData> { }

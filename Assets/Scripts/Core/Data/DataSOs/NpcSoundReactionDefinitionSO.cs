@@ -1,0 +1,212 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum SoundReactionType
+{
+    Test,  // Triggers a visible reaction
+    LookAtEmanationPoint, // NPC will look at the point where the sound was emitted
+    InspectEmanationPoint, // NPC will move to the point where the sound was emitted
+}
+
+[Serializable]
+public class SoundReactionDefinition
+{
+    [Tooltip("The minimum suspicion level that will trigger this reaction.")]
+    public int MinSuspicion;
+
+    [Tooltip("The priority of the graph for StateController interruption. Priority should be 1.")]
+    public int Priority = 1;
+
+    [Tooltip("The reaction type to trigger once past the suspicion threshold.")]
+    public SoundReactionType ReactionType;
+
+    public SoundReactionDefinition()
+    {
+        MinSuspicion = 1;
+        Priority = 1;
+        ReactionType = SoundReactionType.LookAtEmanationPoint;
+    }
+}
+
+[Serializable]
+public class SoundSensitivity
+{
+    [Tooltip("The maximum distance at which the NPC can hear sounds with line of sight.")]
+    public float LoSMaxDistance;
+    [Tooltip("The maximum distance at which the NPC can hear sounds without line of sight.")]
+    public float NoLoSMaxDistance;
+}
+
+[CreateAssetMenu(fileName = "NpcSoundReactionSO", menuName = "Body Politic/Npc Sound Reaction SO")]
+public class NpcSoundReactionDefinitionSO : ScriptableObject
+{
+    [Header("Sound Sensitivity")]
+    [SerializeField] public SoundSensitivity QuiteSoundSensitivity;
+    [SerializeField] public SoundSensitivity NormalSoundSensitivity;
+    [SerializeField] public SoundSensitivity LoudSoundSensitivity;
+    
+    [Header("Sound Volume (For Player)")]
+    [SerializeField] public float QuietSoundVolume = 0.5f;
+    [SerializeField] public float NormalSoundVolume = 1f;
+    [SerializeField] public float LoudSoundVolume = 1.5f;
+    
+    [Header("Sound Reactions")]
+    [SerializeField] public List<SoundReactionDefinition> Reactions;
+
+    [Header("Configration")] [SerializeField]
+    public LayerMask LoSObstacleLayerMask;
+
+    private void AutoSet()
+    {
+        if (LoSObstacleLayerMask == 0)
+        {
+            LoSObstacleLayerMask = LayerMask.GetMask("Default");
+        }
+    }
+
+    private void Reset()
+    {
+        AutoSet();
+    }
+    
+    private void OnValidate()
+    {
+        AutoSet();
+    }
+
+    public float GetSoundVolume(SoundData soundData)
+    {
+        return soundData.Loudness switch
+        {
+            SoundLoudness.Quiet => QuietSoundVolume,
+            SoundLoudness.Normal => NormalSoundVolume,
+            SoundLoudness.Loud => LoudSoundVolume,
+            _ => QuietSoundVolume
+        };
+    }
+    
+    public bool CanHearSound(SoundData soundData, Vector3 reactorPoint)
+    {
+        Vector3 emanationPoint = soundData.EmanationPoint;
+        // We assume that LoSMaxDistance is always greater than NoLoSMaxDistance. So we can check LoSMaxDistance first
+        // and avoid computing the linecast if not necessary.
+        float withLoSMaxDistance = soundData.Loudness switch
+        {
+            SoundLoudness.Quiet => QuiteSoundSensitivity.LoSMaxDistance,
+            SoundLoudness.Normal => NormalSoundSensitivity.LoSMaxDistance,
+            SoundLoudness.Loud => LoudSoundSensitivity.LoSMaxDistance,
+            _ => QuiteSoundSensitivity.LoSMaxDistance
+        };
+        
+        if ((emanationPoint - reactorPoint).sqrMagnitude > withLoSMaxDistance * withLoSMaxDistance)
+        {
+            // The sounds is too far away to hear with line of sight so we do not need to check LoS
+            return false;
+        }
+        
+        // Similarly, if the emanation point is closer than the NoLoSMaxDistance, we can know that the NPC can hear the sound
+        // without checking line of sight.
+        float noLoSMaxDistance = soundData.Loudness switch
+        {
+            SoundLoudness.Quiet => QuiteSoundSensitivity.NoLoSMaxDistance,
+            SoundLoudness.Normal => NormalSoundSensitivity.NoLoSMaxDistance,
+            SoundLoudness.Loud => LoudSoundSensitivity.NoLoSMaxDistance,
+            _ => QuiteSoundSensitivity.NoLoSMaxDistance
+        };
+        
+        if ((emanationPoint - reactorPoint).sqrMagnitude <= noLoSMaxDistance * noLoSMaxDistance)
+        {
+            // The sound is close enough to hear without line of sight
+            return true;
+        }
+        
+        // Otherwise we need to check if there is LoS. If there is, the NPC can hear the sound.
+        RaycastHit hit;
+        if (Physics.Linecast(reactorPoint, emanationPoint, out hit, LoSObstacleLayerMask))
+        {
+            // There is an obstacle in the way, so the NPC cannot hear the sound
+            return false;
+        }
+        
+        // No obstacle in the way, so the NPC can hear the sound
+        return true;
+    }
+    
+    /// <summary>
+    /// Finds the reaction definition that has the maximum minimum suspicion that is less than or equal to the given suspicion.
+    /// </summary>
+    /// <param name="suspicion"></param>
+    /// <returns></returns>
+    private SoundReactionDefinition GetReactionForSuspicion(int suspicion)
+    {
+        float maxMinSuspicion = 0;
+        SoundReactionDefinition bestReaction = null;
+        foreach (var reaction in Reactions)
+        {
+            if (reaction.MinSuspicion <= suspicion && reaction.MinSuspicion > maxMinSuspicion)
+            {
+                maxMinSuspicion = reaction.MinSuspicion;
+                bestReaction = reaction;
+            }
+        }
+        return bestReaction;
+    }
+
+    public (AbstractGraphFactory reactionGraph, int priority) GetReactionFactory(NpcContext reactingNpc, SoundData soundData)
+    {
+        SoundReactionDefinition reaction = GetReactionForSuspicion(soundData.Suspiciousness);
+        if (reaction == null)
+        {
+            // Then there was not an appropriate reaction defined for this sound
+            return (null, -1);
+        }
+
+        
+        AbstractGraphFactory factory = reaction.ReactionType switch 
+        {
+            SoundReactionType.Test => GetTestReactionFactory(reactingNpc, soundData),
+            SoundReactionType.LookAtEmanationPoint => GetLookAtEmanationPointFactory(reactingNpc, soundData),
+            SoundReactionType.InspectEmanationPoint => GetInspectEmanationPointFactory(reactingNpc, soundData),
+            _ => throw new ArgumentOutOfRangeException(nameof(reaction.ReactionType), $"Unhandled reaction type: {reaction.ReactionType}")
+        };
+        if (factory == null)
+        {
+            // There was a problem creating the factory
+            return (null, -1);
+        }
+        factory.SetGraphId($"{reaction.ReactionType.ToString()}-{soundData.EmanationPoint}");
+        
+        return (factory, reaction.Priority);
+    }
+
+    #region Factory Helpers
+
+    private AbstractGraphFactory GetTestReactionFactory(NpcContext reactingNpc, SoundData soundData)
+    {
+        return null;
+    }
+    
+    private AbstractGraphFactory GetLookAtEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
+    {
+        return new LookTowardGraphFactory(new LookTowardGraphConfiguration()
+        {
+            TargetingType = FollowStateTargetingType.Position,
+            TargetPosition = new(soundData.EmanationPoint),
+
+            SightDistance = 10f,
+            MaxDuration = 5f,
+            MaxDurationWithoutLoS = 2f,
+
+            EntryMessage = "Huh?",
+            EntryMessageDuration = 1f,
+        });
+    }
+    
+    private AbstractGraphFactory GetInspectEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
+    {
+        return null;
+    }
+
+    #endregion
+}

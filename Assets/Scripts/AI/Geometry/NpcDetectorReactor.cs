@@ -16,9 +16,19 @@ class DetectionReactionDefinition
 {
     [Tooltip("The minimum suspicion level that will trigger this reaction.")]
     public float MinSuspicion;
+    
+    [Tooltip("The priority of the graph for StateController interruption. Priority should be 2.")]
+    public int Priority = 2;
 
     [Tooltip("The reaction type to trigger once past the suspicion threshold.")]
     public DetectionReactionType ReactionType;
+    
+    public DetectionReactionDefinition()
+    {
+        MinSuspicion = 1f;
+        Priority = 2;
+        ReactionType = DetectionReactionType.Curious;
+    }
 }
 
 /// Checks VisibleNpcs every frame.
@@ -43,6 +53,19 @@ public class NpcDetectorReactor : LoSNpcDetector
     private NpcContext ownNpcContext;
     private float lastMaxSuspicion = 0;
 
+    protected override void InitializeFields()
+    {
+        base.InitializeFields();
+        
+        if (reactionDefinitions == null || reactionDefinitions.Count == 0)
+        {
+            reactionDefinitions = new List<DetectionReactionDefinition>()
+            {
+                new DetectionReactionDefinition()
+            };
+        }
+    }
+    
     void Awake()
     {   
         ownNpcContext = GetComponent<NpcContext>();

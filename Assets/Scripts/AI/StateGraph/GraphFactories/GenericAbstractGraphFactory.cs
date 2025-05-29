@@ -75,23 +75,33 @@ public abstract class GenericAbstractGraphFactory<TConfig> : AbstractGraphFactor
         {
             graph.AddNode(destination);
         }
-        
-        SayStateNode sayStateNode = new(new SayStateConfiguration()
+
+        if (string.IsNullOrEmpty(message))
         {
-            m_logLevel = LogLevel.Info,
-            m_textDuration = messageDuration,
-            m_textToSay = message,
-            m_waitDuration = waitDuration.Value
-        });
+            graph.ConnectStateFlow(
+                source.id, new NodePortInfo(sourcePortName, PortType.StateTransitionOut),
+                destination.id, new NodePortInfo(destinationPortName, PortType.StateTransitionIn)
+            );
+        }
+        else
+        {
+            SayStateNode sayStateNode = new(new SayStateConfiguration()
+            {
+                m_logLevel = LogLevel.Info,
+                m_textDuration = messageDuration,
+                m_textToSay = message,
+                m_waitDuration = waitDuration.Value
+            });
         
-        graph.AddNode(sayStateNode);
-        graph.ConnectStateFlow(
-            source.id, new NodePortInfo(sourcePortName, PortType.StateTransitionOut),
-            sayStateNode.id, new NodePortInfo(StateNode.IN_PORT_NAME, PortType.StateTransitionIn)
-        );
-        graph.ConnectStateFlow(
-            sayStateNode.id, new NodePortInfo(nameof(SayStateOutcome.Timeout), PortType.StateTransitionOut),
-            destination.id, new NodePortInfo(destinationPortName, PortType.StateTransitionIn)
-        );
+            graph.AddNode(sayStateNode);
+            graph.ConnectStateFlow(
+                source.id, new NodePortInfo(sourcePortName, PortType.StateTransitionOut),
+                sayStateNode.id, new NodePortInfo(StateNode.IN_PORT_NAME, PortType.StateTransitionIn)
+            );
+            graph.ConnectStateFlow(
+                sayStateNode.id, new NodePortInfo(nameof(SayStateOutcome.Timeout), PortType.StateTransitionOut),
+                destination.id, new NodePortInfo(destinationPortName, PortType.StateTransitionIn)
+            );
+        }
     }
 }

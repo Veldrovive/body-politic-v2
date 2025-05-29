@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI; // For NavMeshAgent
+using UnityEngine.AI;
+using UnityEngine.Serialization; // For NavMeshAgent
 
 // Add required components for the new controllers
 [RequireComponent(typeof(NPCIdentity))] // [cite: 765]
@@ -14,6 +15,7 @@ using UnityEngine.AI; // For NavMeshAgent
 [RequireComponent(typeof(NpcAnimationManager))]
 [RequireComponent(typeof(NpcDetectorReactor))]
 [RequireComponent(typeof(InteractableNpc))]
+[RequireComponent(typeof(NpcSoundHandler))]
 public class NpcContext : MonoBehaviour
 {
     public NPCIdentity Identity { get; private set; }
@@ -26,6 +28,8 @@ public class NpcContext : MonoBehaviour
     public NavMeshAgent NavMeshAgent { get; private set; }
     public NpcDetectorReactor DetectorReactor { get; private set; }
     public InteractableNpc InteractableNpc { get; private set; }
+    
+    public NpcSoundHandler SoundHandler { get; private set; }
     
     private Dictionary<string, object> arbitraryAccessData { get; set; }
 
@@ -50,6 +54,7 @@ public class NpcContext : MonoBehaviour
         NavMeshAgent = GetComponent<NavMeshAgent>();
         DetectorReactor = GetComponent<NpcDetectorReactor>();
         InteractableNpc = GetComponent<InteractableNpc>();
+        SoundHandler = GetComponent<NpcSoundHandler>();
         
         
         // Register with the InfectionManager
@@ -139,5 +144,90 @@ public class NpcContext : MonoBehaviour
         {
             return defaultValue;
         }
+    }
+
+    #region Sounds
+    
+    // Stroll 24 bpm - Velocity 1
+    // Walk 99 bpm - Velocity 2
+    // Run 146 bpm - Velocity 3
+    // Sprint 173 - Velocity 5
+    
+    [Header("Sounds")]
+    [SerializeField] private List<AudioClip> defaultFootStepSounds;
+
+    [SerializeField] private float footstepZThreshold = 0f;
+    [SerializeField] private Transform rightFootTransform;
+    [SerializeField] private Transform leftFootTransform;
+
+    private float lastRightFoodLocalZ = 0f;
+    private float lastLeftFoodLocalZ = 0f;
+
+    private AudioClip GetFootstepClip()
+    {
+        // Chooses a random footstep sound from the list of default footstep sounds.
+        if (defaultFootStepSounds == null || defaultFootStepSounds.Count == 0)
+        {
+            Debug.LogWarning("No footstep sounds defined. Using a placeholder sound.", this);
+            return null; // Placeholder or default sound
+        }
+        
+        int randomIndex = UnityEngine.Random.Range(0, defaultFootStepSounds.Count);
+        return defaultFootStepSounds[randomIndex];
+    }
+    
+    private void HandleSoundCreation()
+    {
+        // *** Footsteps ***
+        // If you have any suspicion, the footstep sound gains a suspiciousness of 1. Otherwise it has a suspiciousness of 0.
+        bool didStep = false;
+        if (rightFootTransform != null)
+        {
+            // float newRightFootLocalZ = rightFootTransform.position.z - transform.position.z;
+            Vector3 rightFootTransformLocalPosition = rightFootTransform.position - transform.position;
+            // Rotate this into the frame of the NPC
+            rightFootTransformLocalPosition = Quaternion.Inverse(transform.rotation) * rightFootTransformLocalPosition;
+            float newRightFootLocalZ = rightFootTransformLocalPosition.z;
+            if (lastRightFoodLocalZ > footstepZThreshold && newRightFootLocalZ < footstepZThreshold)
+            {
+                didStep = true;
+            }
+            lastRightFoodLocalZ = newRightFootLocalZ;
+        }
+        if (leftFootTransform != null)
+        {
+            // float newLeftFootLocalZ = leftFootTransform.position.z - transform.position.z;
+            Vector3 leftFootTransformLocalPosition = leftFootTransform.position - transform.position;
+            // Rotate this into the frame of the NPC
+            leftFootTransformLocalPosition = Quaternion.Inverse(transform.rotation) * leftFootTransformLocalPosition;
+            float newLeftFootLocalZ = leftFootTransformLocalPosition.z;
+            if (lastLeftFoodLocalZ > footstepZThreshold && newLeftFootLocalZ < footstepZThreshold)
+            {
+                didStep = true;
+            }
+            lastLeftFoodLocalZ = newLeftFootLocalZ;
+        }
+        
+
+        if (didStep)
+        {
+            SoundData footstepSoundData = new SoundData
+            {
+                Clip = GetFootstepClip(),
+                EmanationPoint = transform.position,
+                Suspiciousness = SuspicionTracker.CurrentSuspicionLevel > 0 ? 1 : 0,
+                CausesReactions = SuspicionTracker.CurrentSuspicionLevel > 0,
+                Loudness = SoundLoudness.Quiet,
+                CreatorObject = gameObject
+            };
+            SoundHandler.RaiseSoundEvent(footstepSoundData);
+        }
+    }
+
+    #endregion
+    
+    private void Update()
+    {
+        HandleSoundCreation();
     }
 }

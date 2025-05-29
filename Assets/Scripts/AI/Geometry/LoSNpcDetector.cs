@@ -209,7 +209,7 @@ public class LoSNpcDetector : MonoBehaviour
     /// Initializes serialized fields with default values in the editor,
     /// attempting to find a "Head" child for the LoS origin before defaulting to self.
     /// </summary>
-    private void InitializeFields()
+    protected virtual void InitializeFields()
     {
         // --- LoS Origin Initialization ---
         // Only attempt auto-detection if the field is not already assigned in the Inspector

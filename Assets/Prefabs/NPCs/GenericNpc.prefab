@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 7677463018914152175}
   - component: {fileID: 7769777322885264402}
   - component: {fileID: 4206932792643705303}
+  - component: {fileID: 4776853135727818125}
   - component: {fileID: 5412603953881350774}
   - component: {fileID: 1802905592461804675}
   - component: {fileID: 3065160016559865694}
@@ -146,6 +147,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InfectPoint: {fileID: 2810805423157551732}
+  defaultFootStepSounds:
+  - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
+  - {fileID: 8300000, guid: 5c9bdbce37b06a24fa6ea793bcfd1907, type: 3}
+  - {fileID: 8300000, guid: 0909de896e9029541b92ae05fe15e4b6, type: 3}
+  - {fileID: 8300000, guid: 6ad0cf00f050bee41a2dee098475dc78, type: 3}
+  - {fileID: 8300000, guid: 7ca5a9710db4327439c9f8cb8204615e, type: 3}
+  - {fileID: 8300000, guid: 14ae706fef2303e4cb71112dbd5d250b, type: 3}
+  - {fileID: 8300000, guid: b995bc1775ea83b4b8f861763e9a1424, type: 3}
+  - {fileID: 8300000, guid: d15f7338d693f0343843a6b9096d27f6, type: 3}
+  footstepVelocityCoefficient: 0.5
+  footstepVelocityOffset: 0.1
+  rightFootTransform: {fileID: 985415597510929604}
+  leftFootTransform: {fileID: 2685630361013605513}
 --- !u!114 &7677463018914152175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,6 +210,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   reactionDefinitions: []
+--- !u!114 &4776853135727818125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945626931996106311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba32650ecbc4ef9b185f00111906cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 7d0544ca3d89e485c96c5955407f130f, type: 2}
+  soundReactionDefinition: {fileID: 11400000, guid: d46384a8ed5b34d11b75912f62b87103, type: 2}
 --- !u!114 &5412603953881350774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,9 +1080,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &985415597510929604 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 608321761475470972, guid: 69f3b0f3b8725413096ecc816fef5407, type: 3}
+  m_PrefabInstance: {fileID: 422730509259770552}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2047022244878480752 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: 69f3b0f3b8725413096ecc816fef5407, type: 3}
+  m_PrefabInstance: {fileID: 422730509259770552}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2685630361013605513 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6874584590210671055, guid: 69f3b0f3b8725413096ecc816fef5407, type: 3}
   m_PrefabInstance: {fileID: 422730509259770552}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6069722699781799888 stripped
