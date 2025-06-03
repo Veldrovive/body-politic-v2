@@ -9,11 +9,20 @@ public enum SoundLoudness
     Loud
 }
 
+[Flags]
+public enum SoundType
+{
+    Default = 0,
+    Footstep = 1,
+    // Further must be powers of 2 for flag usage
+}
+
 [Serializable]
 public class SoundData
 {
     public string SoundInstanceId = Guid.NewGuid().ToString();  // Can be used to end the sound instance later if needed
     public AudioClip Clip;
+    public SoundType SType = SoundType.Default;
     public int Suspiciousness;
     public SoundLoudness Loudness;
     public Vector3 EmanationPoint;

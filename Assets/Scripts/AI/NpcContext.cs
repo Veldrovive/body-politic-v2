@@ -218,7 +218,8 @@ public class NpcContext : MonoBehaviour
                 Suspiciousness = SuspicionTracker.CurrentSuspicionLevel > 0 ? 1 : 0,
                 CausesReactions = SuspicionTracker.CurrentSuspicionLevel > 0,
                 Loudness = SoundLoudness.Quiet,
-                CreatorObject = gameObject
+                CreatorObject = gameObject,
+                SType = SoundType.Footstep
             };
             SoundHandler.RaiseSoundEvent(footstepSoundData);
         }

@@ -25,12 +25,24 @@ MonoBehaviour:
   NormalSoundVolume: 1
   LoudSoundVolume: 1.5
   Reactions:
-  - MinSuspicion: 1
+  - name: Handle Low Suspicion
+    MinSuspicion: 1
     Priority: 1
     ReactionType: 1
-  - MinSuspicion: 5
+    SoundTypeWhitelist: 0
+    CanInterruptSelf: 1
+  - name: Handle Mid Suspicion
+    MinSuspicion: 5
     Priority: 1
     ReactionType: 2
+    SoundTypeWhitelist: 0
+    CanInterruptSelf: 1
+  - name: Handle Footstep
+    MinSuspicion: 1
+    Priority: 1
+    ReactionType: 2
+    SoundTypeWhitelist: -1
+    CanInterruptSelf: 0
   LoSObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 1

@@ -12,6 +12,8 @@ public enum SoundReactionType
 [Serializable]
 public class SoundReactionDefinition
 {
+    public string name;  // Used in the editor to identify the reaction
+    
     [Tooltip("The minimum suspicion level that will trigger this reaction.")]
     public int MinSuspicion;
 
@@ -21,11 +23,18 @@ public class SoundReactionDefinition
     [Tooltip("The reaction type to trigger once past the suspicion threshold.")]
     public SoundReactionType ReactionType;
 
+    [Tooltip("The sound type that this reaction applies to.")]
+    public SoundType SoundTypeWhitelist = SoundType.Default;
+
+    public bool CanInterruptSelf = true; // If false, if this reaction is already running it will not try to interrupt itself.
+
     public SoundReactionDefinition()
     {
         MinSuspicion = 1;
         Priority = 1;
         ReactionType = SoundReactionType.LookAtEmanationPoint;
+        SoundTypeWhitelist = SoundType.Default;
+        CanInterruptSelf = true;
     }
 }
 
@@ -138,12 +147,20 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
     /// </summary>
     /// <param name="suspicion"></param>
     /// <returns></returns>
-    private SoundReactionDefinition GetReactionForSuspicion(int suspicion)
+    private SoundReactionDefinition GetReaction(int suspicion, SoundType soundType)
     {
         float maxMinSuspicion = 0;
         SoundReactionDefinition bestReaction = null;
         foreach (var reaction in Reactions)
         {
+            // Check if the sound type is whitelisted for this reaction
+            // soundType is a bitwise flag, so we can use bitwise AND to check if the sound type is included
+            if ((reaction.SoundTypeWhitelist & soundType) == 0)
+            {
+                // The sound type is not whitelisted for this reaction
+                continue;
+            }
+            
             if (reaction.MinSuspicion <= suspicion && reaction.MinSuspicion > maxMinSuspicion)
             {
                 maxMinSuspicion = reaction.MinSuspicion;
@@ -155,7 +172,7 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
 
     public (AbstractGraphFactory reactionGraph, int priority) GetReactionFactory(NpcContext reactingNpc, SoundData soundData)
     {
-        SoundReactionDefinition reaction = GetReactionForSuspicion(soundData.Suspiciousness);
+        SoundReactionDefinition reaction = GetReaction(soundData.Suspiciousness, soundData.SType);
         if (reaction == null)
         {
             // Then there was not an appropriate reaction defined for this sound
@@ -175,7 +192,19 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
             // There was a problem creating the factory
             return (null, -1);
         }
-        factory.SetGraphId($"{reaction.ReactionType.ToString()}-{soundData.EmanationPoint}");
+
+        if (reaction.CanInterruptSelf)
+        {
+            // Then we include the current time in the graph ID to ensure that it is unique
+            // Non-unique graph IDs will cause the SoundHandler to not interrupt the current graph
+            factory.SetGraphId($"{reaction.ReactionType.ToString()}-{Time.time}");
+        }
+        else
+        {
+            // Then we just use the reaction type as the graph ID so that we do not interrupt the current reaction
+            // with a new one of the same type.
+            factory.SetGraphId(reaction.ReactionType.ToString());
+        }
         
         return (factory, reaction.Priority);
     }
