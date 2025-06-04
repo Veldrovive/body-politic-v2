@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization; // For NavMeshAgent
 
-public class NpcSaveData : SaveableData
+/// <summary>
+/// 
+/// </summary>
+public class NpcContextSaveableData : SaveableData
 {
     // Transform
     public Vector3 Position;
@@ -13,16 +14,18 @@ public class NpcSaveData : SaveableData
     public Vector3 Scale;
     
     // Identity
-    public List<NpcRoleSO> DynamicRoles;
+    public NpcIdentitySaveableData NpcIdentityData;
     
     // Inventory
-    public string HeldItemSaveableId;  // References the saveable ID of the held item, if any.
-    public List<string> InventorySlotsSaveableIds;  // References the saveable IDs of the items in the inventory.
+    public NpcInventorySaveableData NpcInventoryData;
     
     // Suspicion
-    public List<NpcSuspicionTracker.SuspicionSourceState> SuspicionSources; // List of active suspicion sources with their states.
+    public NpcSuspicionTrackerSaveableData SuspicionTrackerData;
     
     // Interactable Npc component manages its own save data, so we don't need to store anything here.
+    
+    // State Graph Data
+    public StateGraphControllerSaveableData StateGraphControllerData;
 }
 
 // Add required components for the new controllers
@@ -37,7 +40,7 @@ public class NpcSaveData : SaveableData
 [RequireComponent(typeof(NpcDetectorReactor))]
 [RequireComponent(typeof(InteractableNpc))]
 [RequireComponent(typeof(NpcSoundHandler))]
-public class NpcContext : SaveableMonobehavior
+public class NpcContext : SaveableMonoBehaviour
 {
     public NPCIdentity Identity { get; private set; }
     public NpcInventory Inventory { get; private set; }
@@ -58,12 +61,48 @@ public class NpcContext : SaveableMonobehavior
 
     public Transform InfectPoint;
 
+    #region Saveable Data
+
+    public override SaveableData GetSaveData()
+    {
+        return new NpcContextSaveableData()
+        {
+            Position = transform.position,
+            Rotation = transform.rotation,
+            Scale = transform.localScale,
+            NpcIdentityData = Identity.GetSaveData(),
+            NpcInventoryData = Inventory.GetSaveData(),
+            SuspicionTrackerData = SuspicionTracker.GetSaveData(),
+            // StateGraphControllerData = StateGraphController.GetSaveData()
+        };
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is not NpcContextSaveableData npcData)
+        {
+            Debug.LogError("Invalid save data type for NpcContext: " + data.GetType());
+            return;
+        }
+        
+        // Otherwise we can repopulate the NPC context with the data.
+        transform.position = npcData.Position;
+        transform.rotation = npcData.Rotation;
+        transform.localScale = npcData.Scale;
+        
+        Identity.SetSaveData(npcData.NpcIdentityData);
+        Inventory.SetSaveData(npcData.NpcInventoryData);
+        SuspicionTracker.SetSaveData(npcData.SuspicionTrackerData);
+        // StateGraphController.SetSaveData(npcData.StateGraphControllerData);
+    }
+
+    #endregion
+
     /// <summary>
     /// Gets references to all essential NPC components. Logs errors if components are missing.
     /// </summary>
     protected override void Awake()
     {
-        Debug.Log("Awake called for NPC " + gameObject.name);
         base.Awake();
         
         arbitraryAccessData = new Dictionary<string, object>();

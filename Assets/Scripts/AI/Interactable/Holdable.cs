@@ -11,6 +11,16 @@ public enum HoldableVisualState
     Ghost
 }
 
+public class HoldableSaveableData : InteractableSaveableData
+{
+    // We add data about the transform here.
+    // We do not need to store the holder or the visual state as those get set when the NPC that is holding the item is loaded.
+    // Instead, we just put everything into the world
+    public Vector3 Position;
+    public Quaternion Rotation;
+    public Vector3 Scale;
+}
+
 /// <summary>
 /// Represents an instance of a holdable item in the scene.
 /// Manages its state (held, in inventory, on ground) and interaction consequences.
@@ -39,6 +49,40 @@ public class Holdable : Interactable
     [Header("Initial State")]
     [Tooltip("Optional: Assign an NPC GameObject here if this item should start held by them.")]
     [SerializeField] private GameObject initialHolder;
+
+    public override SaveableData GetSaveData()
+    {
+        SaveableData baseData = base.GetSaveData();
+        // baseData is of type InteractableSaveableData, so we can cast it safely
+        HoldableSaveableData holdableData = baseData as HoldableSaveableData;
+        
+        if (holdableData == null)
+        {
+            throw new InvalidCastException($"Base save data for Holdable '{gameObject.name}' is not of type HoldableSaveableData. Ensure GetSaveData() is overridden correctly.");
+        }
+        
+        holdableData.Position = transform.position;
+        holdableData.Rotation = transform.rotation;
+        holdableData.Scale = transform.localScale;
+        
+        return holdableData;
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is not HoldableSaveableData holdableData)
+        {
+            throw new InvalidCastException($"Expected HoldableSaveableData for loading, but got {data.GetType().Name} for Holdable '{gameObject.name}'.");
+        }
+        
+        base.LoadSaveData(data);  // Sets the base properties from InteractableSaveableData
+        // Now set the specific Holdable properties
+        transform.position = holdableData.Position;
+        transform.rotation = holdableData.Rotation;
+        transform.localScale = holdableData.Scale;
+        // And put into the world. The actual state will be set when NPCs are loaded.
+        SetVisualState(HoldableVisualState.InWorld);
+    }
 
     // --- State Properties ---
     /// <summary>Gets whether this item is currently attached to a holder's hand.</summary>
@@ -69,10 +113,6 @@ public class Holdable : Interactable
     /// <summary>Gets the GameObject currently holding this item (either in hand or inventory).</summary>
     public GameObject CurrentHolder { get; private set; }
 
-    // --- Action Availability Getters --- REMOVED
-    // public bool CanBePickedUp => !IsHeld && !IsInInventory; // REMOVED
-    // public bool CanBePutDown => IsHeld; // REMOVED
-
     // --- Events ---
     /// <summary>Fired when this object is successfully picked up. Passes the GameObject of the holder.</summary>
     public event Action<GameObject> OnPickedUp;
@@ -96,8 +136,10 @@ public class Holdable : Interactable
     /// Initializes state, ensures InteractionInstances exist, caches components,
     /// and sets up event listeners automatically.
     /// </summary>
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         // IsHeld = false;
         // IsInInventory = false;
         CurrentHolder = null;
@@ -150,8 +192,10 @@ public class Holdable : Interactable
     /// <summary>
     /// Sets initial enabled state for PickUp/PutDown interactions and handles starting held.
     /// </summary>
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         // --- Handle Initial Holder ---
         bool startedHeld = false;
         if (initialHolder != null)

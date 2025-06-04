@@ -247,7 +247,7 @@ MonoBehaviour:
   cycleFocusKey: 110
   itemPlacingKey: 98
   overwriteQueueModifier: 304
-  defaultMovementSpeed: 0
+  defaultMovementSpeed: 2
 --- !u!114 &3809693611007301062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NumSaveables: 0
+  holdablePrefabMappings: []
 --- !u!1 &5169808644709739513
 GameObject:
   m_ObjectHideFlags: 0

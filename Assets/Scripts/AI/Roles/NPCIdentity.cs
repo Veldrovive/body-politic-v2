@@ -5,7 +5,12 @@ using System;
 using System.Collections.ObjectModel;
 using Sisus.ComponentNames; // Required for ReadOnlyDictionary
 
-public class NPCIdentity : MonoBehaviour, IRoleProvider
+public class NpcIdentitySaveableData : SaveableData
+{
+    public List<NpcRoleSO> DynamicRoles;
+}
+
+public class NPCIdentity : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcIdentitySaveableData>
 {
     // ******** Unity Inspector Variables ********
     /// <summary>
@@ -65,6 +70,47 @@ public class NPCIdentity : MonoBehaviour, IRoleProvider
 
 
     // ******** END Internal Variables ********
+
+    /// <summary>
+    /// Gets the save data for this object.
+    /// </summary>
+    /// <returns>The save data.</returns>
+    public NpcIdentitySaveableData GetSaveData()
+    {
+        return new()
+        {
+            DynamicRoles = dynamicRoles.ToList() // Convert HashSet to List for serialization
+        };
+    }
+
+    /// <summary>
+    /// Sets the save data for this object.
+    /// </summary>
+    /// <param name="data">The save data to set.</param>
+    public void SetSaveData(NpcIdentitySaveableData data)
+    {
+        dynamicRoles.Clear();
+        if (data != null && data.DynamicRoles != null)
+        {
+            foreach (NpcRoleSO role in data.DynamicRoles)
+            {
+                if (role != null)
+                {
+                    dynamicRoles.Add(role);
+                }
+                else
+                {
+                    Debug.LogWarning($"Null role found in saved data for {gameObject.name}. Skipping.", this);
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"No valid dynamic roles found in saved data for {gameObject.name}.", this);
+        }
+        // Recalculate roles after setting the save data
+        RecalculateAllRoles();
+    }
 
     // ******** Lifecycle Methods ********
     /// <summary>

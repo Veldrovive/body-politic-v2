@@ -176,8 +176,10 @@ public class Consumable : Holdable
     /// <summary>
     /// [EDITOR ONLY] Adds validation checks specific to Consumable setup.
     /// </summary>
-    protected virtual void OnValidate()
+    protected override void OnValidate()
     {
+        base.OnValidate();
+        
         // Basic check to ensure the Consume Definition is assigned if this script is used.
         if (consumeInteractionDefinition == null)
         {

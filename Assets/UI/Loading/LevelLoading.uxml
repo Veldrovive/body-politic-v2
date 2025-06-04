@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="MainContainer" style="flex-grow: 1; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: rgb(12, 12, 12);">
+        <ui:Label text="Loading..." name="Loading" style="color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/munro/munro.ttf?fileID=12800000&amp;guid=7fad61cf4dff6480a90f1a6557c7bba7&amp;type=3#munro&quot;); font-size: 100px;" />
+        <ui:Label text="ASDF" name="LevelName" enable-rich-text="true" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/munro/munro.ttf?fileID=12800000&amp;guid=7fad61cf4dff6480a90f1a6557c7bba7&amp;type=3#munro&quot;); font-size: 20px; color: rgb(180, 180, 180);" />
+        <ui:VisualElement name="ProgressBarContainer" style="flex-grow: 0; width: 50%; height: 50px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-left-color: rgb(173, 173, 173); border-right-color: rgb(173, 173, 173); border-top-color: rgb(173, 173, 173); border-bottom-color: rgb(173, 173, 173);">
+            <ui:VisualElement name="ProgressBar" style="flex-grow: 0; height: 100%; width: 40%; background-color: rgb(183, 183, 183);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

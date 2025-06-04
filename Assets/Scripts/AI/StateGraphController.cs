@@ -27,12 +27,33 @@ public class ExecutionContext
     }
 }
 
-public class StateGraphController : MonoBehaviour
+public class StateGraphControllerSaveableData : SaveableData
+{
+    public class ExecutionContextSaveableData
+    {
+        public StateGraphSaveableData GraphData;
+        public string NodeIdToExecute;
+        public bool IsSavable;
+        public bool Ephemeral;
+        public int Priority;
+        // The state is a runtime object and so it is not saved.
+    }
+    
+    public StateGraphSaveableData RoutineGraphSaveableData;
+    
+    public ExecutionContextSaveableData CurrentExecutionContextData;
+    public List<ExecutionContextSaveableData> ExecutionDataQueue;
+    public ExecutionContextSaveableData SavedRoutineContextData;
+
+    public bool IdleOnExit;
+}
+
+public class StateGraphController : MonoBehaviour, IConsumesSaveData<StateGraphControllerSaveableData>
 {
     [Tooltip("The state graph to start with and return to on queue empty")]
     [SerializeField] StateGraph routineStateGraph;
     
-    [FormerlySerializedAs("idleOnExit")] [Tooltip("If true, when the queue empties, the controller will go to idle state instead of the to routine state graph")]
+    [Tooltip("If true, when the queue empties, the controller will go to idle state instead of the to routine state graph")]
     public bool IdleOnExit = false;
     
     private ExecutionContext currentExecutionContext;
@@ -44,6 +65,24 @@ public class StateGraphController : MonoBehaviour
     public bool IsIdle => IdleOnExit && currentExecutionContext == null;
     public bool IsInRoutine => currentExecutionContext != null && currentExecutionContext.Graph == routineStateGraph;
     public StateGraph CurrentStateGraph => currentExecutionContext?.Graph;
+
+    /// <summary>
+    /// Gets the save data for this object.
+    /// </summary>
+    /// <returns>The save data.</returns>
+    public StateGraphControllerSaveableData GetSaveData()
+    {
+        throw new NotImplementedException("GetSaveData is not implemented in StateGraphController. Please implement this method to return the save data for this controller.");
+    }
+
+    /// <summary>
+    /// Sets the save data for this object.
+    /// </summary>
+    /// <param name="data">The save data to set.</param>
+    public void SetSaveData(StateGraphControllerSaveableData data)
+    {
+        throw new NotImplementedException("SetSaveData is not implemented in StateGraphController. Please implement this method to set the save data for this controller.");
+    }
 
     /// <summary>
     /// Add a StateGraph to be executed.

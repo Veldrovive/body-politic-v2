@@ -138,6 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7cd476e99654765a6b85177fcbdc74a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveableConfig:
+    SaveableId: 
+    LoadOrder: -1
   interactionInstances: []
   itemDefinition: {fileID: 11400000, guid: 5261f51e00594430ba3811f84ead89b7, type: 2}
   pickUpDefinition: {fileID: 11400000, guid: 8c74dcecab53a416ba85fd8cb586c479, type: 2}

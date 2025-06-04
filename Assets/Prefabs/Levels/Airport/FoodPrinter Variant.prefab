@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd9373c34d1ce4dc8a0a51df7f17b22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToPrint: {fileID: 1561862895363509921, guid: 01abf701bbb174bd8af5724d67d54a51, type: 3}
+  prefabToPrint: 1
   printLocation: {fileID: 5919994340963105730}
   printArea: {fileID: 3771137537146515475}
   disableIfPresent: 1

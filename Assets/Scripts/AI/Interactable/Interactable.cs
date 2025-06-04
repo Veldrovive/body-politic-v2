@@ -59,13 +59,26 @@ public class InteractionInstance
     }
 }
 
+public class InteractableSaveableData : SaveableData
+{
+    public class InteracttionInstanceSaveableData
+    {
+        public InteractionDefinitionSO InteractionDefinition;
+        public bool IsEnabled = true;
+        public bool DisabledImpliesHidden = false; // If true, the interaction is hidden when disabled
+        public string DisabledReason = ""; // Reason for being disabled (for UI tooltips)
+    }
+    
+    public List<InteracttionInstanceSaveableData> InteractionInstancesData = new List<InteracttionInstanceSaveableData>();
+}
+
 
 /// <summary>
 /// Base class for objects that NPCs can interact with.
 /// Manages a list of possible interaction instances (defined by InteractionDefinitionSO).
 /// Handles the lifecycle events for interactions performed on it.
 /// </summary>
-public class Interactable : MonoBehaviour
+public class Interactable : SaveableMonoBehaviour
 {
     [Tooltip("List of interactions available on this object.")]
     [SerializeField] protected List<InteractionInstance> interactionInstances = new List<InteractionInstance>();
@@ -75,6 +88,43 @@ public class Interactable : MonoBehaviour
     /// Useful for editor scripts or other systems needing to inspect available interactions.
     /// </summary>
     public IReadOnlyList<InteractionInstance> InteractionInstances => interactionInstances;
+
+    public override SaveableData GetSaveData()
+    {
+        return new InteractableSaveableData()
+        {
+            InteractionInstancesData = interactionInstances.Select(inst =>
+                new InteractableSaveableData.InteracttionInstanceSaveableData
+                {
+                    InteractionDefinition = inst.InteractionDefinition,
+                    IsEnabled = inst.IsEnabled,
+                    DisabledImpliesHidden = inst.DisabledImpliesHidden,
+                    DisabledReason = inst.DisabledReason
+                }).ToList()
+        };
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is not InteractableSaveableData interactableData)
+        {
+            Debug.LogError($"Invalid save data type for {gameObject.name}. Expected InteractableSaveableData.");
+            return;
+        }
+        
+        // We demand that the interactionInstances already has the definitions loaded in it.
+        // We cannot dynamically load definitions here as they contain function references that cannot be serialized.
+        // This does mean that interactions cannot be created dynamically, they must only be enabled and disabled.
+        foreach (var interactionInstance in interactableData.InteractionInstancesData)
+        {
+            SetInteractionEnableInfo(
+                interactionInstance.InteractionDefinition,
+                interactionInstance.IsEnabled,
+                interactionInstance.DisabledImpliesHidden,
+                interactionInstance.DisabledReason
+            );
+        }
+    }
 
     /// <summary>
     /// Finds the InteractionInstance configuration associated with a given InteractionDefinitionSO.

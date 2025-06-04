@@ -19,11 +19,17 @@ public class InventoryData
     }
 }
 
+public class NpcInventorySaveableData : SaveableData
+{
+    public string HeldItemSaveableId;  // References the saveable ID of the held item, if any.
+    public List<string> InventorySlotsSaveableIds;  // References the saveable IDs of the items in the inventory.
+}
+
 /// <summary>
 /// Manages the held item and inventory slots for an NPC.
 /// Acts as the IRoleProvider for roles conferred by items.
 /// </summary>
-public class NpcInventory : MonoBehaviour, IRoleProvider
+public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcInventorySaveableData>
 {
     [Header("Inventory Settings")]
     [Tooltip("Maximum number of items that can be stored in the inventory slots (excluding the held item).")]
@@ -61,6 +67,93 @@ public class NpcInventory : MonoBehaviour, IRoleProvider
     private void NotifyInventoryChanged()
     {
         OnInventoryChanged?.Invoke(GetInventoryData());
+    }
+
+    /// <summary>
+    /// Gets the save data for this object.
+    /// </summary>
+    /// <returns>The save data.</returns>
+    public NpcInventorySaveableData GetSaveData()
+    {
+        if (ResourceDataManager.Instance == null)
+        {
+            throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot get save data.");
+        }
+        
+        string HeldItemSaveableId = _heldItem?.SaveableConfig.SaveableId;
+        List<string> InventorySlotsSaveableIds = _inventorySlots
+            .Select(item => item?.SaveableConfig.SaveableId)
+            .Where(id => !string.IsNullOrEmpty(id)) // Filter out null or empty IDs
+            .ToList();
+
+        return new NpcInventorySaveableData()
+        {
+            HeldItemSaveableId = HeldItemSaveableId,
+            InventorySlotsSaveableIds = InventorySlotsSaveableIds
+        };
+    }
+
+    /// <summary>
+    /// Sets the save data for this object.
+    /// To do this we need to get the gameobjects corresponding to the saveable IDs from the ResourceDataManager
+    /// and try to acquire each of them.
+    /// To do this, we need to call `HandlePickUp` on the Holdable component of the gameobject with a constructed
+    /// InteractionContext that has the NPC gameobject as the initiator.
+    /// </summary>
+    /// <param name="data">The save data to set.</param>
+    public void SetSaveData(NpcInventorySaveableData data)
+    {
+        if (ResourceDataManager.Instance == null)
+        {
+            throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot set save data.");
+        }
+
+        void TryPickUpItem(Holdable item)
+        {
+            InteractionContext dummyContext = new(
+                this.gameObject,
+                item,
+                item.GetPickUpDefinition()
+            );
+            // Attempt to acquire the item, which will handle the visual attachment and role updates.
+            item.HandlePickUp(dummyContext);
+        }
+        
+        // If there is a held item, acquire it first so that it goes into the hand slot.
+        if (!string.IsNullOrEmpty(data.HeldItemSaveableId))
+        {
+            Holdable heldItem = ResourceDataManager.Instance.GetSaveable<Holdable>(data.HeldItemSaveableId);
+            if (heldItem == null)
+            {
+                Debug.LogWarning("NpcInventory: SetSaveData could not find held item with ID " + data.HeldItemSaveableId, this);
+            }
+            else
+            {
+                TryPickUpItem(heldItem);
+            }
+        }
+        
+        // Then we can loop through the inventory slots and acquire each item.
+        foreach (string itemId in data.InventorySlotsSaveableIds)
+        {
+            Holdable item = ResourceDataManager.Instance.GetSaveable<Holdable>(itemId);
+            if (item == null)
+            {
+                Debug.LogWarning($"NpcInventory: SetSaveData could not find inventory item with ID {itemId}", this);
+            }
+            else
+            {
+                TryPickUpItem(item);
+            }
+        }
+        
+        // And finally if the currently held item is not the same as the one in the save data, we store it in the inventory.
+        // This will happen when there is no held item as the first inventory slot will then go into the hand instead.
+        if (_heldItem != null && _heldItem.SaveableConfig.SaveableId != data.HeldItemSaveableId)
+        {
+            // Store the held item in the inventory
+            TryStoreHeldItem();
+        }
     }
 
     /// <summary>

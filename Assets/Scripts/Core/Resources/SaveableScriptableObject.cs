@@ -1,20 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class SaveableScriptableObject : ScriptableObject, ISaveable
 {
     [SerializeField] private SaveableConfig saveableConfig;
     public SaveableConfig SaveableConfig => saveableConfig;
 
-    public virtual SaveableData GetSaveData()
-    {
-        throw new NotImplementedException();
-    }
-    
-    public virtual void LoadSaveData(SaveableData data)
-    {
-        throw new NotImplementedException();
-    }
+    public abstract SaveableData GetSaveData();
+
+    public abstract void LoadSaveData(SaveableData data);
     
     private void InitializeSaveable()
     {
@@ -23,8 +18,8 @@ public abstract class SaveableScriptableObject : ScriptableObject, ISaveable
             saveableConfig.SaveableId = Guid.NewGuid().ToString();
         }
     }
-
-    private void Awake()
+    
+    private void RegisterSaveable()
     {
         InitializeSaveable();
         // On start we need to register with the ResourceDataManager
@@ -37,6 +32,20 @@ public abstract class SaveableScriptableObject : ScriptableObject, ISaveable
             ResourceDataManager.Instance.RegisterSaveable(this);
         }
     }
+    
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // We need to register with the ResourceDataManager for the scene every time a scene is loaded since that
+        // component is scene-specific to avoid saving data across scenes.
+        RegisterSaveable();
+    }
+
+    private void Awake()
+    {
+        RegisterSaveable();
+        
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
     private void OnDestroy()
     {
@@ -47,7 +56,7 @@ public abstract class SaveableScriptableObject : ScriptableObject, ISaveable
         }
         else
         {
-            ResourceDataManager.Instance.UnregisterSaveable(this);
+            ResourceDataManager.Instance.HandleSaveableDestroyed(this);
         }
     }
 }

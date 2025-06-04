@@ -222,17 +222,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6c5263d20943178df98abf0b5513f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveableConfig:
+    SaveableId: 
+    LoadOrder: -1
   interactionInstances:
   - DesignerNotes: 
     InteractionDefinition: {fileID: 0}
-    IsEnabled:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-    DisabledImpliesHidden:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
+    IsEnabled: 1
+    DisabledImpliesHidden: 0
     DisabledReason: 
     OnInteractionStart:
       m_PersistentCalls:
@@ -243,6 +240,6 @@ MonoBehaviour:
     OnInteractionInterrupted:
       m_PersistentCalls:
         m_Calls: []
-    OnInteractionStartEvent: {fileID: 0}
-    OnInteractionEndEvent: {fileID: 0}
-    OnInteractionInterruptedEvent: {fileID: 0}
+    OnInteractionStateExited:
+      m_PersistentCalls:
+        m_Calls: []

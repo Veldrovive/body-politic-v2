@@ -2,35 +2,44 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-public abstract class SaveableMonobehavior : MonoBehaviour, ISaveable
+#if (UNITY_EDITOR)
+using UnityEditor.SceneManagement;
+#endif
+
+public abstract class SaveableMonoBehaviour : MonoBehaviour, ISaveable
 {
     [SerializeField] private SaveableConfig saveableConfig;
     public SaveableConfig SaveableConfig => saveableConfig;
 
-    public virtual SaveableData GetSaveData()
-    {
-        throw new NotImplementedException();
-    }
-    
-    public virtual void LoadSaveData(SaveableData data)
-    {
-        throw new NotImplementedException();
-    }
+    public abstract SaveableData GetSaveData();
+
+    public abstract void LoadSaveData(SaveableData data);
 
     private void InitializeSaveable()
     {
         if (string.IsNullOrEmpty(saveableConfig.SaveableId))
         {
+#if UNITY_EDITOR
             // Check if we are a prefab
-            if (PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            if (PrefabUtility.IsPartOfPrefabAsset(gameObject) || PrefabStageUtility.GetCurrentPrefabStage() != null)
             {
                 // We are not a real instance, so the SaveableId should not be generated.
             }
             else
             {
                 // This is either not a prefab or is an instance of a prefab. In either case, we need to generate a SaveableId.
+                Debug.Log($"Initializing SaveableId for {gameObject.name}");
                 saveableConfig.SaveableId = Guid.NewGuid().ToString();
+                if (PrefabUtility.IsPartOfPrefabInstance(gameObject))
+                {
+                    // Required to actually save the changes to the prefab instance. If we don't do this, changes will
+                    // visually appear in the editor, but are not "real". That was an annoying bug to track down.
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+                }
             }
+#else
+            throw new InvalidOperationException("SaveableMonoBehaviour must have a SaveableId during runtime.");
+#endif
         }
     }
 
@@ -68,11 +77,12 @@ public abstract class SaveableMonobehavior : MonoBehaviour, ISaveable
         // On destroy we need to unregister with the ResourceDataManager
         if (ResourceDataManager.Instance == null)
         {
-            Debug.LogError("ResourceDataManager is null");
+            // The resource manager was already destroyed. This means the game has exited or the scene has been unloaded.
+            // In any case we don't need to worry about cleanup as the ResourceDataManager has been entirely cleaned up.
         }
         else
         {
-            ResourceDataManager.Instance.UnregisterSaveable(this);
+            ResourceDataManager.Instance.HandleSaveableDestroyed(this);
         }
     }
 }

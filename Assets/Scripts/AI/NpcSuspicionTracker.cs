@@ -10,11 +10,22 @@ using Sisus.ComponentNames;
 /// So let's say you steal somebody's bag. Should other people recognize that you are suspicious when holding it?
 /// Or when you are in an off limit zone, should everyone start to panic or should the guards just get suspicious?
 
+public class NpcSuspicionTrackerSaveableData : SaveableData
+{
+    /// <summary>
+    /// List of active suspicion sources with their states.
+    /// Each source has a name, level, and end time.
+    /// </summary>
+    public List<NpcSuspicionTracker.SuspicionSourceState> SuspicionSources;
+
+    public List<string> SuspicionSourceKeys;
+}
+
 /// <summary>
 /// Manages suspicion levels for an NPC based on various timed sources.
 /// Calculates the current suspicion level as the maximum level from all active sources.
 /// </summary>
-public class NpcSuspicionTracker : MonoBehaviour
+public class NpcSuspicionTracker : MonoBehaviour, IConsumesSaveData<NpcSuspicionTrackerSaveableData>
 {
     // --- Internal State Class ---
 
@@ -62,6 +73,49 @@ public class NpcSuspicionTracker : MonoBehaviour
     private int currentMaxSuspicion = 0;
     // Buffer list to avoid modifying dictionary during iteration in Update
     private List<string> sourcesToRemove = new List<string>();
+    
+    // --- Saveable Data Handling ---
+    /// <summary>
+    /// Gets the save data for this object.
+    /// </summary>
+    /// <returns>The save data.</returns>
+    public NpcSuspicionTrackerSaveableData GetSaveData()
+    {
+        return new NpcSuspicionTrackerSaveableData()
+        {
+            SuspicionSources = activeSources.Values.ToList(),
+            SuspicionSourceKeys = activeSources.Keys.ToList()
+        };
+    }
+
+    /// <summary>
+    /// Sets the save data for this object.
+    /// </summary>
+    /// <param name="data">The save data to set.</param>
+    public void SetSaveData(NpcSuspicionTrackerSaveableData data)
+    {
+        if (data == null)
+        {
+            Debug.LogWarning("Attempted to set null save data on NpcSuspicionTracker.", this);
+            return;
+        }
+
+        // Clear existing sources
+        activeSources.Clear();
+        currentMaxSuspicion = 0;
+
+        // Populate from save data
+        foreach (var source in data.SuspicionSources)
+        {
+            if (source != null && !string.IsNullOrEmpty(source.SourceName) && source.Level > 0 && source.EndTime > Time.time)
+            {
+                activeSources[source.SourceName] = source;
+            }
+        }
+
+        // Recalculate max suspicion level
+        RecalculateMaxSuspicion();
+    }
 
     // --- Public Properties ---
 

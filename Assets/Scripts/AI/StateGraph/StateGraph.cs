@@ -5,7 +5,25 @@ using System.Linq;
 using System.Reflection;
 using Object = UnityEngine.Object;
 
-public class StateGraph : MonoBehaviour
+public class StateGraphSaveableData : SaveableData
+{
+    public string DisplayName;
+    public string Description;
+    public string Id;
+    public List<StateGraphNode> Nodes;
+    public List<StateGraphConnection> Connections;
+
+    public StateGraphSaveableData(StateGraph graph)
+    {
+        DisplayName = graph.DisplayName;
+        Description = graph.Description;
+        Id = graph.id;
+        Nodes = graph.Nodes;
+        Connections = graph.Connections;
+    }
+}
+
+public class StateGraph : MonoBehaviour, IConsumesSaveData<StateGraphSaveableData>
 {
     [SerializeField] private string displayName = "State Graph";
     public string DisplayName => displayName;
@@ -20,6 +38,24 @@ public class StateGraph : MonoBehaviour
     
     [SerializeField] private List<StateGraphConnection> m_connections = new();
     public List<StateGraphConnection> Connections => m_connections;
+    
+    /// <summary>
+    /// Gets the save data for this object.
+    /// </summary>
+    /// <returns>The save data.</returns>
+    public StateGraphSaveableData GetSaveData()
+    {
+        throw new NotImplementedException("GetSaveData is not implemented in StateGraphController. Please implement this method to return the save data for this controller.");
+    }
+
+    /// <summary>
+    /// Sets the save data for this object.
+    /// </summary>
+    /// <param name="data">The save data to set.</param>
+    public void SetSaveData(StateGraphSaveableData data)
+    {
+        throw new NotImplementedException("SetSaveData is not implemented in StateGraphController. Please implement this method to set the save data for this controller.");
+    }
     
     public void SetGUID(string guid)
     {

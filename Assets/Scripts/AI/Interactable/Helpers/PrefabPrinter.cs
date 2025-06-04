@@ -9,7 +9,7 @@ public class PrefabPrinter : AbstractInteractionReactor
 
     [Header("Production Parameters")]
     [Tooltip("The prefab to print.")]
-    [SerializeField] private GameObject prefabToPrint;
+    [SerializeField] private HoldableType prefabToPrint;
     
     [Tooltip("The point at which the prefab will appear.")]
     [SerializeField] private Transform printLocation;
@@ -95,8 +95,9 @@ public class PrefabPrinter : AbstractInteractionReactor
     public void TryPrint(InteractionContext context)
     {
         // Plan: Create the prefab and add it to the tracked produced items. Try cast to Consumable and infect if not null.
-        Debug.Log($"Prefab printer got called to print {prefabToPrint.name} at {printLocation.position}", this);
-        GameObject printedObject = Instantiate(prefabToPrint, printLocation.position, printLocation.rotation);
+        Debug.Log($"Prefab printer got called to print {prefabToPrint} at {printLocation.position}", this);
+        // GameObject printedObject = Instantiate(prefabToPrint, printLocation.position, printLocation.rotation);
+        GameObject printedObject = ResourceDataManager.Instance.InstantiateHoldable(prefabToPrint, printLocation.position, printLocation.rotation);
         Debug.Log($"Prefab printer created {printedObject.name} at {printLocation.position}", this);
         trackedProducedItems.Add(printedObject);
         
@@ -109,7 +110,7 @@ public class PrefabPrinter : AbstractInteractionReactor
         else if (infectConsumable.Value)
         {
             // We wanted to infect, but this isn't a consumable. That's a problem.
-            Debug.LogWarning($"Prefab '{prefabToPrint.name}' is not a consumable, but infection was requested. Infection will not be applied.", this);
+            Debug.LogWarning($"Prefab '{prefabToPrint}' is not a consumable, but infection was requested. Infection will not be applied.", this);
         }
     }
 

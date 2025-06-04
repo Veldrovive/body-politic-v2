@@ -21,8 +21,10 @@ public class InteractableNpc : Interactable
     }
     private NpcInteractionInstance _currentNpcInteractionInstance;
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         // Get the NpcContext component attached to this GameObject
         npcContext = GetComponent<NpcContext>();
         if (npcContext == null)

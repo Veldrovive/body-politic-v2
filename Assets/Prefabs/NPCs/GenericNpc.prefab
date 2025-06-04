@@ -343,6 +343,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33487b5c54b840b2b6bf3cb1e535bd1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveableConfig:
+    SaveableId: 
+    LoadOrder: 0
   interactionInstances:
   - DesignerNotes: 
     InteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
@@ -421,7 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b5fdf145a3a40268b705a133fd58ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: State Graph
+  displayName: Routine State Graph
   description: 
   m_guid: c7733963-c18a-43bd-8a03-016b3922ede2
   m_nodes:
