@@ -4446,7 +4446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4206932792643705303, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: reactionDefinitions.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6069972115561842295, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: IdleOnExit
@@ -13716,8 +13716,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 1945626931996106311, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6069972115561842295, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: IdleOnExit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6658198896699952685, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6658198896699952685, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
@@ -17161,6 +17169,10 @@ PrefabInstance:
     - target: {fileID: 1096262539549592467, guid: 7d486740872b1426295d627cb974793e, type: 3}
       propertyPath: managedReferences[6648118524569714688].configuration.TargetPosition.ConstantValue.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5135530858572972991, guid: 7d486740872b1426295d627cb974793e, type: 3}
+      propertyPath: saveableConfig.SaveableId
+      value: 26cc4cab-57d2-4497-a571-ff3a23c0e250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

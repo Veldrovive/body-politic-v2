@@ -40,7 +40,7 @@ MonoBehaviour:
   - name: Handle Footstep
     MinSuspicion: 1
     Priority: 1
-    ReactionType: 2
+    ReactionType: 1
     SoundTypeWhitelist: -1
     CanInterruptSelf: 0
   LoSObstacleLayerMask:

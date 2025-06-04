@@ -1,8 +1,29 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization; // For NavMeshAgent
+
+public class NpcSaveData : SaveableData
+{
+    // Transform
+    public Vector3 Position;
+    public Quaternion Rotation;
+    public Vector3 Scale;
+    
+    // Identity
+    public List<NpcRoleSO> DynamicRoles;
+    
+    // Inventory
+    public string HeldItemSaveableId;  // References the saveable ID of the held item, if any.
+    public List<string> InventorySlotsSaveableIds;  // References the saveable IDs of the items in the inventory.
+    
+    // Suspicion
+    public List<NpcSuspicionTracker.SuspicionSourceState> SuspicionSources; // List of active suspicion sources with their states.
+    
+    // Interactable Npc component manages its own save data, so we don't need to store anything here.
+}
 
 // Add required components for the new controllers
 [RequireComponent(typeof(NPCIdentity))] // [cite: 765]
@@ -16,7 +37,7 @@ using UnityEngine.Serialization; // For NavMeshAgent
 [RequireComponent(typeof(NpcDetectorReactor))]
 [RequireComponent(typeof(InteractableNpc))]
 [RequireComponent(typeof(NpcSoundHandler))]
-public class NpcContext : MonoBehaviour
+public class NpcContext : SaveableMonobehavior
 {
     public NPCIdentity Identity { get; private set; }
     public NpcInventory Inventory { get; private set; }
@@ -40,8 +61,11 @@ public class NpcContext : MonoBehaviour
     /// <summary>
     /// Gets references to all essential NPC components. Logs errors if components are missing.
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
+        Debug.Log("Awake called for NPC " + gameObject.name);
+        base.Awake();
+        
         arbitraryAccessData = new Dictionary<string, object>();
         
         Identity = GetComponent<NPCIdentity>();
@@ -91,9 +115,11 @@ public class NpcContext : MonoBehaviour
             gameObject.layer = targetLayer;
         }
     }
-
-    private void OnValidate()
+    
+    protected override void OnValidate()
     {
+        base.OnValidate();
+        
 #if UNITY_EDITOR
         EnsureLayerIsSet();
 #endif

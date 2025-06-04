@@ -21,7 +21,7 @@ public class NpcSuspicionTracker : MonoBehaviour
     /// <summary>
     /// Internal class to store the state of an active suspicion source.
     /// </summary>
-    private class SuspicionSourceState
+    public class SuspicionSourceState
     {
         public string SourceName; // Identifier for the source (e.g., Zone name, Witness name)
         public int Level;        // Suspicion level associated with this source

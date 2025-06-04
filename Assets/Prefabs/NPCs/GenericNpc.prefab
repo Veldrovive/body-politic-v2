@@ -146,6 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f022e1850c46d2976032156abc4eb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveableConfig:
+    SaveableId: 
+    LoadOrder: 0
   InfectPoint: {fileID: 2810805423157551732}
   defaultFootStepSounds:
   - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
@@ -156,8 +159,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 14ae706fef2303e4cb71112dbd5d250b, type: 3}
   - {fileID: 8300000, guid: b995bc1775ea83b4b8f861763e9a1424, type: 3}
   - {fileID: 8300000, guid: d15f7338d693f0343843a6b9096d27f6, type: 3}
-  footstepVelocityCoefficient: 0.5
-  footstepVelocityOffset: 0.1
+  footstepZThreshold: 0
   rightFootTransform: {fileID: 985415597510929604}
   leftFootTransform: {fileID: 2685630361013605513}
 --- !u!114 &7677463018914152175
@@ -209,7 +211,10 @@ MonoBehaviour:
   obstacleColliderLayer:
     serializedVersion: 2
     m_Bits: 1
-  reactionDefinitions: []
+  reactionDefinitions:
+  - MinSuspicion: 1
+    Priority: 2
+    ReactionType: 1
 --- !u!114 &4776853135727818125
 MonoBehaviour:
   m_ObjectHideFlags: 0

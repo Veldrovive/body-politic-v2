@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 6335414319268155121}
   - component: {fileID: 3116719903882094897}
   - component: {fileID: 3809693611007301062}
+  - component: {fileID: 2708711474926798640}
   m_Layer: 0
   m_Name: LogicManager
   m_TagString: Untagged
@@ -246,6 +247,7 @@ MonoBehaviour:
   cycleFocusKey: 110
   itemPlacingKey: 98
   overwriteQueueModifier: 304
+  defaultMovementSpeed: 0
 --- !u!114 &3809693611007301062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +262,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixerRole: {fileID: 11400000, guid: 4cf2f2f8875944372a5f1024c5133a0e, type: 2}
   actionCameraDuration: 10
+--- !u!114 &2708711474926798640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3616972317661252658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdef79ce6187449e856b1cc836df3ad5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NumSaveables: 0
 --- !u!1 &5169808644709739513
 GameObject:
   m_ObjectHideFlags: 0
