@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 
 [DefaultExecutionOrder(-80)]
@@ -31,32 +33,17 @@ public class CameraManager_v2 : MonoBehaviour
     [Header("View Logic")]
     [SerializeField] private float maxFocusCenterOffset = 10f;  // max distance the camera focus center can be from the focused NPC
     [SerializeField] private float focusSnapDistanceThreshold = 0.1f; // Distance threshold to consider focus center snapped when changing focus
-
-    private enum CameraManagerState
-    {
-        /// <summary>
-        /// Used when shifting between target transforms or when refocusing on the target transform.
-        /// In this mode, we LERP the camera position and rotation to the new camera position and rotation.
-        /// When we get near enough to our target position, we switch to MovingAroundFocusCenter mode.
-        /// </summary>
-        ChangingFocus,
-        /// <summary>
-        /// Used when moving the camera around the focus center using scrolling and WASD.
-        /// In this mode, we LERP the curve param and rot param so that we smoothly move on the circle around the focus center.
-        /// The focusCenter is moved smoothly to ensure linear movement is smooth.
-        /// </summary>
-        MovingAroundFocusCenter,
-    }
-    [SerializeField] private CameraManagerState currentState = CameraManagerState.ChangingFocus;
     
     private float curViewCurveParam = 0f;
     private float curViewRotParam = 0f;
+    private Vector3 curFocusCenter = Vector3.zero;
     
     [SerializeField] [Range(0, 1)] private float targetViewCurveParam = 0f;
     [SerializeField] [Range(0, 1)] private float targetViewRotParam = 0f;
 
-    private Vector3 focusCenter = Vector3.zero; // The point the camera is looking at
+    private Vector3 targetFocusCenter = Vector3.zero; // The point the camera is looking at
     private bool attachedToTransform = true;  // If true, the focus center will follow the focused NPC's position
+    private bool isSnappedToTransform = false;
     
     // Velocities for smooth damping
     private Vector3 focusSnapVelocity = Vector3.zero;  // Used with Vector3.SmoothDamp when ChangingFocus
@@ -112,12 +99,13 @@ public class CameraManager_v2 : MonoBehaviour
         {
             targetTransform = initialNpc.transform;
             attachedToTransform = true;
-            focusCenter = targetTransform.position;
+            isSnappedToTransform = true;
+            targetFocusCenter = targetTransform.position;
+            curFocusCenter = targetFocusCenter;
             
-            currentState = CameraManagerState.ChangingFocus;
             var relPosition = GetViewOffsetFromParams(curViewCurveParam, curViewRotParam);
-            transform.position = focusCenter + relPosition;
-            transform.LookAt(focusCenter + Vector3.up * viewLookAtHeightCurve.Evaluate(curViewCurveParam), Vector3.up);
+            transform.position = curFocusCenter + relPosition;
+            transform.LookAt(curFocusCenter + Vector3.up * viewLookAtHeightCurve.Evaluate(curViewCurveParam), Vector3.up);
         }
         else
         {
@@ -133,78 +121,124 @@ public class CameraManager_v2 : MonoBehaviour
             // If we are changing focus to a new NPC, we want to set the target transform to the new NPC's transform
             targetTransform = newNpcContext.transform;
             attachedToTransform = true; // We will follow the new NPC's position
+            isSnappedToTransform = false;
             
             // Set the focus center to the new NPC's position
-            focusCenter = targetTransform.position;
-
-            // Reset the camera state to ChangingFocus
-            currentState = CameraManagerState.ChangingFocus;
+            targetFocusCenter = targetTransform.position;
         }
         else
         {
             Debug.LogWarning("CameraManager received null NpcContext in HandleFocusChanged. No change made.", this);
         }
     }
-    
-    /// <summary>
-    /// I don't like the logic here. The two states can be unified by smoothly moving the focus center and the params
-    /// at the same time. If the focus center is stationary, then changing the parameters moves you in a circle.
-    /// If the focus center is moving, you can move in a circle around it still, but it will also be smoothly moving.
-    /// The focus center is always following something. When it is attached to the transform it is the transform position
-    /// and while unattached it follows a player controlled position that moves jerkily based on WASD input.
-    /// The player controlled position only has an x and y. The z is taken from the tracked transform still.
-    /// </summary>
-    /// <returns></returns>
 
-    private Vector3 UpdateCameraPose()
+    private void UpdateCameraPose()
     {
         float lookAtHeight = viewLookAtHeightCurve.Evaluate(curViewCurveParam);
-        if (currentState == CameraManagerState.ChangingFocus)
+        
+        // Update the focus center
+        if (isSnappedToTransform || (curFocusCenter - targetFocusCenter).sqrMagnitude <= focusSnapDistanceThreshold * focusSnapDistanceThreshold)
         {
-            // Then we want to LERP the camera position to the new position and rotation. Rotation is not lerped, but set directly.
-            var relPosition = GetViewOffsetFromParams(curViewCurveParam, curViewRotParam);
-            Vector3 desiredPosition = focusCenter + relPosition;
-            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref focusSnapVelocity, focusSnapSmoothTime);
-            // transform.LookAt(focusCenter + Vector3.up * lookAtHeight, Vector3.up);
-            return desiredPosition - transform.position;
-        }
-        else if (currentState == CameraManagerState.MovingAroundFocusCenter)
-        {
-            // Then we instead LERP the curve and rotation parameters to the target parameters.
-            curViewCurveParam = Mathf.SmoothDamp(curViewCurveParam, targetViewCurveParam, ref curveParamVelocity, curveParamSmoothTime);
-            curViewRotParam = Mathf.SmoothDamp(curViewRotParam, targetViewRotParam, ref rotParamVelocity, rotParamSmoothTime);
-            var relPosition = GetViewOffsetFromParams(curViewCurveParam, curViewRotParam);
-            transform.position = focusCenter + relPosition;
-            transform.LookAt(focusCenter + Vector3.up * lookAtHeight, Vector3.up);
-            return Vector3.zero;
+            // Then we are close enough that we should just snap to the target focus center
+            curFocusCenter = targetFocusCenter;
+            // And we should note that we are snapped so that simple movement cannot un-snap us
+            // Unsnapping will only happen when the player manually moves the focus center or changes focus to a new NPC
+            isSnappedToTransform = true;
         }
         else
         {
-            Debug.LogWarning("Unknown camera manager state: " + currentState);
-            return Vector3.zero;
+            // Movement would be jerky so we want to smoothly move the focus center towards the target focus center
+            curFocusCenter = Vector3.SmoothDamp(curFocusCenter, targetFocusCenter, ref focusSnapVelocity, focusSnapSmoothTime);
         }
+        
+        // Update our curve and rot params
+        curViewCurveParam = Mathf.SmoothDamp(curViewCurveParam, targetViewCurveParam, ref curveParamVelocity, curveParamSmoothTime);
+        curViewRotParam = Mathf.SmoothDamp(curViewRotParam, targetViewRotParam, ref rotParamVelocity, rotParamSmoothTime);
+        
+        Vector3 relPosition = GetViewOffsetFromParams(curViewCurveParam, curViewRotParam);
+
+        transform.position = curFocusCenter + relPosition;
+        transform.LookAt(curFocusCenter + Vector3.up * lookAtHeight, Vector3.up);
     }
 
     private void LateUpdate()
     {
+        
+        var (desiredVel, desiredRot, desiredCurveDelta, snapValue) = HandleInputs();
+        
+        // Handle target focus center movement
+        if (snapValue.HasValue)
+        {
+            if (snapValue.Value)
+            {
+                // Reattach to the target transform
+                attachedToTransform = true;
+            }
+            else
+            {
+                // The player is manually moving the focus center, so we should not snap to the target focus center
+                attachedToTransform = false;
+                isSnappedToTransform = false; // We are no longer snapped to the target transform
+            }
+        }
+        
+        if (desiredVel != Vector3.zero)
+        {
+            // Desired velocity is in local space, so we need to convert it to world space
+            // Get the camera's forward and right vectors, but ignore the y component for XZ plane movement.
+            Vector3 cameraForward = transform.forward;
+            cameraForward.y = 0;
+            cameraForward.Normalize(); // Ensure the vector is normalized after altering the y component.
+
+            Vector3 cameraRight = transform.right;
+            cameraRight.y = 0;
+            cameraRight.Normalize(); // Ensure the vector is normalized.
+
+            // Desired velocity is in local space relative to camera's XZ plane.
+            // We construct the world space direction by combining the camera's XZ forward and right.
+            Vector3 worldDesiredVel = cameraForward * desiredVel.z + cameraRight * desiredVel.x;
+
+            // Then we need to move the target focus center based on the desired velocity
+            targetFocusCenter += worldDesiredVel * Time.deltaTime;
+        }
+        
+        // But also clamp the max (x, z) distance from the target transform. If we are outside the max distance,
+        // be project back onto the circle of radius maxFocusCenterOffset centered at the target transform
+        Vector3 offset = targetFocusCenter - targetTransform.position;
+        offset.y = 0f;
+        if (offset.sqrMagnitude > maxFocusCenterOffset * maxFocusCenterOffset)
+        {
+            // Project onto the circle of radius maxFocusCenterOffset
+            offset = offset.normalized * maxFocusCenterOffset;
+            targetFocusCenter = targetTransform.position + offset;  // We don't need to worry about the y value here, since we will set it later
+        }
+        
         if (attachedToTransform)
         {
             // Then we first need to set the focus center to the target transform position
-            focusCenter = targetTransform?.position ?? Vector3.zero;
+            targetFocusCenter = targetTransform?.position ?? Vector3.zero;
+        }
+        // In any case, the y value of the target focus center should snap to the target transform's y value
+        targetFocusCenter.y = targetTransform?.position.y ?? 0f;
+        
+        // Handle rotation input
+        if (!Mathf.Approximately(desiredRot, 0f))
+        {
+            // If the player is rotating the camera, we need to update the rotation parameter
+            targetViewRotParam += desiredRot * Time.deltaTime;
+        }
+        
+        // Handle curve parameter input
+        if (!Mathf.Approximately(desiredCurveDelta, 0f))
+        {
+            // If the player is changing the curve parameter, we need to update the curve parameter
+            targetViewCurveParam += desiredCurveDelta * Time.deltaTime;
+            // Clamp the curve parameter to [0, 1] range
+            targetViewCurveParam = Mathf.Clamp01(targetViewCurveParam);
         }
         
         // Then we can take a step to update the camera pose based on the current state
-        Vector3 targetDisplacement = UpdateCameraPose();
-        
-        // If we are within focusSnapDistanceThreshold of the target position then we can swap to MovingAroundFocusCenter state
-        if (currentState == CameraManagerState.ChangingFocus && targetDisplacement.magnitude < focusSnapDistanceThreshold)
-        {
-            currentState = CameraManagerState.MovingAroundFocusCenter;
-            // Reset the velocities to ensure smooth movement
-            focusSnapVelocity = Vector3.zero;
-            curveParamVelocity = 0f;
-            rotParamVelocity = 0f;
-        }
+        UpdateCameraPose();
     }
 
 
@@ -232,7 +266,146 @@ public class CameraManager_v2 : MonoBehaviour
         {
             // Draw the focus center
             Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(focusCenter, 0.2f);
+            Gizmos.DrawSphere(targetFocusCenter, 0.2f);
+            Gizmos.DrawSphere(curFocusCenter, 0.2f);
         }
     }
+
+    #region Input Handling
+
+    [Header("Input Handling")]
+    [SerializeField] private List<KeyCode> forwardKeys = new List<KeyCode> { KeyCode.W, KeyCode.UpArrow };
+    [SerializeField] private List<KeyCode> backwardKeys = new List<KeyCode> { KeyCode.S, KeyCode.DownArrow };
+    [SerializeField] private List<KeyCode> leftKeys = new List<KeyCode> { KeyCode.A, KeyCode.LeftArrow };
+    [SerializeField] private List<KeyCode> rightKeys = new List<KeyCode> { KeyCode.D, KeyCode.RightArrow };
+    [SerializeField] private List<KeyCode> rotationLeftKeys = new List<KeyCode> { KeyCode.Q };
+    [SerializeField] private List<KeyCode> rotationRightKeys = new List<KeyCode> { KeyCode.E };
+    [SerializeField] private MouseButton rotationDragButton = MouseButton.Right;
+    [SerializeField] private List<KeyCode> reattachToTransformKeys = new List<KeyCode> { KeyCode.F };
+    
+    [SerializeField] private float playerFocusMoveVel = 5f; // The speed at which the target focus center moves when using the input keys
+    [SerializeField] private float playerFocusRotVel = 0.1f; // The speed at which the target focus center rotates when using the input keys
+    [SerializeField] private float playerFocusRotDragSensitivity = 0.05f; // The sensitivity of the rotation drag when using the mouse button
+    [SerializeField] private float scrollSensitivity = 0.1f; // The sensitivity of the scroll wheel for zooming in and out
+    
+    private bool dragButtonHeld = false; // Records if the drag button was left last frame
+    private Vector3 lastMousePosition = Vector3.zero; // Records the last mouse position for drag calculations
+    private (Vector3 desiredVel, float desiredRot, float desiredCurveDelta, bool? snapValue) HandleInputs()
+    {
+        // Movement keys (linear and rotation)
+        Vector3 desiredVelocity = Vector3.zero;
+        float desiredRotation = 0f;
+        bool? snapValue = null;
+        if (Input.anyKey)
+        {
+            foreach (KeyCode fkCode in forwardKeys)
+            {
+                if (Input.GetKey(fkCode))
+                {
+                    desiredVelocity += Vector3.forward;
+                    snapValue = false;
+                    break;
+                }
+            }
+            
+            foreach (KeyCode bkCode in backwardKeys)
+            {
+                if (Input.GetKey(bkCode))
+                {
+                    desiredVelocity += Vector3.back;
+                    snapValue = false;
+                    break;
+                }
+            }
+            
+            foreach (KeyCode lkCode in leftKeys)
+            {
+                if (Input.GetKey(lkCode))
+                {
+                    desiredVelocity += Vector3.left;
+                    snapValue = false;
+                    break;
+                }
+            }
+            
+            foreach (KeyCode rkCode in rightKeys)
+            {
+                if (Input.GetKey(rkCode))
+                {
+                    desiredVelocity += Vector3.right;
+                    snapValue = false;
+                    break;
+                }
+            }
+            
+            foreach (KeyCode rlCode in rotationLeftKeys)
+            {
+                if (Input.GetKey(rlCode))
+                {
+                    desiredRotation -= 1;
+                    break;
+                }
+            }
+            
+            foreach (KeyCode rrCode in rotationRightKeys)
+            {
+                if (Input.GetKey(rrCode))
+                {
+                    desiredRotation += 1;
+                    break;
+                }
+            }
+            
+            foreach (KeyCode reattachCode in reattachToTransformKeys)
+            {
+                if (Input.GetKeyDown(reattachCode))
+                {
+                    snapValue = true; // Indicate that we are snapping to the target transform
+                }
+            }
+        }
+        desiredVelocity *= playerFocusMoveVel;
+        desiredRotation *= playerFocusRotVel;
+        
+        
+        // Scroll wheel input for zooming
+        float scrollDelta = GetScrollDelta();
+        float desiredCurveDelta = -scrollDelta * scrollSensitivity;
+        
+        
+        // Mouse drag input for rotation
+        if (Input.GetMouseButton((int)rotationDragButton))
+        {
+            if (dragButtonHeld)
+            {
+                // Then a drag has occurred. We need to get the horizontal delta of the mouse movement
+                Vector2 mouseDelta = Input.mousePosition - lastMousePosition;
+                float rotationDelta = -mouseDelta.x * playerFocusRotDragSensitivity;
+                desiredRotation += rotationDelta;
+                
+                lastMousePosition = Input.mousePosition; // Update the last mouse position to the current one
+            }
+            else
+            {
+                // Start dragging for next frame
+                dragButtonHeld = true;
+                lastMousePosition = Input.mousePosition; // Record the initial mouse position
+            }
+        }
+        else
+        {
+            dragButtonHeld = false;
+            lastMousePosition = Vector2.zero;
+        }
+        
+        return (desiredVelocity, desiredRotation, desiredCurveDelta, snapValue);
+    }
+    
+    private float GetScrollDelta()
+    {
+        // Returns the scroll delta for zooming in and out
+        return Input.mouseScrollDelta.y;
+    }
+
+    #endregion
 }

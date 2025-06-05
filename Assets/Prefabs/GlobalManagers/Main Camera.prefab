@@ -215,3 +215,16 @@ MonoBehaviour:
   rotParamSmoothTime: 0.1
   maxFocusCenterOffset: 10
   focusSnapDistanceThreshold: 0.1
+  targetViewCurveParam: 0
+  targetViewRotParam: 0
+  forwardKeys: 7700000011010000
+  backwardKeys: 7300000012010000
+  leftKeys: 6100000014010000
+  rightKeys: 6400000013010000
+  rotationLeftKeys: 71000000
+  rotationRightKeys: 65000000
+  rotationDragButton: 1
+  playerFocusMoveVel: 8
+  playerFocusRotVel: 0.5
+  playerFocusRotDragSensitivity: 0.2
+  scrollSensitivity: 1

@@ -11081,6 +11081,10 @@ PrefabInstance:
       value: Main Camera
       objectReference: {fileID: 0}
     - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: maxFocusCenterOffset
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
       propertyPath: focusSnapDistanceThreshold
       value: 0.01
       objectReference: {fileID: 0}
