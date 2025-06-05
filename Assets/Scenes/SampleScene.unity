@@ -11080,6 +11080,74 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: focusSnapDistanceThreshold
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewHeightCurve.m_Curve.Array.data[1].time
+      value: 1.0000004
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewHeightCurve.m_Curve.Array.data[1].value
+      value: 13.438112
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[1].time
+      value: 0.80108434
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[1].value
+      value: 7.996784
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewHeightCurve.m_Curve.Array.data[0].inSlope
+      value: 8.112494
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewHeightCurve.m_Curve.Array.data[0].outSlope
+      value: 8.112494
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewHeightCurve.m_Curve.Array.data[1].outSlope
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[0].inSlope
+      value: 10.330313
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[1].inSlope
+      value: -0.08613421
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewHeightCurve.m_Curve.Array.data[0].outWeight
+      value: 0.07692307
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[0].outSlope
+      value: 10.330313
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[1].inWeight
+      value: 0.19166666
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[1].outSlope
+      value: -0.08613421
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewDistanceCurve.m_Curve.Array.data[0].outWeight
+      value: 0.05167728
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewLookAtHeightCurve.m_Curve.Array.data[0].value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758283066121246490, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
+      propertyPath: viewLookAtHeightCurve.m_Curve.Array.data[1].value
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8486492751657933785, guid: c425cbceceb914862a9df7f6f3fb9f23, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
