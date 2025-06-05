@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 8486492751657933785}
   - component: {fileID: 7311174606291372265}
   - component: {fileID: 3997082245425699194}
-  - component: {fileID: 2426859597011003118}
-  - component: {fileID: 8318908851812540891}
   - component: {fileID: 5758283066121246490}
   m_Layer: 0
   m_Name: Main Camera
@@ -95,34 +93,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4259465707031688699}
   m_Enabled: 1
---- !u!114 &2426859597011003118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4259465707031688699}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc8a649d479ef47bf902153b64de5ca0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerManager: {fileID: 0}
-  followOffset: {x: 0, y: 10, z: -3}
-  smoothTime: 0.1
---- !u!114 &8318908851812540891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4259465707031688699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3875a9321415e43c3bd5ec17301c98ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 0}
 --- !u!114 &5758283066121246490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,20 +114,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 3
-      inSlope: 0
-      outSlope: 7
+      inSlope: 10.330313
+      outSlope: 10.330313
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.05167728
     - serializedVersion: 3
-      time: 1
-      value: 10
-      inSlope: 7
-      outSlope: 0
+      time: 0.7977274
+      value: 5.9803963
+      inSlope: -0.08613421
+      outSlope: -0.08613421
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.19166666
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -168,20 +138,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 5
-      inSlope: 0
-      outSlope: 5
+      inSlope: 8.112494
+      outSlope: 8.112494
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.07692307
     - serializedVersion: 3
-      time: 1
-      value: 10
-      inSlope: 5
-      outSlope: 0
+      time: 1.0000004
+      value: 13.438112
+      inSlope: 17.321089
+      outSlope: 17.321089
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.039160833
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -191,7 +161,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 2
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -200,7 +170,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 0
+      value: 2
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -213,10 +183,8 @@ MonoBehaviour:
   focusSnapSmoothTime: 0.1
   curveParamSmoothTime: 0.1
   rotParamSmoothTime: 0.1
-  maxFocusCenterOffset: 10
-  focusSnapDistanceThreshold: 0.1
-  targetViewCurveParam: 0
-  targetViewRotParam: 0
+  maxFocusCenterOffset: 8
+  focusSnapDistanceThreshold: 0.01
   forwardKeys: 7700000011010000
   backwardKeys: 7300000012010000
   leftKeys: 6100000014010000
@@ -224,7 +192,8 @@ MonoBehaviour:
   rotationLeftKeys: 71000000
   rotationRightKeys: 65000000
   rotationDragButton: 1
+  reattachToTransformKeys: 66000000
   playerFocusMoveVel: 8
   playerFocusRotVel: 0.5
   playerFocusRotDragSensitivity: 0.2
-  scrollSensitivity: 1
+  scrollSensitivity: 5

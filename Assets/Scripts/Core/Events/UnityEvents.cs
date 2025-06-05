@@ -26,9 +26,6 @@ public class UnityEventGameObject : UnityEvent<GameObject> { }
 public class UnityEventTargetInfo : UnityEvent<TargetInfoData> { }
 
 [Serializable]
-public class UnityEventCameraModeRequest : UnityEvent<CameraModeRequest> { }
-
-[Serializable]
 public class UnityEventInfectionData : UnityEvent<InfectionData> { }
 
 [Serializable]

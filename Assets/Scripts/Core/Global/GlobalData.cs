@@ -13,9 +13,6 @@ public class GlobalData : MonoBehaviour
 
     [Tooltip("The event used to trigger infection events.")]
     [SerializeField] public InfectionDataEventSO InfectionEvent;
-
-    [Tooltip("The event used to trigger camera mode changes.")]
-    [SerializeField] public CameraModeRequestEventSO CameraModeRequestEvent;
     
     [Tooltip("The event used to trigger sound events.")]
     [SerializeField] public SoundEventSO SoundEvent;
