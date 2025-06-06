@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 6335414319268155121}
   - component: {fileID: 3116719903882094897}
   - component: {fileID: 3809693611007301062}
-  - component: {fileID: 2708711474926798640}
+  - component: {fileID: 983456098727416866}
   m_Layer: 0
   m_Name: LogicManager
   m_TagString: Untagged
@@ -175,7 +175,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerIdentity: {fileID: 11400000, guid: c5f214389aac7473f8304ce6b401d3fb, type: 2}
   InfectionEvent: {fileID: 11400000, guid: b2d0179eea23a4d389a3d13be4f6f1f3, type: 2}
-  CameraModeRequestEvent: {fileID: 11400000, guid: ad3ed1f77dd99490bbcc928fe7e95df1, type: 2}
   SoundEvent: {fileID: 11400000, guid: 7d0544ca3d89e485c96c5955407f130f, type: 2}
 --- !u!114 &8917888051748937010
 MonoBehaviour:
@@ -262,7 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixerRole: {fileID: 11400000, guid: 4cf2f2f8875944372a5f1024c5133a0e, type: 2}
   actionCameraDuration: 10
---- !u!114 &2708711474926798640
+--- !u!114 &983456098727416866
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -271,11 +270,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3616972317661252658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdef79ce6187449e856b1cc836df3ad5, type: 3}
+  m_Script: {fileID: 11500000, guid: 06af9b83f4e34fb8b75d44e3c02f5773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumSaveables: 0
-  holdablePrefabMappings: []
+  holdablePrefabMappings:
+  - holdableType: 0
+    Prefab: {fileID: 0}
+  - holdableType: 1
+    Prefab: {fileID: 1561862895363509921, guid: 01abf701bbb174bd8af5724d67d54a51, type: 3}
 --- !u!1 &5169808644709739513
 GameObject:
   m_ObjectHideFlags: 0

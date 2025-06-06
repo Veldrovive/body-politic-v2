@@ -78,7 +78,7 @@ public class InteractableSaveableData : SaveableData
 /// Manages a list of possible interaction instances (defined by InteractionDefinitionSO).
 /// Handles the lifecycle events for interactions performed on it.
 /// </summary>
-public class Interactable : SaveableMonoBehaviour
+public class Interactable : SaveableGOConsumer
 {
     [Tooltip("List of interactions available on this object.")]
     [SerializeField] protected List<InteractionInstance> interactionInstances = new List<InteractionInstance>();

@@ -40,6 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1934814640455056923}
+  - component: {fileID: 4126593065883827398}
   - component: {fileID: 1089351011035540731}
   - component: {fileID: 2051610065292084905}
   - component: {fileID: 6658198896699952685}
@@ -84,6 +85,21 @@ Transform:
   - {fileID: 3243171972740919452}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4126593065883827398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945626931996106311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    ProducerId: 
+    LoadOrder: 0
 --- !u!54 &1089351011035540731
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -146,9 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f022e1850c46d2976032156abc4eb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
   saveableConfig:
-    SaveableId: 
-    LoadOrder: 0
+    ConsumerId: d7126c22-9139-44c9-b357-7a9a5edce8bd
   InfectPoint: {fileID: 2810805423157551732}
   defaultFootStepSounds:
   - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
@@ -343,9 +359,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33487b5c54b840b2b6bf3cb1e535bd1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
   saveableConfig:
-    SaveableId: 
-    LoadOrder: 0
+    ConsumerId: 64e71a78-ab0a-4f4b-afa2-3015d590e1f8
   interactionInstances:
   - DesignerNotes: 
     InteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}

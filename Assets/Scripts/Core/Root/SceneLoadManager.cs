@@ -223,13 +223,28 @@ public class SceneLoadManager : MonoBehaviour
         
         yield return null;
 
-        if (ResourceDataManager.Instance == null)
+        // if (ResourceDataManager.Instance == null)
+        // {
+        //     Debug.LogWarning($"Level {sceneMapping.Id} loaded, but ResourceDataManager.Instance is null. Ensure ResourceDataManager is initialized before loading scenes.");
+        // }
+        // else
+        // {
+        //     Debug.Log($"Loaded level has {ResourceDataManager.Instance.NumSaveables} saveables.");
+        // }
+    }
+
+    public SceneId GetCurrentScenedId()
+    {
+        // Get the currently active scene and return its SceneId.
+        Scene activeScene = SceneManager.GetActiveScene();
+        SceneMapping sceneMapping = SceneMap.Find(scene => scene.SceneName == activeScene.name);
+        
+        if (sceneMapping != null)
         {
-            Debug.LogWarning($"Level {sceneMapping.Id} loaded, but ResourceDataManager.Instance is null. Ensure ResourceDataManager is initialized before loading scenes.");
+            return sceneMapping.Id;
         }
-        else
-        {
-            Debug.Log($"Loaded level has {ResourceDataManager.Instance.NumSaveables} saveables.");
-        }
+        
+        Debug.LogWarning($"No SceneMapping found for active scene: {activeScene.name}. Returning default SceneId.MainMenu.");
+        return SceneId.MainMenu; // Default or fallback value if no mapping is found.
     }
 }

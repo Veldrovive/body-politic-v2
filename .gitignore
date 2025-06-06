@@ -1,6 +1,7 @@
 .vscode/
 create_context.py
 project_context.txt
+Saves/
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #

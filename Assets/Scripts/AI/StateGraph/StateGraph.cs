@@ -23,7 +23,7 @@ public class StateGraphSaveableData : SaveableData
     }
 }
 
-public class StateGraph : MonoBehaviour, IConsumesSaveData<StateGraphSaveableData>
+public class StateGraph : MonoBehaviour
 {
     [SerializeField] private string displayName = "State Graph";
     public string DisplayName => displayName;
@@ -43,7 +43,7 @@ public class StateGraph : MonoBehaviour, IConsumesSaveData<StateGraphSaveableDat
     /// Gets the save data for this object.
     /// </summary>
     /// <returns>The save data.</returns>
-    public StateGraphSaveableData GetSaveData()
+    public StateGraphSaveableData GetData()
     {
         throw new NotImplementedException("GetSaveData is not implemented in StateGraphController. Please implement this method to return the save data for this controller.");
     }
@@ -52,7 +52,7 @@ public class StateGraph : MonoBehaviour, IConsumesSaveData<StateGraphSaveableDat
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public void SetSaveData(StateGraphSaveableData data)
+    public void SetData(StateGraphSaveableData data)
     {
         throw new NotImplementedException("SetSaveData is not implemented in StateGraphController. Please implement this method to set the save data for this controller.");
     }

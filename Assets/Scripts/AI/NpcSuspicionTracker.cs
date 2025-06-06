@@ -25,7 +25,7 @@ public class NpcSuspicionTrackerSaveableData : SaveableData
 /// Manages suspicion levels for an NPC based on various timed sources.
 /// Calculates the current suspicion level as the maximum level from all active sources.
 /// </summary>
-public class NpcSuspicionTracker : MonoBehaviour, IConsumesSaveData<NpcSuspicionTrackerSaveableData>
+public class NpcSuspicionTracker : SaveableGOConsumer
 {
     // --- Internal State Class ---
 
@@ -79,7 +79,7 @@ public class NpcSuspicionTracker : MonoBehaviour, IConsumesSaveData<NpcSuspicion
     /// Gets the save data for this object.
     /// </summary>
     /// <returns>The save data.</returns>
-    public NpcSuspicionTrackerSaveableData GetSaveData()
+    public override SaveableData GetSaveData()
     {
         return new NpcSuspicionTrackerSaveableData()
         {
@@ -92,11 +92,11 @@ public class NpcSuspicionTracker : MonoBehaviour, IConsumesSaveData<NpcSuspicion
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public void SetSaveData(NpcSuspicionTrackerSaveableData data)
+    public override void LoadSaveData(SaveableData data)
     {
-        if (data == null)
+        if (data is not NpcSuspicionTrackerSaveableData trackerData)
         {
-            Debug.LogWarning("Attempted to set null save data on NpcSuspicionTracker.", this);
+            Debug.LogWarning($"Invalid save data type provided to {nameof(NpcSuspicionTracker)}. Expected {nameof(NpcSuspicionTrackerSaveableData)}, got {data.GetType().Name}.", this);
             return;
         }
 
@@ -105,7 +105,7 @@ public class NpcSuspicionTracker : MonoBehaviour, IConsumesSaveData<NpcSuspicion
         currentMaxSuspicion = 0;
 
         // Populate from save data
-        foreach (var source in data.SuspicionSources)
+        foreach (var source in trackerData.SuspicionSources)
         {
             if (source != null && !string.IsNullOrEmpty(source.SourceName) && source.Level > 0 && source.EndTime > Time.time)
             {

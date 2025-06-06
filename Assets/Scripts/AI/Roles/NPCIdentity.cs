@@ -10,7 +10,7 @@ public class NpcIdentitySaveableData : SaveableData
     public List<NpcRoleSO> DynamicRoles;
 }
 
-public class NPCIdentity : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcIdentitySaveableData>
+public class NPCIdentity : SaveableGOConsumer, IRoleProvider
 {
     // ******** Unity Inspector Variables ********
     /// <summary>
@@ -75,9 +75,9 @@ public class NPCIdentity : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcId
     /// Gets the save data for this object.
     /// </summary>
     /// <returns>The save data.</returns>
-    public NpcIdentitySaveableData GetSaveData()
+    public override SaveableData GetSaveData()
     {
-        return new()
+        return new NpcIdentitySaveableData()
         {
             DynamicRoles = dynamicRoles.ToList() // Convert HashSet to List for serialization
         };
@@ -87,12 +87,18 @@ public class NPCIdentity : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcId
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public void SetSaveData(NpcIdentitySaveableData data)
+    public override void LoadSaveData(SaveableData data)
     {
-        dynamicRoles.Clear();
-        if (data != null && data.DynamicRoles != null)
+        if (data is not NpcIdentitySaveableData npcData)
         {
-            foreach (NpcRoleSO role in data.DynamicRoles)
+            Debug.LogWarning($"Invalid save data type for {gameObject.name}. Expected NpcIdentitySaveableData.", this);
+            return;
+        }
+
+        dynamicRoles.Clear();
+        if (data != null && npcData.DynamicRoles != null)
+        {
+            foreach (NpcRoleSO role in npcData.DynamicRoles)
             {
                 if (role != null)
                 {

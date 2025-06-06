@@ -12,20 +12,6 @@ public class NpcContextSaveableData : SaveableData
     public Vector3 Position;
     public Quaternion Rotation;
     public Vector3 Scale;
-    
-    // Identity
-    public NpcIdentitySaveableData NpcIdentityData;
-    
-    // Inventory
-    public NpcInventorySaveableData NpcInventoryData;
-    
-    // Suspicion
-    public NpcSuspicionTrackerSaveableData SuspicionTrackerData;
-    
-    // Interactable Npc component manages its own save data, so we don't need to store anything here.
-    
-    // State Graph Data
-    public StateGraphControllerSaveableData StateGraphControllerData;
 }
 
 // Add required components for the new controllers
@@ -40,7 +26,7 @@ public class NpcContextSaveableData : SaveableData
 [RequireComponent(typeof(NpcDetectorReactor))]
 [RequireComponent(typeof(InteractableNpc))]
 [RequireComponent(typeof(NpcSoundHandler))]
-public class NpcContext : SaveableMonoBehaviour
+public class NpcContext : SaveableGOConsumer
 {
     public NPCIdentity Identity { get; private set; }
     public NpcInventory Inventory { get; private set; }
@@ -70,10 +56,6 @@ public class NpcContext : SaveableMonoBehaviour
             Position = transform.position,
             Rotation = transform.rotation,
             Scale = transform.localScale,
-            NpcIdentityData = Identity.GetSaveData(),
-            NpcInventoryData = Inventory.GetSaveData(),
-            SuspicionTrackerData = SuspicionTracker.GetSaveData(),
-            // StateGraphControllerData = StateGraphController.GetSaveData()
         };
     }
 
@@ -89,11 +71,6 @@ public class NpcContext : SaveableMonoBehaviour
         transform.position = npcData.Position;
         transform.rotation = npcData.Rotation;
         transform.localScale = npcData.Scale;
-        
-        Identity.SetSaveData(npcData.NpcIdentityData);
-        Inventory.SetSaveData(npcData.NpcInventoryData);
-        SuspicionTracker.SetSaveData(npcData.SuspicionTrackerData);
-        // StateGraphController.SetSaveData(npcData.StateGraphControllerData);
     }
 
     #endregion
@@ -101,10 +78,8 @@ public class NpcContext : SaveableMonoBehaviour
     /// <summary>
     /// Gets references to all essential NPC components. Logs errors if components are missing.
     /// </summary>
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
-        
         arbitraryAccessData = new Dictionary<string, object>();
         
         Identity = GetComponent<NPCIdentity>();

@@ -185,6 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2075951780575458857}
+  - component: {fileID: 7659253329689517800}
   - component: {fileID: 4102933364882050337}
   m_Layer: 0
   m_Name: GenericInteractable
@@ -210,6 +211,21 @@ Transform:
   - {fileID: 4609880194290221278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7659253329689517800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6927544156335784971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    ProducerId: 
+    LoadOrder: -1
 --- !u!114 &4102933364882050337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,9 +238,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6c5263d20943178df98abf0b5513f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 7659253329689517800}
   saveableConfig:
-    SaveableId: 
-    LoadOrder: -1
+    ConsumerId: a201d347-1d33-4cc4-93fd-ffdcc1dd555c
   interactionInstances:
   - DesignerNotes: 
     InteractionDefinition: {fileID: 0}

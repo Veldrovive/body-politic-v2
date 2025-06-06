@@ -97,7 +97,7 @@ public class PrefabPrinter : AbstractInteractionReactor
         // Plan: Create the prefab and add it to the tracked produced items. Try cast to Consumable and infect if not null.
         Debug.Log($"Prefab printer got called to print {prefabToPrint} at {printLocation.position}", this);
         // GameObject printedObject = Instantiate(prefabToPrint, printLocation.position, printLocation.rotation);
-        GameObject printedObject = ResourceDataManager.Instance.InstantiateHoldable(prefabToPrint, printLocation.position, printLocation.rotation);
+        GameObject printedObject = SaveableDataManager.Instance.InstantiateHoldable(prefabToPrint, printLocation.position, printLocation.rotation);
         Debug.Log($"Prefab printer created {printedObject.name} at {printLocation.position}", this);
         trackedProducedItems.Add(printedObject);
         

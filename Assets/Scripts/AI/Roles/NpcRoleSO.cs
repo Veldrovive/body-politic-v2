@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NpcRoleSO", menuName = "Body Politic/NPC Role SO")]
-public class NpcRoleSO : ScriptableObject
+public class NpcRoleSO : IdentifiableSO
 {
     [Tooltip("The visual name shown to the player when they select individuals with this role.")]
     public string RoleName;

@@ -53,8 +53,11 @@ public class Holdable : Interactable
     public override SaveableData GetSaveData()
     {
         SaveableData baseData = base.GetSaveData();
-        // baseData is of type InteractableSaveableData, so we can cast it safely
-        HoldableSaveableData holdableData = baseData as HoldableSaveableData;
+        // The base class returns a InteractableSaveableData. We need to copy the values into a HoldableSaveableData.
+        InteractableSaveableData interactableData = baseData as InteractableSaveableData;
+
+        HoldableSaveableData holdableData = new HoldableSaveableData();
+        holdableData.InteractionInstancesData = interactableData.InteractionInstancesData;
         
         if (holdableData == null)
         {
@@ -136,10 +139,8 @@ public class Holdable : Interactable
     /// Initializes state, ensures InteractionInstances exist, caches components,
     /// and sets up event listeners automatically.
     /// </summary>
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
-        
         // IsHeld = false;
         // IsInInventory = false;
         CurrentHolder = null;
@@ -192,10 +193,8 @@ public class Holdable : Interactable
     /// <summary>
     /// Sets initial enabled state for PickUp/PutDown interactions and handles starting held.
     /// </summary>
-    protected override void Start()
+    protected virtual void Start()
     {
-        base.Start();
-        
         // --- Handle Initial Holder ---
         bool startedHeld = false;
         if (initialHolder != null)

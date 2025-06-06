@@ -18,7 +18,7 @@ public enum InteractionAvailableFrom
 /// Implements IActionDefinition to check status based on initiator and target.
 /// </summary>
 [CreateAssetMenu(fileName = "InteractionDefinitionSO", menuName = "Body Politic/Interaction Definition SO")]
-public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
+public class InteractionDefinitionSO : IdentifiableSO, IActionDefinition
 {
     [Header("Identification & UI")] [Tooltip("The user-facing name of the action (e.g., for menus).")] [SerializeField]
     private string uiTitle;
@@ -265,8 +265,9 @@ public class InteractionDefinitionSO : ScriptableObject, IActionDefinition
 #endif
     }
 
-    private void OnValidate()
+    protected override void OnValidate()
     {
+        base.OnValidate();
 #if UNITY_EDITOR
         ValidateHumanReadableFailureReasons();
 #endif

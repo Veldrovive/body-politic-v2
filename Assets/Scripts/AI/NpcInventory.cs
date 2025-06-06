@@ -21,15 +21,15 @@ public class InventoryData
 
 public class NpcInventorySaveableData : SaveableData
 {
-    public string HeldItemSaveableId;  // References the saveable ID of the held item, if any.
-    public List<string> InventorySlotsSaveableIds;  // References the saveable IDs of the items in the inventory.
+    public string HeldItemProducerId;  // References the saveable ID of the held item, if any.
+    public List<string> InventorySlotsProducerIds;  // References the saveable IDs of the items in the inventory.
 }
 
 /// <summary>
 /// Manages the held item and inventory slots for an NPC.
 /// Acts as the IRoleProvider for roles conferred by items.
 /// </summary>
-public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcInventorySaveableData>
+public class NpcInventory : SaveableGOConsumer, IRoleProvider
 {
     [Header("Inventory Settings")]
     [Tooltip("Maximum number of items that can be stored in the inventory slots (excluding the held item).")]
@@ -73,23 +73,25 @@ public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcI
     /// Gets the save data for this object.
     /// </summary>
     /// <returns>The save data.</returns>
-    public NpcInventorySaveableData GetSaveData()
+    public override SaveableData GetSaveData()
     {
-        if (ResourceDataManager.Instance == null)
+        if (SaveableDataManager.Instance == null)
         {
             throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot get save data.");
         }
         
-        string HeldItemSaveableId = _heldItem?.SaveableConfig.SaveableId;
-        List<string> InventorySlotsSaveableIds = _inventorySlots
-            .Select(item => item?.SaveableConfig.SaveableId)
+        string heldItemProducerId = _heldItem?.GetProducerId();
+        List<string> inventorySlotsProduderIds = _inventorySlots
+            .Select(item => item?.GetProducerId())
             .Where(id => !string.IsNullOrEmpty(id)) // Filter out null or empty IDs
             .ToList();
 
         return new NpcInventorySaveableData()
         {
-            HeldItemSaveableId = HeldItemSaveableId,
-            InventorySlotsSaveableIds = InventorySlotsSaveableIds
+            // HeldItemSaveableId = HeldItemSaveableId,
+            // InventorySlotsSaveableIds = InventorySlotsSaveableIds
+            HeldItemProducerId = heldItemProducerId,
+            InventorySlotsProducerIds = inventorySlotsProduderIds
         };
     }
 
@@ -101,9 +103,15 @@ public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcI
     /// InteractionContext that has the NPC gameobject as the initiator.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public void SetSaveData(NpcInventorySaveableData data)
+    public override void LoadSaveData(SaveableData data)
     {
-        if (ResourceDataManager.Instance == null)
+        if (data is not NpcInventorySaveableData npcData)
+        {
+            Debug.LogError($"NpcInventory: LoadSaveData received data of type {data.GetType().Name}, expected NpcInventorySaveableData.", this);
+            return;
+        }
+        
+        if (SaveableDataManager.Instance == null)
         {
             throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot set save data.");
         }
@@ -120,12 +128,13 @@ public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcI
         }
         
         // If there is a held item, acquire it first so that it goes into the hand slot.
-        if (!string.IsNullOrEmpty(data.HeldItemSaveableId))
+        if (!string.IsNullOrEmpty(npcData.HeldItemProducerId))
         {
-            Holdable heldItem = ResourceDataManager.Instance.GetSaveable<Holdable>(data.HeldItemSaveableId);
+            GameObject heldItemGO = SaveableDataManager.Instance.GetProducerObject(npcData.HeldItemProducerId);
+            Holdable heldItem = heldItemGO?.GetComponent<Holdable>();
             if (heldItem == null)
             {
-                Debug.LogWarning("NpcInventory: SetSaveData could not find held item with ID " + data.HeldItemSaveableId, this);
+                Debug.LogWarning("NpcInventory: SetSaveData could not find held item with ID " + npcData.HeldItemProducerId, this);
             }
             else
             {
@@ -134,12 +143,13 @@ public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcI
         }
         
         // Then we can loop through the inventory slots and acquire each item.
-        foreach (string itemId in data.InventorySlotsSaveableIds)
+        foreach (string producerId in npcData.InventorySlotsProducerIds)
         {
-            Holdable item = ResourceDataManager.Instance.GetSaveable<Holdable>(itemId);
+            GameObject holdableGO = SaveableDataManager.Instance.GetProducerObject(producerId);
+            Holdable item = holdableGO?.GetComponent<Holdable>();
             if (item == null)
             {
-                Debug.LogWarning($"NpcInventory: SetSaveData could not find inventory item with ID {itemId}", this);
+                Debug.LogWarning($"NpcInventory: SetSaveData could not find inventory item with ID {producerId}", this);
             }
             else
             {
@@ -149,7 +159,7 @@ public class NpcInventory : MonoBehaviour, IRoleProvider, IConsumesSaveData<NpcI
         
         // And finally if the currently held item is not the same as the one in the save data, we store it in the inventory.
         // This will happen when there is no held item as the first inventory slot will then go into the hand instead.
-        if (_heldItem != null && _heldItem.SaveableConfig.SaveableId != data.HeldItemSaveableId)
+        if (_heldItem != null && _heldItem.GetProducerId() != npcData.HeldItemProducerId)
         {
             // Store the held item in the inventory
             TryStoreHeldItem();

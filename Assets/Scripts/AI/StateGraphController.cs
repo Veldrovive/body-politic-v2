@@ -48,7 +48,7 @@ public class StateGraphControllerSaveableData : SaveableData
     public bool IdleOnExit;
 }
 
-public class StateGraphController : MonoBehaviour, IConsumesSaveData<StateGraphControllerSaveableData>
+public class StateGraphController : SaveableGOConsumer
 {
     [Tooltip("The state graph to start with and return to on queue empty")]
     [SerializeField] StateGraph routineStateGraph;
@@ -70,18 +70,19 @@ public class StateGraphController : MonoBehaviour, IConsumesSaveData<StateGraphC
     /// Gets the save data for this object.
     /// </summary>
     /// <returns>The save data.</returns>
-    public StateGraphControllerSaveableData GetSaveData()
+    public override SaveableData GetSaveData()
     {
-        throw new NotImplementedException("GetSaveData is not implemented in StateGraphController. Please implement this method to return the save data for this controller.");
+        return new SaveableData();
+        // throw new NotImplementedException("GetSaveData is not implemented in StateGraphController. Please implement this method to return the save data for this controller.");
     }
 
     /// <summary>
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public void SetSaveData(StateGraphControllerSaveableData data)
+    public override void LoadSaveData(SaveableData data)
     {
-        throw new NotImplementedException("SetSaveData is not implemented in StateGraphController. Please implement this method to set the save data for this controller.");
+        throw new NotImplementedException();
     }
 
     /// <summary>

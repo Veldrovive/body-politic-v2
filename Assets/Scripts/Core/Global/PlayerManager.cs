@@ -270,7 +270,11 @@ public class PlayerManager : MonoBehaviour
     /// <summary> Handles discrete key press events for focus cycling and returning to routine. </summary>
     void HandleKeyPressed(InputManager.KeyState keyState) // [cite: 1065]
     {
-        if (keyState.Key == cycleFocusKey) // Use configured key [cite: 1066]
+        if (keyState.Key == KeyCode.M)
+        {
+            SaveableDataManager.Instance.CreateSave();
+        }
+        else if (keyState.Key == cycleFocusKey) // Use configured key [cite: 1066]
         {
             CycleCurrentFocusedNpc();
         }
