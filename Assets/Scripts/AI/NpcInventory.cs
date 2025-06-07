@@ -21,8 +21,8 @@ public class InventoryData
 
 public class NpcInventorySaveableData : SaveableData
 {
-    public string HeldItemProducerId;  // References the saveable ID of the held item, if any.
-    public List<string> InventorySlotsProducerIds;  // References the saveable IDs of the items in the inventory.
+    public GameObject HeldItemGO;  // References the saveable ID of the held item, if any.
+    public List<GameObject> InventorySlotsGOs;  // References the saveable IDs of the items in the inventory.
 }
 
 /// <summary>
@@ -80,18 +80,18 @@ public class NpcInventory : SaveableGOConsumer, IRoleProvider
             throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot get save data.");
         }
         
-        string heldItemProducerId = _heldItem?.GetProducerId();
-        List<string> inventorySlotsProduderIds = _inventorySlots
-            .Select(item => item?.GetProducerId())
-            .Where(id => !string.IsNullOrEmpty(id)) // Filter out null or empty IDs
+        // TODO: We can pass GOs in now so this isn't necessary.
+        List<GameObject> inventorySlots = _inventorySlots
+            .Select(item => item?.gameObject)
+            .Where(go => go) // Filter out null or empty
             .ToList();
 
         return new NpcInventorySaveableData()
         {
             // HeldItemSaveableId = HeldItemSaveableId,
             // InventorySlotsSaveableIds = InventorySlotsSaveableIds
-            HeldItemProducerId = heldItemProducerId,
-            InventorySlotsProducerIds = inventorySlotsProduderIds
+            HeldItemGO = _heldItem?.gameObject,
+            InventorySlotsGOs = inventorySlots
         };
     }
 
@@ -128,13 +128,12 @@ public class NpcInventory : SaveableGOConsumer, IRoleProvider
         }
         
         // If there is a held item, acquire it first so that it goes into the hand slot.
-        if (!string.IsNullOrEmpty(npcData.HeldItemProducerId))
+        if (npcData.HeldItemGO != null)
         {
-            GameObject heldItemGO = SaveableDataManager.Instance.GetProducerObject(npcData.HeldItemProducerId);
-            Holdable heldItem = heldItemGO?.GetComponent<Holdable>();
+            Holdable heldItem = npcData.HeldItemGO?.GetComponent<Holdable>();
             if (heldItem == null)
             {
-                Debug.LogWarning("NpcInventory: SetSaveData could not find held item with ID " + npcData.HeldItemProducerId, this);
+                Debug.LogWarning($"NpcInventory: LoadSaveData held item is not a Holdable or is null. GameObject: {npcData.HeldItemGO?.name}", this);
             }
             else
             {
@@ -143,13 +142,12 @@ public class NpcInventory : SaveableGOConsumer, IRoleProvider
         }
         
         // Then we can loop through the inventory slots and acquire each item.
-        foreach (string producerId in npcData.InventorySlotsProducerIds)
+        foreach (GameObject invItem in npcData.InventorySlotsGOs)
         {
-            GameObject holdableGO = SaveableDataManager.Instance.GetProducerObject(producerId);
-            Holdable item = holdableGO?.GetComponent<Holdable>();
+            Holdable item = invItem?.GetComponent<Holdable>();
             if (item == null)
             {
-                Debug.LogWarning($"NpcInventory: SetSaveData could not find inventory item with ID {producerId}", this);
+                Debug.LogWarning($"NpcInventory: LoadSaveData inventory item is not a Holdable or is null. GameObject: {invItem?.name}", this);
             }
             else
             {
@@ -159,7 +157,7 @@ public class NpcInventory : SaveableGOConsumer, IRoleProvider
         
         // And finally if the currently held item is not the same as the one in the save data, we store it in the inventory.
         // This will happen when there is no held item as the first inventory slot will then go into the hand instead.
-        if (_heldItem != null && _heldItem.GetProducerId() != npcData.HeldItemProducerId)
+        if (_heldItem != null && _heldItem.gameObject != npcData.HeldItemGO)
         {
             // Store the held item in the inventory
             TryStoreHeldItem();

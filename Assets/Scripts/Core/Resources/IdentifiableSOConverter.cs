@@ -56,17 +56,8 @@ public class IdentifiableSOConverter : JsonConverter
 
         string id = null;
 
-        if (reader.TokenType == JsonToken.String)
+        if (reader.TokenType == JsonToken.StartObject)
         {
-            // --- Backwards Compatibility ---
-            // Handles old save files where the value was just the string ID.
-            id = (string)reader.Value;
-        }
-        else if (reader.TokenType == JsonToken.StartObject)
-        {
-            // --- New Format ---
-            // Handles the new, more descriptive object format.
-            // We let Newtonsoft deserialize the small object into our helper class.
             SOReference reference = serializer.Deserialize<SOReference>(reader);
             id = reference?.AssetID;
         }
@@ -80,8 +71,7 @@ public class IdentifiableSOConverter : JsonConverter
             Debug.LogWarning("IdentifiableSO reference had a null or empty ID during deserialization. The reference will be null.");
             return null;
         }
-
-        // The core logic remains the same: look up the object by its ID.
+        
         if (idToIdentifiableSO.TryGetValue(id, out IdentifiableSO soInstance))
         {
             return soInstance;

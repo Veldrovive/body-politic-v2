@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
   m_Name: ID_PickUpItem
   m_EditorClassIdentifier: 
+  identifierId: b6ced52af55524ad1a6a8acd452eb6e1
   uiTitle: Pick up item
   uiDescription: Looks like I can pick that up
   rolesCanExecuteNoSuspicion:
@@ -24,6 +25,8 @@ MonoBehaviour:
   interactionDuration: 0.25
   initiatorAnimationTrigger: PickUpHoldable
   targetAnimationTrigger: 
+  endAnimationOnFinish: 0
+  endAnimationOnInterrupt: 1
   witnessSuspicionLevel: 0
   humanReadableFailureReasons:
   - HumanReadableReason: It looks like this thrall doesn't have the ability to do

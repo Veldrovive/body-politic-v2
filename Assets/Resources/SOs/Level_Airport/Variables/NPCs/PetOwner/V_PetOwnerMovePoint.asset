@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3929f47fb02684ae4aac93959a25dda9, type: 3}
   m_Name: V_PetOwnerMovePoint
   m_EditorClassIdentifier: 
+  identifierId: f18cae636f85641519fe99f8f3e53b90
+  ActiveSceneIds: 
   value: {x: 0, y: 0, z: 0}
   _resetOnPlay: 1

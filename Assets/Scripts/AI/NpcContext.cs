@@ -8,10 +8,7 @@ using UnityEngine.AI;
 /// </summary>
 public class NpcContextSaveableData : SaveableData
 {
-    // Transform
-    public Vector3 Position;
-    public Quaternion Rotation;
-    public Vector3 Scale;
+    public Dictionary<string, object> ArbitraryAccessData { get; set; }
 }
 
 // Add required components for the new controllers
@@ -53,24 +50,21 @@ public class NpcContext : SaveableGOConsumer
     {
         return new NpcContextSaveableData()
         {
-            Position = transform.position,
-            Rotation = transform.rotation,
-            Scale = transform.localScale,
+            ArbitraryAccessData = arbitraryAccessData
         };
     }
 
     public override void LoadSaveData(SaveableData data)
     {
-        if (data is not NpcContextSaveableData npcData)
+        if (data is NpcContextSaveableData npcData)
         {
-            Debug.LogError("Invalid save data type for NpcContext: " + data.GetType());
-            return;
+            arbitraryAccessData = npcData.ArbitraryAccessData ?? new Dictionary<string, object>();
         }
-        
-        // Otherwise we can repopulate the NPC context with the data.
-        transform.position = npcData.Position;
-        transform.rotation = npcData.Rotation;
-        transform.localScale = npcData.Scale;
+        else
+        {
+            Debug.LogError($"Expected NpcContextSaveableData but received {data.GetType().Name}.", this);
+            arbitraryAccessData = new Dictionary<string, object>();
+        }
     }
 
     #endregion
@@ -170,8 +164,11 @@ public class NpcContext : SaveableGOConsumer
     {
         if (arbitraryAccessData.TryGetValue(key, out var value))
         {
-            if (value is TStoredDataType storedValue)
+            // if (value is TStoredDataType storedValue)
+            if (typeof(TStoredDataType).IsAssignableFrom(value.GetType()))
             {
+                // If the value is of the correct type, return it
+                TStoredDataType storedValue = (TStoredDataType)value;
                 return storedValue;
             }
             else

@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8171dd5d7faad437a9b087959af907db, type: 3}
   m_Name: V_PetWasteVentBlocked
   m_EditorClassIdentifier: 
+  identifierId: 9c6aef9820d9042eca655aea26e195dd
+  ActiveSceneIds: 
   value: 0
   _resetOnPlay: 1

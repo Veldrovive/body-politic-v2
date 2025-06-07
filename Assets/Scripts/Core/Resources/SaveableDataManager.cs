@@ -17,33 +17,107 @@ public class HoldablePrefabMapping {
     public GameObject Prefab;
 }
 
-public class ProducerGOContext {
+public class ProducerGOContext
+{
+    public string ProducerId;
+    public string ProducerGOName;
     public SaveableGOProducer Producer;
     public HoldableType HoldableType = HoldableType.None;  // Used to instantiate the correct prefab type.
     public bool IsDestroyed = false;                       // If true, we might need to destroy the saveable on load. This might happen if
     // a consumable was eaten.
 }
 
-public class ProducerSaveableDataContext
+public class ProducerGODataContext
 {
-    public ProducerGOSaveableData Data;
+    public string ProducerId;  // Used to assign the correct id to the instantiated game object if it needs to be instantiated.
+    public string ProducerGOName;
     public HoldableType HoldableType = HoldableType.None;
     public bool IsDestroyed = false;  // If true, this producer was destroyed and should not be instantiated on load.
 }
 
-public class SaveData {
+public class ProducerSaveableDataContext
+{
+    public ProducerGOSaveableData Data;  // Holds the producer id as well as generic saveable data.
+}
+
+public class SaveableSODataContext
+{
+    public SaveableData Data;
+    public string SOName;
+    public string SOId;
+}
+
+// public class SaveData {
+//     public DateTime SaveTime;      // The time at which the save was made.
+//     public SceneId ActiveSceneId;  // The scene in which the save was made.
+//
+//     // Saved Data:
+//     public Dictionary<string, ProducerSaveableDataContext> ProducerData = new Dictionary<string, ProducerSaveableDataContext>();
+//     public Dictionary<string, SaveableSODataContext> SaveableSOData = new Dictionary<string, SaveableSODataContext>();
+// }
+
+public class SaveDataMeta
+{
     public DateTime SaveTime;      // The time at which the save was made.
     public SceneId ActiveSceneId;  // The scene in which the save was made.
+}
 
-    // Saved Data:
-    public Dictionary<string, ProducerSaveableDataContext> ProducerData = new Dictionary<string, ProducerSaveableDataContext>();
-    public Dictionary<string, SaveableData> SaveableSOData = new Dictionary<string, SaveableData>();
+/// <summary>
+/// Holds the portion of save data necessary to instantiate the game object, but not the internal data.
+/// This is used so that we can first instantiate any missing game objects so that if they are referenced in the
+/// later save data, they can be found.
+/// </summary>
+public class SaveDataGOGenerator
+{
+    public List<ProducerGODataContext> ProducersGODefs = new List<ProducerGODataContext>();
+}
+
+/// <summary>
+/// Holds the portion of the data necessary to fill in the data for game objects. This is the stuff we got from
+/// calling GetSaveData on the SaveableGOProducer.
+/// </summary>
+public class SaveDataGOProducer
+{
+    public List<ProducerGOSaveableData> ProducerData = new List<ProducerGOSaveableData>();
+}
+
+/// <summary>
+/// Holds the portion of the data necessary to fill in the data for SaveableSOs.
+/// </summary>
+public class SaveDataSOSaveable
+{
+    public List<SaveableSODataContext> SaveableSOData = new List<SaveableSODataContext>();
+}
+
+/// <summary>
+/// So that we can deserialize each section independently, the actual SaveData class maps to strings that contain the
+/// serialized data for each section.
+/// </summary>
+public class SaveData
+{
+    public SaveDataMeta meta = new SaveDataMeta(); // Metadata about the save, such as time and active scene.
+    public string SaveDataGOGenerator;   // Serialized data for creating the game object producers.
+    public string SaveDataGOProducer;     // Serialized data for the game object producers.
+    public string SaveDataSOSaveable;    // Serialized data for the saveable scriptable objects.
+}
+
+public class DeserializedSaveData
+{
+    public SaveDataMeta meta;
+    public SaveDataGOGenerator SaveDataGOGenerator;   // Deserialized data for creating the game object producers.
+    public SaveDataGOProducer SaveDataGOProducer;     // Deserialized data for the game object producers.
+    public SaveDataSOSaveable SaveDataSOSaveable;     // Deserialized data for the saveable scriptable objects.
 }
 
 [DefaultExecutionOrder(-50)]
-public class SaveableDataManager : MonoBehaviour {
+public class SaveableDataManager : MonoBehaviour
+{
+    [SerializeField] private bool isTesting = false;
+    
     [SerializeReference]
     private List<SaveableGOProducer> saveableGOProducers = new List<SaveableGOProducer>();
+    [SerializeReference]
+    private List<SaveableSO> saveableSOsList = new List<SaveableSO>();
 
     [SerializeField]
     private List<HoldablePrefabMapping> holdablePrefabMappings = new List<HoldablePrefabMapping>();
@@ -56,7 +130,10 @@ public class SaveableDataManager : MonoBehaviour {
     // Used for serialization of IdentifiableSOs.
     private Dictionary<IdentifiableSO, string> identifiableSoToId = new Dictionary<IdentifiableSO, string>();
     private Dictionary<string, IdentifiableSO> identifiableSOs = new Dictionary<string, IdentifiableSO>();
-    private Dictionary<string, System.Type> identifiableSOTypes = new Dictionary<string, System.Type>();
+    
+    // Used for the serialization of GameObjects that have SaveableGOProducers.
+    private Dictionary<GameObject, string> gameObjectToProducerId = new Dictionary<GameObject, string>();
+    private Dictionary<string, GameObject> producerIdToGO = new Dictionary<string, GameObject>();
 
     public static SaveableDataManager Instance;
     private void Awake() {
@@ -64,7 +141,17 @@ public class SaveableDataManager : MonoBehaviour {
             Instance = this;
             ConstructIdentifiableSODatabase();
         } else {
-            Destroy(gameObject);
+            // This shouldn't really happen, but the correct behavior is to overwrite the old instance.
+            Debug.LogWarning($"There is already an instance of SaveableDataManager in the scene. Overwriting the old instance.");
+            Destroy(Instance.gameObject);  // Destroy the old instance.
+            Instance = this;  // Set the new instance.
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) {
+            Instance = null;
         }
     }
 
@@ -89,9 +176,19 @@ public class SaveableDataManager : MonoBehaviour {
             return;
         }
 
-        ProducerGOContext context = new ProducerGOContext { Producer = producer, HoldableType = holdableType, IsDestroyed = isDestroyed };
+        ProducerGOContext context = new ProducerGOContext
+        {
+            ProducerId = producerId,
+            ProducerGOName = producer.name,
+            Producer = producer,
+            HoldableType = holdableType,
+            IsDestroyed = isDestroyed
+        };
 
         producers[producerId] = context;
+        
+        gameObjectToProducerId[producer.gameObject] = producerId;
+        producerIdToGO[producerId] = producer.gameObject;
 
         saveableGOProducers.Add(producer);
     }
@@ -100,13 +197,12 @@ public class SaveableDataManager : MonoBehaviour {
         string producerId = producer.Config.ProducerId;
         if (producers.ContainsKey(producerId)) {
             producers[producerId].IsDestroyed = true;
-            Debug.Log($"Producer {producerId} marked as destroyed.");
         } else {
-            Debug.LogWarning($"Producer {producerId} not found in the registry.");
+            Debug.LogWarning($"Producer {producerId} not found in the registry. Failed to mark as destroyed.");
         }
     }
 
-    public GameObject InstantiateHoldable(HoldableType holdableType, Vector3 position, Quaternion rotation) {
+    public GameObject InstantiateHoldable(HoldableType holdableType, Vector3 position, Quaternion rotation, string id = null) {
         HoldablePrefabMapping mapping = holdablePrefabMappings.Find(p => p.holdableType == holdableType);
         if (mapping == null) {
             // The prefab requested does not exist in the mappings.
@@ -134,106 +230,127 @@ public class SaveableDataManager : MonoBehaviour {
         }
 
         // Otherwise we should set up the producer and register it.
-        producer.SetConfig(Guid.NewGuid().ToString(), -1);
+        if (id == null)
+        {
+            producer.SetConfig(Guid.NewGuid().ToString(), -1);
+        }
+        else
+        {
+            producer.SetConfig(id, -1);
+        }
         RegisterProducer(producer, holdableType);
 
         Debug.Log($"Instantiated holdable of type {holdableType} at {position}. Producer registered with ID {producer.Config.ProducerId}.", this);
         return instance;
     }
+    
+    #region Save
 
-    private SaveData ConstructSaveData() {
-        SaveData data = new();
-
-        data.SaveTime = DateTime.Now;
-        data.ActiveSceneId = SceneLoadManager.Instance.GetCurrentScenedId();
-
-        foreach (var producerContext in producers.Values)
-        {
-            ProducerSaveableDataContext saveData;
-            if (producerContext.IsDestroyed)
-            {
-                saveData = new()
-                {
-                    Data = null,
-                    HoldableType = producerContext.HoldableType,
-                    IsDestroyed = true
-                };
-            }
-            else
-            {
-                ProducerGOSaveableData producerData = producerContext.Producer.GetSaveData();
-                saveData = new()
-                {
-                    Data = producerData,
-                    HoldableType = producerContext.HoldableType,
-                    IsDestroyed = false
-                };
-            }
-            
-            data.ProducerData[producerContext.Producer.Config.ProducerId] = saveData;
-        }
-
-        // foreach (var saveableSO in saveableSOs.Values) {
-        //     SaveableData saveableData = saveableSO.GetSaveData();
-        //     if (saveableData != null) {
-        //         data.SaveableSOData[saveableSO.Config.SaveableId] = saveableData;
-        //     }
-        // }
-
-        return data;
-    }
-
-    public string SaveFilePath(string fileName)
-    {
-        string path;
-#if UNITY_EDITOR
-        // For debugging in the editor, create a "Saves" folder in the project root.
-        // This makes the save file easily accessible from the project window.
-        // Application.dataPath is the /Assets folder. "../" goes up one level to the project root.
-        path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "..", "Saves"));
-#else
-        // For a deployed build, use the platform-safe persistent data path.
-        path = Application.persistentDataPath;
-#endif
-
-        // Ensure the directory exists before trying to create a file there.
-        if (!System.IO.Directory.Exists(path))
-        {
-            System.IO.Directory.CreateDirectory(path);
-        }
-
-        // Combine the path with the desired filename.
-        return System.IO.Path.Combine(path, fileName);
-    }
-
-    public void CreateSave()
-    {
-        SaveData saveData = ConstructSaveData();
-        
+    private string ConstructSerializedSaveData() {
         JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Objects,
             Formatting = Formatting.Indented,
         };
-        // TODO: Should I do a similar thing here with GameObjects that are saveable? Like if something puts a gameobject
-        // in its save data, we assume it must be have a SaveableGOProducer component? Currently that would be problematic
-        // because dynamically generated prefabs do not have a gameobject at load time. The current plan is to handle
-        // the creation of such prefabs after deserialization which would not work with a converter. Although, that is
-        // only relevant for destroyed objects, but if it was destroyed, another objects should not have a reference to it
-        // as it is now null. So actually it should be fine.
         jsonSettings.Converters.Add(new IdentifiableSOConverter(identifiableSOs, identifiableSoToId));
-        string json = JsonConvert.SerializeObject(saveData, jsonSettings);
+        jsonSettings.Converters.Add(new SaveableGOConverter(producerIdToGO, gameObjectToProducerId));
         
-        string filename = $"save_{DateTime.Now:yyyyMMdd_HHmmss}.json"; // Unique filename based on current time
-        string path = SaveFilePath(filename);
+        SaveData data = new();
+
+        data.meta.SaveTime = DateTime.Now;
+        data.meta.ActiveSceneId = SceneLoadManager.Instance.GetCurrentScenedId();
+
+        SaveDataGOGenerator goSaveData = new();
+        SaveDataGOProducer producerSaveData = new();
+        SaveDataSOSaveable saveableSOData = new();
+        
+
+        foreach (var producerContext in producers.Values)
+        {
+            ProducerGODataContext goData = new()
+            {
+                ProducerId = producerContext.ProducerId,
+                ProducerGOName = producerContext.ProducerGOName,
+                HoldableType = producerContext.HoldableType,
+                IsDestroyed = producerContext.IsDestroyed
+            };
+            goSaveData.ProducersGODefs.Add(goData);
+            
+            if (producerContext.IsDestroyed)
+            {
+                continue; // Skip saving data for destroyed producers.
+            }
+            ProducerGOSaveableData saveData = producerContext.Producer.GetSaveData();
+            if (saveData == null)
+            {
+                Debug.LogWarning($"Producer {producerContext.Producer.Config.ProducerId} returned null save data. Skipping.");
+                continue; // Skip saving if no data is returned.
+            }
+            producerSaveData.ProducerData.Add(saveData);
+        }
+
+        foreach (var saveableSO in saveableSOs.Values) {
+            SaveableData saveableData = saveableSO.GetSaveData();
+            if (saveableData != null) {
+                saveableSOData.SaveableSOData.Add(new SaveableSODataContext()
+                {
+                    Data = saveableData,
+                    SOName = saveableSO.name,
+                    SOId = saveableSO.ID
+                });
+            }
+        }
+
+        data.SaveDataGOGenerator = JsonConvert.SerializeObject(goSaveData, jsonSettings);
+        data.SaveDataGOProducer = JsonConvert.SerializeObject(producerSaveData, jsonSettings);
+        data.SaveDataSOSaveable = JsonConvert.SerializeObject(saveableSOData, jsonSettings);
+
+        if (isTesting)
+        {
+            // Then we also write out the save data to a folder with one file for each of the sections.
+            string folderPath = System.IO.Path.Combine(SaveFileInterface.GetRootSaveDir(), "TestSaves");
+            if (!System.IO.Directory.Exists(folderPath))
+            {
+                System.IO.Directory.CreateDirectory(folderPath);
+            }
+            
+            string metaDataPath = System.IO.Path.Combine(folderPath, "_SaveDataMeta.json");
+            string goSaveDataPath = System.IO.Path.Combine(folderPath, "SaveDataGOGenerator.json");
+            string producerSaveDataPath = System.IO.Path.Combine(folderPath, "SaveDataGOProducer.json");
+            string saveableSODataPath = System.IO.Path.Combine(folderPath, "SaveDataSOSaveable.json");
+            
+            if (!System.IO.Directory.Exists(folderPath))
+            {
+                System.IO.Directory.CreateDirectory(folderPath);
+            }
+            string metaDataJson = JsonConvert.SerializeObject(data.meta, jsonSettings);
+            System.IO.File.WriteAllText(metaDataPath, metaDataJson);
+            System.IO.File.WriteAllText(goSaveDataPath, data.SaveDataGOGenerator);
+            System.IO.File.WriteAllText(producerSaveDataPath, data.SaveDataGOProducer);
+            System.IO.File.WriteAllText(saveableSODataPath, data.SaveDataSOSaveable);
+            Debug.Log($"Test save data written to {folderPath}");
+        }
+        
+        string serializedJson = JsonConvert.SerializeObject(data, jsonSettings);
+        return serializedJson;
+    }
+
+    public void CreateSave()
+    {
+        string json = ConstructSerializedSaveData();
+        
+        string saveDir = SaveFileInterface.CreateSaveDir();
+        string dataPath = System.IO.Path.Combine(saveDir, "SaveData.json");
+        string screenshotPath = System.IO.Path.Combine(saveDir, "Screenshot.png");
         
         try
         {
-            System.IO.File.WriteAllText(path, json);
-            Debug.Log($"Save created successfully at {path}");
+            System.IO.File.WriteAllText(dataPath, json);
+            Debug.Log($"Save created successfully at {dataPath}");
             
-            SaveData testDeserializedData = JsonConvert.DeserializeObject<SaveData>(json, jsonSettings);
-            Debug.Log($"Deserialized");
+            // Take and write the screenshot
+            ScreenCapture.CaptureScreenshot(screenshotPath);
+            Debug.Log($"Screenshot saved at {screenshotPath}");
         }
         catch (Exception ex)
         {
@@ -241,8 +358,222 @@ public class SaveableDataManager : MonoBehaviour {
         }
     }
     
+    #endregion
+
+
+    #region Load
+    
+    private void RecreateGameObjects(SaveDataGOGenerator goDefinitions)
+    {
+        foreach (var goDefinition in goDefinitions.ProducersGODefs)
+        {
+            // Check if the producer is already registered. If it is, we are done. No need to recreate something that already exists.
+            if (producers.ContainsKey(goDefinition.ProducerId))
+            {
+                // Debug.Log($"Producer {goDefinition.ProducerId} already exists. Skipping recreation.");
+                continue;
+            }
+            
+            // Similarly, if the producer is marked as destroyed, we should not recreate it.
+            if (goDefinition.IsDestroyed)
+            {
+                Debug.Log($"Producer {goDefinition.ProducerId} is marked as destroyed. Skipping recreation.");
+                continue;
+            }
+            
+            // If we get here, we need to instantiate the game object. However, we still need to check if the prefab exists.
+            // Also, if this object was not instantiated from a prefab, we can detect that with the HoldableType.
+            // If it is None, something went wrong with the save data. An object was supposed to exist in the scene, but does not.
+            if (goDefinition.HoldableType == HoldableType.None)
+            {
+                Debug.LogError($"Producer {goDefinition.ProducerId} has no HoldableType defined. Cannot instantiate.");
+                continue;
+            }
+            
+            // Find the prefab for this holdable type.
+            HoldablePrefabMapping mapping = holdablePrefabMappings.Find(p => p.holdableType == goDefinition.HoldableType);
+            if (mapping == null)
+            {
+                Debug.LogError($"No prefab mapping found for holdable type {goDefinition.HoldableType}. Cannot instantiate producer {goDefinition.ProducerId}.");
+                continue;
+            }
+            
+            // Instantiate the prefab at the origin (0, 0, 0) with no rotation. This will be set when we load the data.
+            GameObject instance = InstantiateHoldable(mapping.holdableType, Vector3.zero, Quaternion.identity, id: goDefinition.ProducerId);
+            if (instance == null)
+            {
+                Debug.LogError($"Failed to instantiate prefab for holdable type {goDefinition.HoldableType}. Cannot recreate producer {goDefinition.ProducerId}.");
+                continue;
+            }
+            
+            Debug.Log($"Instantiated prefab {goDefinition.ProducerId}.");
+        }
+    }
+
+    private void LoadGameObjectData(SaveDataGOProducer producerData)
+    {
+        // Assumes all game object have been instantiated by this point. If one is missing, we warn, but do not fail.
+        // We have one thing to do before we can load the data, sort by the load order.
+        List<ProducerGOSaveableData> ProducerData = producerData.ProducerData;  // yea my naming sucks
+        // Sort by increasing load order.
+        ProducerData.Sort((a, b) => a.LoadOrder.CompareTo(b.LoadOrder));
+        foreach (ProducerGOSaveableData data in ProducerData)
+        {
+            if (!producers.TryGetValue(data.ProducerId, out ProducerGOContext context))
+            {
+                Debug.LogWarning($"Producer {data.ProducerId} not found in the registry. Cannot load data.");
+                continue;
+            }
+
+            if (context.IsDestroyed)
+            {
+                Debug.LogWarning($"Producer {data.ProducerId} is marked as destroyed. Skipping loading data.");
+                continue;
+            }
+
+            // Now we can set the data on the producer.
+            context.Producer.LoadSaveData(data);
+            // Debug.Log($"Loaded data for producer {data.ProducerId}.");
+        }
+    }
+    
+    private void LoadSaveableSOData(SaveDataSOSaveable saveableSOData)
+    {
+        foreach (SaveableSODataContext soData in saveableSOData.SaveableSOData)
+        {
+            if (!saveableSOs.TryGetValue(soData.SOId, out SaveableSO saveableSO))
+            {
+                Debug.LogWarning($"SaveableSO with ID {soData.SOId} not found. Cannot load data for {soData.SOName}.");
+                continue;
+            }
+
+            saveableSO.LoadSaveData(soData.Data);
+            // Debug.Log($"Loaded data for SaveableSO {soData.SOName} with ID {soData.SOId}.");
+        }
+    }
+
+    private void DestroyDestroyedObjects(SaveDataGOGenerator goDefinitions)
+    {
+        // After we have the game fully loaded, we need to destroy any objects that were marked as destroyed in the save data.
+        foreach (var goDefinition in goDefinitions.ProducersGODefs)
+        {
+            if (goDefinition.IsDestroyed)
+            {
+                // If the producer is marked as destroyed, we need to destroy the game object.
+                if (producers.TryGetValue(goDefinition.ProducerId, out ProducerGOContext context))
+                {
+                    context.Producer.HandleDestroyOnLoad();  // This calls destroy on the game object.
+                }
+                else
+                {
+                    // This isn't actually a problem. We expect it to occur most of the time in fact. This just means
+                    // that the producer was part of a prefab that was created and then destroyed before the save data was created.
+                    // Debug.LogWarning($"Producer {goDefinition.ProducerId} not found in the registry. Cannot destroy.");
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Loads the save data from a file and deserializes it into game objects and saveable scriptable objects.
+    /// Returns the deserialized save data for further processing if needed.
+    /// </summary>
+    /// <returns></returns>
+    private DeserializedSaveData LoadSaveData(string saveDataJSON)
+    {
+        // First we deserialize into the SaveData class which has the sections as strings.
+        JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Objects,
+            Formatting = Formatting.Indented,
+        };
+        jsonSettings.Converters.Add(new IdentifiableSOConverter(identifiableSOs, identifiableSoToId));
+        jsonSettings.Converters.Add(new SaveableGOConverter(producerIdToGO, gameObjectToProducerId));
+        
+        SaveData saveData = JsonConvert.DeserializeObject<SaveData>(saveDataJSON, jsonSettings);
+        
+        // Santity check that we are in the right level
+        if (SceneLoadManager.Instance.GetCurrentScenedId() != saveData.meta.ActiveSceneId)
+        {
+            // Whoops, we are loading data into the wrong scene.
+            Debug.LogError($"Trying to load save data into scene {SceneLoadManager.Instance.GetCurrentScenedId()} but save data is for scene {saveData.meta.ActiveSceneId}. Aborting load.");
+            return null;
+        }
+        
+        // Section 1: Recreating Game Objects
+        SaveDataGOGenerator goDefinitions = JsonConvert.DeserializeObject<SaveDataGOGenerator>(saveData.SaveDataGOGenerator, jsonSettings);
+        if (goDefinitions == null)
+        {
+            Debug.LogError("Failed to deserialize SaveDataGOGenerator. Aborting load.");
+            return null;
+        }
+        RecreateGameObjects(goDefinitions);
+        // This automatically added the created game objects to the relevant dictionaries so no further action is needed here.
+        
+        // Section 2: Loading Game Object Data
+        SaveDataGOProducer producerData = JsonConvert.DeserializeObject<SaveDataGOProducer>(saveData.SaveDataGOProducer, jsonSettings);
+        if (producerData == null)
+        {
+            Debug.LogError("Failed to deserialize SaveDataGOProducer. Aborting load.");
+            return null;
+        }
+        LoadGameObjectData(producerData);
+        
+        // Section 3: Loading Saveable Scriptable Object Data
+        SaveDataSOSaveable saveableSOData = JsonConvert.DeserializeObject<SaveDataSOSaveable>(saveData.SaveDataSOSaveable, jsonSettings);
+        if (saveableSOData == null)
+        {
+            Debug.LogError("Failed to deserialize SaveDataSOSaveable. Aborting load.");
+            return null;
+        }
+        LoadSaveableSOData(saveableSOData);
+        
+        // Section 4: Destroying any objects that were marked as destroyed in the save data.
+        DestroyDestroyedObjects(goDefinitions);
+        
+        // If we get here, everything was loaded successfully.
+        DeserializedSaveData deserializedData = new DeserializedSaveData
+        {
+            meta = saveData.meta,
+            SaveDataGOGenerator = goDefinitions,
+            SaveDataGOProducer = producerData,
+            SaveDataSOSaveable = saveableSOData
+        };
+        Debug.Log("Save data loaded successfully.");
+        return deserializedData;
+    }
+
+    public DeserializedSaveData LoadSaveFile(string saveFilePath)
+    {
+        if (string.IsNullOrEmpty(saveFilePath))
+        {
+            Debug.LogError("Save file path is null or empty.");
+            return null;
+        }
+
+        if (!System.IO.File.Exists(saveFilePath))
+        {
+            Debug.LogError($"Save file not found at {saveFilePath}.");
+            return null;
+        }
+
+        try
+        {
+            string json = System.IO.File.ReadAllText(saveFilePath);
+            return LoadSaveData(json);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to load save file: {ex.Message}");
+            return null;
+        }
+    }
+    
+    #endregion
+    
     private void ConstructIdentifiableSODatabase()
     {
+        saveableSOsList.Clear();
         foreach (IdentifiableSO so in Resources.LoadAll<IdentifiableSO>(""))
         {
             if (so == null || string.IsNullOrEmpty(so.ID))
@@ -259,8 +590,14 @@ public class SaveableDataManager : MonoBehaviour {
 
             identifiableSoToId[so] = so.ID;
             identifiableSOs[so.ID] = so;
-            identifiableSOTypes[so.ID] = so.GetType();
-            Debug.Log($"IdentifiableSO {so?.name} (Type: {so.GetType().Name}) with ID {so.ID} added to the database.");
+            
+            if (so is SaveableSO saveableSO)
+            {
+                saveableSOs[saveableSO.ID] = saveableSO;
+                // Debug.Log($"SaveableSO {saveableSO.name} with ID {saveableSO.ID} added to the database.");
+                
+                saveableSOsList.Add(saveableSO);
+            }
         }
     }
 }

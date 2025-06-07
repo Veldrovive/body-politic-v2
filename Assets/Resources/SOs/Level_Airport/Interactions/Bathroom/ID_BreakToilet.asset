@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
   m_Name: ID_BreakToilet
   m_EditorClassIdentifier: 
-  identifierId: 
+  identifierId: 59732e0ba9acc4d18b561d1b7030b09d
   uiTitle: Break toilet
   uiDescription: Pretty fun to break.
   rolesCanExecuteNoSuspicion: []

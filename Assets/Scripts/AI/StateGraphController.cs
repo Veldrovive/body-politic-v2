@@ -82,7 +82,9 @@ public class StateGraphController : SaveableGOConsumer
     /// <param name="data">The save data to set.</param>
     public override void LoadSaveData(SaveableData data)
     {
-        throw new NotImplementedException();
+        Debug.LogWarning($"{gameObject.name} State Controller tried to load save data but this is not implemented. Data: {data}");
+        return;
+        // throw new NotImplementedException();
     }
 
     /// <summary>

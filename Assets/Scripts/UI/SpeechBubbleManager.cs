@@ -136,7 +136,7 @@ public class SpeechBubbleManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Speech Bubble Manager: Unable to convert world position to panel position. The speech bubble will not be displayed.");
+            // Debug.LogWarning("Speech Bubble Manager: Unable to convert world position to panel position. The speech bubble will not be displayed.");
         }
     }
 

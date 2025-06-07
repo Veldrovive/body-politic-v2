@@ -21,6 +21,7 @@ public abstract class SaveableGOConsumer : MonoBehaviour
     
     public abstract SaveableData GetSaveData();
     public abstract void LoadSaveData(SaveableData data);
+    public virtual void HandleDestroyOnLoad(){ }  // By default, component just let themselves be destroyed with no side effects.
     
     public string GetProducerId()
     {

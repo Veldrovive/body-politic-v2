@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
   m_Name: ID_ShootNpc
   m_EditorClassIdentifier: 
+  identifierId: 5bacbc975c6fd4aad9b4d1a6ec8b17d4
   uiTitle: Shoot them!
   uiDescription: 
   rolesCanExecuteNoSuspicion:

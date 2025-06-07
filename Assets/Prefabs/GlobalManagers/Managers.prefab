@@ -273,6 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06af9b83f4e34fb8b75d44e3c02f5773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTesting: 1
+  saveableGOProducers: []
   holdablePrefabMappings:
   - holdableType: 0
     Prefab: {fileID: 0}

@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f450280d49844d9092535c8bef8ac3d, type: 3}
   m_Name: V_PetOwnerFoodObject
   m_EditorClassIdentifier: 
+  identifierId: c2bb077ab105b4c42a48b0141317ef45
+  ActiveSceneIds: 
   value: {fileID: 0}
   _resetOnPlay: 1

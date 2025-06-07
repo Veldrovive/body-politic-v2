@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f450280d49844d9092535c8bef8ac3d, type: 3}
   m_Name: TestNpcConsumable
   m_EditorClassIdentifier: 
+  identifierId: f3575891630a44bd28eddf37b4483501
+  ActiveSceneIds: 
   value: {fileID: 0}
   _resetOnPlay: 1

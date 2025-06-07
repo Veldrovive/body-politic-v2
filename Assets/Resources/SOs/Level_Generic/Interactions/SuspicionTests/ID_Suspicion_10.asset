@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
   m_Name: ID_Suspicion_10
   m_EditorClassIdentifier: 
+  identifierId: 21129d7a5b3574d6eb9d0fc5e2b8042d
   uiTitle: Get Suspicion 10
   uiDescription: 
   rolesCanExecuteNoSuspicion: []

@@ -1,7 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 
-public abstract class AbstractVariableSO<T> : ScriptableObject
+public class VariableSOSaveableData<T> : SaveableData
+{
+    public T Value;
+}
+
+public abstract class AbstractVariableSO<T> : SaveableSO
 {
     [SerializeField] private T value;
     public virtual T Value { get => value; set => this.value = value; }
@@ -36,4 +41,23 @@ public abstract class AbstractVariableSO<T> : ScriptableObject
         }
     }
     #endif
+
+    public override SaveableData GetSaveData()
+    {
+        VariableSOSaveableData<T> data = new VariableSOSaveableData<T>();
+        data.Value = Value;
+        return data;
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is VariableSOSaveableData<T> variableData)
+        {
+            Value = variableData.Value;
+        }
+        else
+        {
+            Debug.LogError($"Invalid data type for {name}. Expected VariableSOSaveableData<{typeof(T)}> but got {data.GetType()}");
+        }
+    }
 }

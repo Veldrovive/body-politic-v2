@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8171dd5d7faad437a9b087959af907db, type: 3}
   m_Name: V_FoodPrinterEnabled
   m_EditorClassIdentifier: 
+  identifierId: 96c5abeca9b5d44d2b7ee555c7020579
+  ActiveSceneIds: 
   value: 1
   _resetOnPlay: 1

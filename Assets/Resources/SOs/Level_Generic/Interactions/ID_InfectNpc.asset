@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
   m_Name: ID_InfectNpc
   m_EditorClassIdentifier: 
+  identifierId: 590f4289fdd0f4f60a32b2d18c3a84a2
   uiTitle: Infect!
   uiDescription: Forcibly infecting somebody can take a while and be a bit loud.
   rolesCanExecuteNoSuspicion: []

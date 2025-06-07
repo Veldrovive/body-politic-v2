@@ -57,13 +57,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5646af12277448199eae35595a7357a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SceneFolderPath: Assets/Scenes/
   SceneMap:
   - Id: 0
     Type: 1
-    SceneObj: {fileID: 102900000, guid: e0c6d3e66b49e4b57878559054fcf959, type: 3}
+    SceneName: MainMenu
+    PublicName: 
   - Id: 2
     Type: 2
-    SceneObj: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
+    SceneName: SampleScene
+    PublicName: Test Level
   - Id: 3
     Type: 2
-    SceneObj: {fileID: 102900000, guid: 239005486b5ee40a7b7409211d6af31f, type: 3}
+    SceneName: AirportLevel
+    PublicName: Last Call
+  LoadingScreenSceneName: 
+  minLoadingScreenDuration: 1

@@ -105,6 +105,16 @@ public class SaveableGOProducer : MonoBehaviour
         }
     }
 
+    public void HandleDestroyOnLoad()
+    {
+        // Tells each of the components to handle destroying themselves on load and then destroys the producer.
+        foreach (var consumer in consumers)
+        {
+            consumer.HandleDestroyOnLoad();
+        }
+        Destroy(gameObject);
+    }
+
     private void Awake()
     {
         if (string.IsNullOrEmpty(config?.ProducerId))
@@ -118,7 +128,12 @@ public class SaveableGOProducer : MonoBehaviour
 
     private void OnDestroy()
     {
-        SaveableDataManager.Instance.HandleProducerDestroyed(this);
+        if (SaveableDataManager.Instance != null)
+        {
+            SaveableDataManager.Instance.HandleProducerDestroyed(this);
+        }
+        // else: the data manager unloaded before this producer was destroyed, which is fine. It just means that the
+        // scene was unloaded
     }
 
     #region Id Autoset

@@ -390,26 +390,6 @@ PrefabInstance:
       propertyPath: LoadingScreenSceneName
       value: LevelLoading
       objectReference: {fileID: 0}
-    - target: {fileID: 2371865146796269460, guid: 01fda7a84585e47ddb1eaddb2dd44a2d, type: 3}
-      propertyPath: SceneMap.Array.data[0].SceneName
-      value: MainMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 2371865146796269460, guid: 01fda7a84585e47ddb1eaddb2dd44a2d, type: 3}
-      propertyPath: SceneMap.Array.data[1].SceneName
-      value: SampleScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 2371865146796269460, guid: 01fda7a84585e47ddb1eaddb2dd44a2d, type: 3}
-      propertyPath: SceneMap.Array.data[2].SceneName
-      value: AirportLevel
-      objectReference: {fileID: 0}
-    - target: {fileID: 2371865146796269460, guid: 01fda7a84585e47ddb1eaddb2dd44a2d, type: 3}
-      propertyPath: SceneMap.Array.data[1].PublicName
-      value: Test Level
-      objectReference: {fileID: 0}
-    - target: {fileID: 2371865146796269460, guid: 01fda7a84585e47ddb1eaddb2dd44a2d, type: 3}
-      propertyPath: SceneMap.Array.data[2].PublicName
-      value: Last Call
-      objectReference: {fileID: 0}
     - target: {fileID: 7886129591919009276, guid: 01fda7a84585e47ddb1eaddb2dd44a2d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.376921
