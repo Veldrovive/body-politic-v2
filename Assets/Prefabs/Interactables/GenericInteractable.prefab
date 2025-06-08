@@ -134,6 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8779675895918541611}
   - component: {fileID: 1898523839466264179}
+  - component: {fileID: 4573713744831264708}
   m_Layer: 0
   m_Name: MoveToPoint
   m_TagString: Untagged
@@ -176,6 +177,21 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.5
+--- !u!114 &4573713744831264708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5788311564679051758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 7659253329689517800}
+  saveableConfig:
+    ConsumerId: fa2e0c21-709f-4d86-82dd-4036ea6229ae
 --- !u!1 &6927544156335784971
 GameObject:
   m_ObjectHideFlags: 0

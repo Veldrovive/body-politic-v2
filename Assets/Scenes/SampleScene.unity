@@ -4454,7 +4454,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1945626931996106311, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2051610065292084905, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_Radius
@@ -6296,7 +6296,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1945626931996106311, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4126593065883827398, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: config.ProducerId
@@ -8955,7 +8955,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1945626931996106311, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4126593065883827398, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: config.ProducerId

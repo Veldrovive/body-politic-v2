@@ -66,6 +66,11 @@ public class SaveableGOProducer : MonoBehaviour
             }
             
             SaveableData consumerData = consumer.GetSaveData();
+            if (consumerData == null)
+            {
+                // This consumer doesn't actually want to save anything. Likely it is used as a pointer to the GO.
+                continue;
+            }
             data.ChildConsumerData.Add(consumer.SaveableConfig.ConsumerId, consumerData);
         }
         return data;
@@ -115,6 +120,21 @@ public class SaveableGOProducer : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public GameObject GetConsumerObject(string consumerId)
+    {
+        // Find the consumer by ID and return its GameObject.
+        SaveableGOConsumer consumer = consumers.Find(c => c.SaveableConfig.ConsumerId == consumerId);
+        if (consumer != null)
+        {
+            return consumer.gameObject;
+        }
+        else
+        {
+            Debug.LogWarning($"Consumer with ID {consumerId} not found in producer {config.ProducerId}.");
+            return null;
+        }
+    }
+    
     private void Awake()
     {
         if (string.IsNullOrEmpty(config?.ProducerId))

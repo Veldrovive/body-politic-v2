@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class StateNodePort
@@ -17,8 +18,11 @@ public abstract class StateNode : StateGraphNode
     public static string LOAD_IN_PORT_NAME = "LoadIn";
     public static string IN_PORT_NAME = "In";
     
+    [JsonIgnore]
     public abstract AbstractStateConfiguration GenericConfiguration { get; }
+    [JsonIgnore]
     public abstract Type OutcomeEnumType { get; }  // Defines the outcome ports
+    [JsonIgnore]
     public abstract Type StateType { get; }
 
     protected override List<NodePortContext> ComputePorts()
@@ -124,8 +128,11 @@ public abstract class StateNode : StateGraphNode
 public abstract class ConfigurableStateNode<TStateConfiguration> : StateNode
     where TStateConfiguration : AbstractStateConfiguration, new()
 {
+    [JsonProperty]
     [SerializeField] private TStateConfiguration configuration; // Defines the configuration data object
+    [JsonIgnore]
     public TStateConfiguration Configuration => configuration;
+    [JsonIgnore]
     public override AbstractStateConfiguration GenericConfiguration => configuration;
 
     protected ConfigurableStateNode()

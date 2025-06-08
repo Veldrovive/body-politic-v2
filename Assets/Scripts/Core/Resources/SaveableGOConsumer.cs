@@ -15,7 +15,7 @@ public class ConsumerGOSaveableConfig
 
 public abstract class SaveableGOConsumer : MonoBehaviour
 {
-    [SerializeField] private SaveableGOProducer linkedSaveableProducer;
+    [SerializeField] protected SaveableGOProducer linkedSaveableProducer;
     [SerializeField] private ConsumerGOSaveableConfig saveableConfig;
     public ConsumerGOSaveableConfig SaveableConfig => saveableConfig;
     
@@ -37,6 +37,12 @@ public abstract class SaveableGOConsumer : MonoBehaviour
 
     private void AutosetConsumerId()
     {
+        if (saveableConfig == null)
+        {
+            // If the saveableConfig is not set, we need to create it.
+            saveableConfig = new ConsumerGOSaveableConfig();
+        }
+        
         if (string.IsNullOrEmpty(saveableConfig.ConsumerId))
         {
             // Then we are not playing and this is not a prefab so we are designing the level. It must have an ID.

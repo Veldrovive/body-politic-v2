@@ -254,6 +254,7 @@ public class SaveableDataManager : MonoBehaviour
         };
         jsonSettings.Converters.Add(new IdentifiableSOConverter(identifiableSOs, identifiableSoToId));
         jsonSettings.Converters.Add(new SaveableGOConverter(producerIdToGO, gameObjectToProducerId));
+        jsonSettings.Converters.Add(new TransformConverter(producerIdToGO, gameObjectToProducerId));
         
         SaveData data = new();
 
@@ -489,6 +490,7 @@ public class SaveableDataManager : MonoBehaviour
         };
         jsonSettings.Converters.Add(new IdentifiableSOConverter(identifiableSOs, identifiableSoToId));
         jsonSettings.Converters.Add(new SaveableGOConverter(producerIdToGO, gameObjectToProducerId));
+        jsonSettings.Converters.Add(new TransformConverter(producerIdToGO, gameObjectToProducerId));
         
         SaveData saveData = JsonConvert.DeserializeObject<SaveData>(saveDataJSON, jsonSettings);
         

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5662746947587455520}
   - component: {fileID: 3771137537146515475}
+  - component: {fileID: 6057861319681157660}
   m_Layer: 0
   m_Name: PrintArea
   m_TagString: Untagged
@@ -53,6 +54,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6057861319681157660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083057155403357329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    ProducerId: 
+    LoadOrder: 0
 --- !u!1 &7699123524510371532
 GameObject:
   m_ObjectHideFlags: 0

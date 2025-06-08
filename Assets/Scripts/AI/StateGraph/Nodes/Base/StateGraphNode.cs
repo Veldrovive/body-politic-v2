@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public enum PortType
@@ -56,18 +57,26 @@ public struct NodePortContext
 [System.Serializable]
 public abstract class StateGraphNode
 {
+    [JsonProperty]
     [SerializeField] private string m_guid;
-
+    [JsonProperty]
     [SerializeField] private Rect m_position;
     
+    [JsonIgnore]  // Gets defined on creation
     [SerializeField] private List<NodePortInfo> m_ports;
+    [JsonIgnore]  // Gets defined on creation
     private Dictionary<NodePortInfo, NodePortContext> m_portContext;
+    [JsonIgnore]
     public List<NodePortInfo> Ports => m_ports;
+    [JsonIgnore]
     public Dictionary<NodePortInfo, NodePortContext> PortContext => m_portContext;
 
+    [JsonIgnore]
     public string typeName;
 
+    [JsonIgnore]
     public string id => m_guid;
+    [JsonIgnore]
     public Rect position => m_position;
 
     public StateGraphNode()

@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 [System.Serializable]
@@ -14,6 +15,7 @@ public abstract class AbstractReference<T, VarT>
         return MemberwiseClone();
     }
 
+    [JsonIgnore]
     public T Value
     {
         get => UseConstant ? ConstantValue : Variable.Value;

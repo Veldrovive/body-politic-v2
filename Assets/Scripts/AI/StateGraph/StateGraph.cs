@@ -13,6 +13,11 @@ public class StateGraphSaveableData : SaveableData
     public List<StateGraphNode> Nodes;
     public List<StateGraphConnection> Connections;
 
+    public StateGraphSaveableData()
+    {
+        // Default constructor for serialization
+    }
+
     public StateGraphSaveableData(StateGraph graph)
     {
         DisplayName = graph.DisplayName;
@@ -45,7 +50,8 @@ public class StateGraph : MonoBehaviour
     /// <returns>The save data.</returns>
     public StateGraphSaveableData GetData()
     {
-        throw new NotImplementedException("GetSaveData is not implemented in StateGraphController. Please implement this method to return the save data for this controller.");
+        StateGraphSaveableData data = new StateGraphSaveableData(this);
+        return data;
     }
 
     /// <summary>
@@ -54,7 +60,30 @@ public class StateGraph : MonoBehaviour
     /// <param name="data">The save data to set.</param>
     public void SetData(StateGraphSaveableData data)
     {
-        throw new NotImplementedException("SetSaveData is not implemented in StateGraphController. Please implement this method to set the save data for this controller.");
+        displayName = data.DisplayName;
+        description = data.Description;
+        m_guid = data.Id;
+        
+        // If the nodes and connections are not clear, we should warn and then clear them. But they really should be empty
+        if (m_nodes.Count > 0 || m_connections.Count > 0)
+        {
+            Debug.LogWarning($"StateGraph {displayName} is being set with data but already has nodes or connections. Clearing existing nodes and connections.");
+        }
+        
+        // Clear existing nodes and connections
+        m_nodes.Clear();
+        m_connections.Clear();
+        
+        // Add nodes and connections from the data
+        foreach (var node in data.Nodes)
+        {
+            AddNode(node);
+        }
+        
+        foreach (var connection in data.Connections)
+        {
+            m_connections.Add(connection);
+        }
     }
     
     public void SetGUID(string guid)
