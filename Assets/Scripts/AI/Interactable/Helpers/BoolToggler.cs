@@ -56,8 +56,9 @@ public class BoolToggler : AbstractInteractionReactor
         }
     }
     
-    private void OnValidate()
+    protected override void OnValidate()
     {
+        base.OnValidate();
         Initialize();
     }
 
@@ -75,9 +76,10 @@ public class BoolToggler : AbstractInteractionReactor
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         // Our first job is to the enabled states of the two interactions based on the initial value of the bool
+        base.OnEnable();
         HandleValueChange();
     }
 

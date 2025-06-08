@@ -125,21 +125,22 @@ public class SceneLoadManager : MonoBehaviour
     /// </summary>
     /// <param name="sceneMapping">The scene mapping data for the level.</param>
     /// <param name="levelSceneName">The name of the level scene to load.</param>
-    private IEnumerator LoadLevelWithLoadingScreen(SceneMapping sceneMapping)
+    private IEnumerator LoadLevelWithLoadingScreen(SceneMapping sceneMapping, Action<bool> callback = null)
     {
-        // Unload the currently active scene if it's not the main menu.
-        Scene activeScene = SceneManager.GetActiveScene();
-        if (activeScene.name != "MainMenu" && activeScene.isLoaded)
-        {
-            Debug.Log($"Unloading current scene: {activeScene.name}");
-            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(activeScene);
-            if (unloadOperation == null)
-            {
-                Debug.LogError($"Failed to start unloading the current scene: {activeScene.name}. Cannot proceed with loading a new level.");
-                yield break; // Critical error, can't proceed.
-            }
-            yield return unloadOperation; // Wait for the unload to complete.
-        }
+        // // Unload the currently active scene if it's not the main menu.
+        // Scene activeScene = SceneManager.GetActiveScene();
+        // if (activeScene.name != "MainMenu" && activeScene.isLoaded)
+        // {
+        //     Debug.Log($"Unloading current scene: {activeScene.name}");
+        //     AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(activeScene);
+        //     if (unloadOperation == null)
+        //     {
+        //         Debug.LogError($"Failed to start unloading the current scene: {activeScene.name}. Cannot proceed with loading a new level.");
+        //         callback?.Invoke(false);
+        //         yield break; // Critical error, can't proceed.
+        //     }
+        //     yield return unloadOperation; // Wait for the unload to complete.
+        // }
         
         string levelScenePath = GetScenePath(sceneMapping.SceneName);
         Debug.Log($"Loading level {sceneMapping.Id} ({sceneMapping.SceneName})");
@@ -147,6 +148,7 @@ public class SceneLoadManager : MonoBehaviour
         if (LoadingScreenSceneName == null)
         {
             Debug.LogError("Loading Screen Scene object (LoadingScreenSceneObj) is not assigned in the SceneLoadManager. Please assign a SceneAsset in the Inspector.");
+            callback?.Invoke(false);
             yield break;
         }
 
@@ -155,6 +157,7 @@ public class SceneLoadManager : MonoBehaviour
         if (string.IsNullOrEmpty(loadingScreenName))
         {
             Debug.LogError("Loading screen scene name is empty or invalid. Ensure a valid SceneAsset is assigned for the loading screen and it has a name.");
+            callback?.Invoke(false);
             yield break;
         }
         
@@ -193,6 +196,7 @@ public class SceneLoadManager : MonoBehaviour
         if (asyncLoad == null)
         {
             Debug.LogError($"Failed to start async load for scene {sceneMapping.Id} ({sceneMapping.SceneName}).");
+            callback?.Invoke(false);
             yield break; // Critical error, can't proceed.
         }
         // Prevent the scene from activating immediately.
@@ -237,6 +241,7 @@ public class SceneLoadManager : MonoBehaviour
         SceneManager.UnloadSceneAsync(loadingScreenName);
         
         yield return null;
+        callback?.Invoke(true);
     }
 
     public void LoadSave(string saveFilePath)
@@ -245,12 +250,13 @@ public class SceneLoadManager : MonoBehaviour
         StartCoroutine(LoadSaveWithLoadingScreen(saveFilePath));
     }
     
-    private IEnumerator LoadSaveWithLoadingScreen(string saveFilePath)
+    private IEnumerator LoadSaveWithLoadingScreen(string saveFilePath, Action<bool> callback = null)
     {
         // Ensure that this save file actually exists.
         if (string.IsNullOrEmpty(saveFilePath) || !System.IO.File.Exists(saveFilePath))
         {
             Debug.LogError($"Save file not found at {saveFilePath}. Cannot load save.");
+            callback?.Invoke(false);
             yield break; // Critical error, can't proceed.
         }
         
@@ -263,24 +269,43 @@ public class SceneLoadManager : MonoBehaviour
         if (sceneMapping == null || string.IsNullOrEmpty(sceneMapping.SceneName))
         {
             Debug.LogError($"No SceneMapping found for save's active scene: {saveSceneId}. Cannot load save.");
+            callback?.Invoke(false);
             yield break; // Critical error, can't proceed.
         }
-        
+
+        bool? success = null;
         // We are ready to load the scene. We can use LoadLevelWithLoadingScreen as a helper
-        yield return LoadLevelWithLoadingScreen(sceneMapping);
-        
-        // The new scene is loaded and ready. Now we can actually load the save data.
-        DeserializedSaveData saveData = SaveableDataManager.Instance.LoadSaveFile(saveFilePath);
-        // We just use saveData as an indicator of success. If it was null, the load failed.
-        if (saveData == null)
+        yield return LoadLevelWithLoadingScreen(sceneMapping, res => success = res);
+
+        // Wait until the scene is loaded and the success flag is set.
+        while (!success.HasValue)
         {
-            Debug.LogError($"Failed to load save data from {saveFilePath}. The scene is loaded, but the save data could not be retrieved.");
+            yield return null;
+        }
+
+        if (success.Value)
+        {
+            // The new scene is loaded and ready. Now we can actually load the save data.
+            DeserializedSaveData saveData = SaveableDataManager.Instance.LoadSaveFile(saveFilePath);
+            // We just use saveData as an indicator of success. If it was null, the load failed.
+            if (saveData == null)
+            {
+                Debug.LogError($"Failed to load save data from {saveFilePath}. The scene is loaded, but the save data could not be retrieved.");
+                callback?.Invoke(false);
+                yield break; // Critical error, can't proceed.
+            }
+        
+            callback?.Invoke(true);
+#if UNITY_EDITOR
+            EditorApplication.isPaused = true;
+#endif
+        }
+        else
+        {
+            Debug.LogError($"Failed to load scene for save file {saveFilePath}. The scene was not loaded successfully.");
+            callback?.Invoke(false);
             yield break; // Critical error, can't proceed.
         }
-        
-#if UNITY_EDITOR
-        EditorApplication.isPaused = true;
-#endif
     }
 
     private void LoadMainMenu()
@@ -310,5 +335,23 @@ public class SceneLoadManager : MonoBehaviour
         
         Debug.LogWarning($"No SceneMapping found for active scene: {activeScene.name}. Returning default SceneId.MainMenu.");
         return SceneId.MainMenu; // Default or fallback value if no mapping is found.
+    }
+
+    public void QuickLoad()
+    {
+        // Selects the last save file and loads it.
+        List<SaveFileData> saveFiles = SaveFileInterface.GetSaveFiles();
+        if (saveFiles.Count > 0)
+        {
+            // Load the last save file.
+            SaveFileData lastSaveFile = saveFiles[^1]; // Get the last save file in the list.
+            Debug.Log($"Quick loading last save file: {lastSaveFile.DataFilePath}");
+            LoadSave(lastSaveFile.DataFilePath);
+        }
+        else
+        {
+            Debug.LogWarning("No save files found. Cannot quick load.");
+            LoadMainMenu(); // Optionally, load the main menu if no saves are available.
+        }
     }
 }

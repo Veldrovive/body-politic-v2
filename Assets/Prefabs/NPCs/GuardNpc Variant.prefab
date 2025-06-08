@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GuardNpc Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4848299609032010763, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: linkedSaveableProducer
+      value: 
+      objectReference: {fileID: 2478989712499814740}
+    - target: {fileID: 4848299609032010763, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: saveableConfig.ConsumerId
+      value: e5f63564-51fe-4b1f-ac2e-ca0de26769c4
+      objectReference: {fileID: 0}
     - target: {fileID: 7769777322885264402, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: DefaultRoles.Array.size
       value: 2
@@ -65,3 +73,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+--- !u!114 &2478989712499814740 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4126593065883827398, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+  m_PrefabInstance: {fileID: 1955616145943711122}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

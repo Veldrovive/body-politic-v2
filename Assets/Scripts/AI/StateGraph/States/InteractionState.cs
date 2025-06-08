@@ -125,6 +125,7 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             // Map the Interactable's failure reason to this State's error enum.
             if (initiateResult.HasFailureReason(InteractionFailureReason.InteractionDisabled))
             {
+                Debug.LogWarning($"InteractionState: Interaction '{interactionToPerform.DisplayName}' is disabled on {targetInteractableGO.Value.name}.", this);
                 TriggerExit(InteractionStateOutcome.Error);
             }
             else if (initiateResult.HasFailureReason(InteractionFailureReason.RoleFailed))

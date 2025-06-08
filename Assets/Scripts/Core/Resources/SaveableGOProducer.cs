@@ -160,6 +160,11 @@ public class SaveableGOProducer : MonoBehaviour
 
     private void AutosetProducerId()
     {
+        if (config == null)
+        {
+            // If the config is not set, we need to create it.
+            config = new ProducerGOSaveableConfig();
+        }
         // We only autoset the ID if it is not set, this is not a prefab asset, and we are not in a prefab stage.
         // If it is a prefab asset or in a prefab stage, we in fact want to null the ID as prefabs absolutely never have IDs.
         // We also do not autoset IDs if the application is running. We only autoset IDs when designing the level.

@@ -1,7 +1,14 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
+public class PrefabPrinterSaveableData : SaveableData
+{
+    public List<GameObject> trackedProducedItems = new List<GameObject>();
+    public int lastProducedItemCount = -1;
+    public bool printDefEnabled = false;
+}
 
 public class PrefabPrinter : AbstractInteractionReactor
 {
@@ -42,6 +49,34 @@ public class PrefabPrinter : AbstractInteractionReactor
     
     #endregion
 
+    #region Save-Load
+
+    public override SaveableData GetSaveData()
+    {
+        return new PrefabPrinterSaveableData()
+        {
+            trackedProducedItems = trackedProducedItems.ToList(),
+            lastProducedItemCount = lastProducedItemCount,
+            printDefEnabled = printDefEnabled
+        };
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is PrefabPrinterSaveableData printerData)
+        {
+            trackedProducedItems = new HashSet<GameObject>(printerData.trackedProducedItems);
+            lastProducedItemCount = printerData.lastProducedItemCount;
+            printDefEnabled = printerData.printDefEnabled;
+        }
+        else
+        {
+            Debug.LogWarning($"PrefabPrinter received invalid save data: {data.GetType().Name}.", this);
+        }
+    }
+
+    #endregion
+
     #region Unity Lifecycle
 
     private void Initialize()
@@ -63,8 +98,10 @@ public class PrefabPrinter : AbstractInteractionReactor
             TryPrint);
     }
 
-    private void OnValidate()
+    protected override void OnValidate()
     {
+        base.OnValidate();
+        
         Initialize();
     }
 

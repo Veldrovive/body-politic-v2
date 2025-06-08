@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7311174606291372265}
   - component: {fileID: 3997082245425699194}
   - component: {fileID: 5758283066121246490}
+  - component: {fileID: 7706898105576086098}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -105,6 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb90a5a679954f4ca5d5a12ffe7f5db1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 7706898105576086098}
+  saveableConfig:
+    ConsumerId: 08f3263f-0042-43b2-9436-3e0adc2646d1
   managedCamera: {fileID: 0}
   playerManager: {fileID: 0}
   targetTransform: {fileID: 0}
@@ -197,3 +201,18 @@ MonoBehaviour:
   playerFocusRotVel: 0.5
   playerFocusRotDragSensitivity: 0.2
   scrollSensitivity: 5
+--- !u!114 &7706898105576086098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4259465707031688699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    ProducerId: 
+    LoadOrder: 0

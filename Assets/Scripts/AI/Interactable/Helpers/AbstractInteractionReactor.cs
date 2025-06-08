@@ -11,7 +11,7 @@ public enum InteractionLifecycleEvent
 }
 
 [RequireComponent(typeof(Interactable))]
-public abstract class AbstractInteractionReactor : MonoBehaviour
+public abstract class AbstractInteractionReactor : SaveableGOConsumer
 {
     private Interactable _interactable;
     public Interactable GetInteractable()
@@ -22,7 +22,15 @@ public abstract class AbstractInteractionReactor : MonoBehaviour
         }
         return _interactable;
     }
-    
+
+    public override SaveableData GetSaveData()
+    {
+        // By default, we don't save state for reactors.
+        return null;
+    }
+
+    public override void LoadSaveData(SaveableData data) { }
+
     protected virtual void Awake()
     {
         Interactable interactable = GetInteractable();

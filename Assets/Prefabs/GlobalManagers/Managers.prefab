@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3530302977041695967}
+  - component: {fileID: 8707118731231123420}
   - component: {fileID: 6560746526949030315}
   - component: {fileID: 8917888051748937010}
   - component: {fileID: 8106561755936268605}
@@ -161,6 +162,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5895967714825608151}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8707118731231123420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3616972317661252658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    ProducerId: 
+    LoadOrder: 0
 --- !u!114 &6560746526949030315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,12 +234,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f252f02acc6d467dadf54f23db52f24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: b2d0179eea23a4d389a3d13be4f6f1f3, type: 2}
+  linkedSaveableProducer: {fileID: 8707118731231123420}
+  saveableConfig:
+    ConsumerId: 348de447-3980-48ef-b6d1-4562c7d89e7d
   allNpcs: []
   infectedNpcs: []
   focusOnInfection: 0
   triggerActionCameraOnInfection: 1
   infectionActionCameraDuration: 5
+  gameEvent: {fileID: 11400000, guid: b2d0179eea23a4d389a3d13be4f6f1f3, type: 2}
 --- !u!114 &3116719903882094897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,6 +255,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ad8c8b63f4143adad8aa3c1b9c6a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 8707118731231123420}
+  saveableConfig:
+    ConsumerId: 2a8da4e8-b14c-4eba-9201-6df14887ab8f
   inputManager: {fileID: 8106561755936268605}
   movementMarkerPrefab: {fileID: 4578786293534885563, guid: 084ca064cc18444f8c2c208f3cdb5e8a, type: 3}
   movementMarkerSnapSpeed: 20
@@ -275,6 +297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTesting: 1
   saveableGOProducers: []
+  saveableSOsList: []
   holdablePrefabMappings:
   - holdableType: 0
     Prefab: {fileID: 0}

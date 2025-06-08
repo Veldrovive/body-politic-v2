@@ -127,8 +127,6 @@ public class StateGraphController : SaveableGOConsumer
     /// <param name="data">The save data to set.</param>
     public override void LoadSaveData(SaveableData data)
     {
-        Debug.LogWarning($"{gameObject.name} State Controller tried to load save data but this is not implemented. Data: {data}");
-        
         if (data is not StateGraphControllerSaveableData stateData)
         {
             Debug.LogError($"{gameObject.name} State Controller tried to load save data but the data is not of type StateGraphControllerSaveableData. Data: {data}");

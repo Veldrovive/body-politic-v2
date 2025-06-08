@@ -9,12 +9,17 @@ public enum PlayerManagerSelectionMode
     PlaceItem
 }
 
+public class PlayerManagerSaveableData : SaveableData
+{
+    public GameObject CurrentFocusedNpcId;
+}
+
 /// <summary>
 /// Manages the player's current focus (NPC), handles input for focus switching
 /// and interactions, relays trigger events, and sends commands to the focused NPC's CharacterModeController.
 /// </summary>
 [DefaultExecutionOrder(-85)]
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : SaveableGOConsumer
 {
     // --- Dependencies ---
     [Header("Dependencies")]
@@ -39,6 +44,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private KeyCode cycleFocusKey = KeyCode.N;
     [Tooltip("Key to press to activate item placing mode.")]
     [SerializeField] private KeyCode itemPlacingKey = KeyCode.B;
+    [Tooltip("Key for quicksave")]
+    [SerializeField] private KeyCode quickSaveKey = KeyCode.F5;
+    [Tooltip("Key for quickload")]
+    [SerializeField] private KeyCode quickLoadKey = KeyCode.F9;
     [Tooltip("Key to hold to overwrite the player controller queue instead of appending.")]
     [SerializeField] private KeyCode overwriteQueueModifier = KeyCode.LeftShift;
     
@@ -73,6 +82,42 @@ public class PlayerManager : MonoBehaviour
 
     private Holdable itemPlaceHoldable = null;
     private Vector3? itemPlacePosition = null;
+
+    public override SaveableData GetSaveData()
+    {
+        return new PlayerManagerSaveableData
+        {
+            CurrentFocusedNpcId = currentFocusedNpc.gameObject
+        };
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is PlayerManagerSaveableData playerData)
+        {
+            if (playerData.CurrentFocusedNpcId != null)
+            {
+                // Try to find the NPC in the controllable list
+                NpcContext npc = controllableNpcs.FirstOrDefault(n => n.gameObject == playerData.CurrentFocusedNpcId);
+                if (npc != null)
+                {
+                    SetFocus(npc);
+                }
+                else
+                {
+                    Debug.LogWarning($"Could not find NPC with ID {playerData.CurrentFocusedNpcId.name} in controllable NPCs. Focus not set.", this);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("PlayerManagerSaveableData has no CurrentFocusedNpcId. Focus not set.", this);
+            }
+        }
+        else
+        {
+            Debug.LogError("Invalid save data type for PlayerManager. Expected PlayerManagerSaveableData.", this);
+        }
+    }
 
     /// <summary> Initializes the Singleton, dependencies, focus, and validates references. </summary>
     void Awake() // [cite: 1006]
@@ -270,9 +315,14 @@ public class PlayerManager : MonoBehaviour
     /// <summary> Handles discrete key press events for focus cycling and returning to routine. </summary>
     void HandleKeyPressed(InputManager.KeyState keyState) // [cite: 1065]
     {
-        if (keyState.Key == KeyCode.M)
+        if (keyState.Key == quickSaveKey)
         {
             SaveableDataManager.Instance.CreateSave();
+        }
+
+        if (keyState.Key == quickLoadKey)
+        {
+            SceneLoadManager.Instance.QuickLoad();
         }
         else if (keyState.Key == cycleFocusKey) // Use configured key [cite: 1066]
         {

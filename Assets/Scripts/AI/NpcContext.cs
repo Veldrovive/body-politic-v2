@@ -173,7 +173,18 @@ public class NpcContext : SaveableGOConsumer
             }
             else
             {
-                Debug.LogWarning($"Key '{key}' found but value is not of type {typeof(TStoredDataType)}.", this);
+                // Special cases:
+                // 1. By default, the json library deserializes ints to longs. If the required type is int, we can assume that a convert is safe.
+                if (typeof(TStoredDataType) == typeof(int) && value is long longValue)
+                {
+                    return (TStoredDataType) (object) Convert.ToInt32(longValue);
+                }
+                // 2. Same but for floats.
+                if (typeof(TStoredDataType) == typeof(float) && value is double doubleValue)
+                {
+                    return (TStoredDataType) (object) Convert.ToSingle(doubleValue);
+                }
+                Debug.LogWarning($"Key '{key}' found but value is not of type {typeof(TStoredDataType)}. Expected type: {typeof(TStoredDataType)}, but got: {value.GetType()}. Returning default value.", this);
                 return defaultValue;
             }
         }

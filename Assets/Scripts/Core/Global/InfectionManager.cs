@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -10,9 +11,15 @@ public class InfectionData
     public NpcContext infectedNpc;
 }
 
+public class InfectionManagerSaveableData : SaveableData
+{
+    public List<GameObject> InfectedNpcs = new List<GameObject>();
+}
+
 [DefaultExecutionOrder(-90)]
 [RequireComponent(typeof(PlayerManager))]
-public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDataEventSO>
+// public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDataEventSO>
+public class InfectionManager : SaveableGOConsumer, IGameEventListener<InfectionData>
 {
     [SerializeField] private List<NpcContext> allNpcs = new List<NpcContext>();
     
@@ -31,28 +38,15 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
     public static InfectionManager Instance { get; private set; }
     
     public event Action<NpcContext> OnNpcInfected;
+    
+    [Tooltip("The event channel to register to.")]
+    [SerializeField] protected InfectionDataEventSO gameEvent = default;
 
-    void Awake()
-    {
-        if (Instance != null) {
-            Debug.LogError("There is more than one instance!");
-            return;
-        }
-
-        Instance = this;
-    }
-
-    void OnEnable()
-    {
-        playerManager = GetComponent<PlayerManager>();
-        if (playerManager == null)
-        {
-            Debug.LogError("PlayerManager component not found on this GameObject.", this);
-            return;
-        }
-    }
-
-    protected override void Start()
+    /// <summary>
+    /// Called when the component becomes enabled and active.
+    /// Registers the listener with the specified event channel.
+    /// </summary>
+    protected virtual void Start()
     {
         // Filter out Npcs that are not enabled
         allNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy || !npc.gameObject.activeSelf);
@@ -71,11 +65,15 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
                 Debug.LogError("Infection Event SO not found in GlobalData. Please assign it in the inspector.", this);
             }
         }
-
-        // Call the base Start method AFTER potentially assigning gameEvent.
-        // This ensures registration happens correctly.
-        base.Start();
-
+        
+        // Ensure the gameEvent is assigned before attempting to register.
+        if (gameEvent == null)
+        {
+            Debug.LogError($"GameEvent is not assigned in the inspector for {this.GetType().Name} on GameObject {this.gameObject.name}. Cannot register listener.", this);
+            return;
+        }
+        gameEvent.RegisterListener(this);
+        
         // Initialize the player manager with the infected NPCs.
         if (playerManager != null)
         {
@@ -83,7 +81,67 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
         }
     }
 
-    protected override void HandleEventRaised(InfectionData data)
+    /// <summary>
+    /// Called when the component is disabled or destroyed.
+    /// Unregisters the listener from the event channel.
+    /// </summary>
+    protected virtual void OnDisable()
+    {
+        // Only attempt to unregister if the gameEvent was assigned.
+        gameEvent?.UnregisterListener(this);
+    }
+
+    void Awake()
+    {
+        if (Instance != null) {
+            Debug.LogError("There is more than one instance!");
+            return;
+        }
+
+        Instance = this;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        
+        playerManager = GetComponent<PlayerManager>();
+        if (playerManager == null)
+        {
+            Debug.LogError("PlayerManager component not found on this GameObject.", this);
+            return;
+        }
+    }
+
+    public override SaveableData GetSaveData()
+    {
+        return new InfectionManagerSaveableData
+        {
+            InfectedNpcs = infectedNpcs.Select(npc => npc.gameObject).ToList()
+        };
+    }
+
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is InfectionManagerSaveableData infectionData)
+        {
+            infectedNpcs = infectionData.InfectedNpcs.Select(go => go.GetComponent<NpcContext>()).Where(npc => npc != null).ToList();
+            // Ensure all NPCs are registered after loading save data.
+            foreach (var npc in infectedNpcs)
+            {
+                RegisterNpc(npc);
+            }
+            
+            // Notify the player manager about the loaded infected NPCs.
+            playerManager?.SetControllableNpcs(infectedNpcs);
+        }
+        else
+        {
+            Debug.LogError("Invalid save data type for InfectionManager.", this);
+        }
+    }
+
+    public void OnEventRaised(InfectionData data)
     {
         OnInfection(data.infectedNpc);
     }
@@ -114,7 +172,7 @@ public class InfectionManager : GameEventListenerBase<InfectionData, InfectionDa
         }
         else
         {
-            Debug.LogWarning($"NPC {npc.name} is already registered in the InfectionManager.", this);
+            // Debug.LogWarning($"NPC {npc.name} is already registered in the InfectionManager.", this);
         }
     }
     

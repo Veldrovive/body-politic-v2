@@ -5,9 +5,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 
+public class CameraManagerSaveableData : SaveableData
+{
+    public float ViewCurveParam = 0f;
+    public float ViewRotParam = 0.75f;
+    public Vector3 FocusCenter = Vector3.zero;
+    public bool AttachedToTransform = true;
+}
+
 [DefaultExecutionOrder(-80)]
 [RequireComponent(typeof(Camera))] // Ensure it's attached to a camera
-public class CameraManager : MonoBehaviour
+public class CameraManager : SaveableGOConsumer
 {
     [Header("Dependencies")]
     [SerializeField] private Camera managedCamera;
@@ -49,7 +57,38 @@ public class CameraManager : MonoBehaviour
     private Vector3 focusSnapVelocity = Vector3.zero;  // Used with Vector3.SmoothDamp when ChangingFocus
     private float curveParamVelocity = 0f;  // Using with Mathf.SmoothDamp for smooth transitions
     private float rotParamVelocity = 0f;  // Using with Mathf.SmoothDamp for smooth transitions
+
+    public override SaveableData GetSaveData()
+    {
+        CameraManagerSaveableData data = new CameraManagerSaveableData
+        {
+            ViewCurveParam = curViewCurveParam,
+            ViewRotParam = curViewRotParam,
+            FocusCenter = curFocusCenter,
+            AttachedToTransform = attachedToTransform
+        };
+        return data;
+    }
     
+    public override void LoadSaveData(SaveableData data)
+    {
+        if (data is CameraManagerSaveableData cameraData)
+        {
+            targetViewCurveParam = cameraData.ViewCurveParam;
+            curViewCurveParam = cameraData.ViewCurveParam;
+            targetViewRotParam = cameraData.ViewRotParam;
+            curViewRotParam = cameraData.ViewRotParam;
+            targetFocusCenter = cameraData.FocusCenter;
+            curFocusCenter = cameraData.FocusCenter;
+            attachedToTransform = cameraData.AttachedToTransform;
+            isSnappedToTransform = attachedToTransform; // If we are attached to the transform, we are snapped to it
+        }
+        else
+        {
+            Debug.LogError("CameraManager received invalid save data!", this);
+        }
+    }
+
     void Awake()
     {
         managedCamera = GetComponent<Camera>();

@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+// TODO: Implement save system for Fixable state
+
 public class Fixable : AbstractInteractionReactor
 {
     #region Serialized Fields
@@ -90,8 +92,9 @@ public class Fixable : AbstractInteractionReactor
         }
     }
 
-    private void OnValidate()
+    protected override void OnValidate()
     {
+        base.OnValidate();
         Initialize();
     }
 

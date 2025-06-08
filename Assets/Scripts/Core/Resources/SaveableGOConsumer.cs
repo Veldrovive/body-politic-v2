@@ -48,12 +48,14 @@ public abstract class SaveableGOConsumer : MonoBehaviour
             // Then we are not playing and this is not a prefab so we are designing the level. It must have an ID.
             Debug.Log($"Initializing ConsumerId for {name}");
             saveableConfig.ConsumerId = Guid.NewGuid().ToString();
+#if UNITY_EDITOR
             if (PrefabUtility.IsPartOfPrefabInstance(gameObject))
             {
                 // Required to actually save the changes to the prefab instance. If we don't do this, changes will
                 // visually appear in the editor, but are not "real". That was an annoying bug to track down.
                 PrefabUtility.RecordPrefabInstancePropertyModifications(this);
             }
+#endif
         }
     }
     
@@ -67,6 +69,14 @@ public abstract class SaveableGOConsumer : MonoBehaviour
             {
                 Debug.LogWarning($"No linked producer found for {name}. Please assign one in the Inspector.");
             }
+#if UNITY_EDITOR
+            if (PrefabUtility.IsPartOfPrefabInstance(gameObject))
+            {
+                // Required to actually save the changes to the prefab instance. If we don't do this, changes will
+                // visually appear in the editor, but are not "real". That was an annoying bug to track down.
+                PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+            }
+#endif
         }
     }
     
@@ -83,7 +93,7 @@ public abstract class SaveableGOConsumer : MonoBehaviour
     }
     
     protected virtual void OnValidate()
-    {
+    { 
         AutosetConsumerId();
         AutosetLinkedProducer();
         RegisterConsumer();
@@ -91,6 +101,11 @@ public abstract class SaveableGOConsumer : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        if (saveableConfig == null || string.IsNullOrEmpty(saveableConfig.ConsumerId))
+        {
+            Debug.LogError($"Consumer {name} is enabled without a valid ConsumerId. This is likely due to OnValidate not being called before OnEnable. Please ensure that AutosetConsumerId is called in OnValidate.", this);
+        }
+        AutosetLinkedProducer();
         RegisterConsumer();
     }
 

@@ -40,8 +40,9 @@ public class BoolSetter : AbstractInteractionReactor
         );
     }
 
-    private void OnValidate()
+    protected override void OnValidate()
     {
+        base.OnValidate();
         Initialize();
     }
 
