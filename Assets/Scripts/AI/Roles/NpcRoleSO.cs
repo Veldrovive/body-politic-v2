@@ -16,6 +16,9 @@ public class NpcRoleSO : IdentifiableSO
     [Tooltip("The type of role this is. This is used to determine how the role interacts with the game world.")]
     public RoleType RoleType = RoleType.Default;
 
+    [Tooltip("If true, this role will apply to all thralls as soon as any thrall gains this role.")]
+    public bool Sticky = false;
+
     public override string ToString()
     {
         return RoleName;

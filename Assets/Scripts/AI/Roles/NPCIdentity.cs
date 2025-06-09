@@ -22,7 +22,7 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
 
     /// <summary>
     /// Add other components/ScriptableObjects that implement IRoleProvider here.
-    /// References PlayerIdentitySO automatically if available via GlobalData.
+    /// References PlayerIdentity automatically if available via the singleton.
     /// </summary>
     [Tooltip("Add other components/ScriptableObjects that implement IRoleProvider here.")]
     [SerializeField] private List<UnityEngine.Object> AdditionalRoleProviderObjects = new();
@@ -56,6 +56,8 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     /// This is used to determine what role to show the user in the UI.
     /// </summary>
     private NpcRoleSO primaryRole;
+
+    private NpcContext npcContext;
 
     // ******** Events ********
     /// <summary>
@@ -119,6 +121,11 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     }
 
     // ******** Lifecycle Methods ********
+    private void Awake()
+    {
+        npcContext = gameObject.GetComponent<NpcContext>();
+    }
+
     /// <summary>
     /// Subscribe to role change events from providers and perform initial role calculation.
     /// </summary>
@@ -129,15 +136,15 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
 
         // Add self as a provider for dynamic roles
         internalRoleProviders.Add(this);
-
-        // Add the PlayerIdentitySO from the GlobalData singleton
-        if (GlobalData.Instance != null && GlobalData.Instance.PlayerIdentity != null)
+        
+        // Add the PlayerIdentityManager from the singleton instance if available.
+        if (PlayerIdentityManager.Instance != null)
         {
-            internalRoleProviders.Add(GlobalData.Instance.PlayerIdentity);
+            internalRoleProviders.Add(PlayerIdentityManager.Instance);
         }
         else
         {
-            Debug.LogWarning($"PlayerIdentitySO not found via GlobalData on {gameObject.name}. Player roles will be missing.", this);
+            Debug.LogWarning($"PlayerIdentityManager not found on {gameObject.name}. Player roles will be missing.", this);
         }
         
         // TODO: XXX Uncomment when inventory (interactables) are re-implemented
@@ -176,13 +183,6 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
 
             provider.OnRoleAdded += HandleProviderRoleAdded;
             provider.OnRoleRemoved += HandleProviderRoleRemoved;
-
-            // Subscribe to the general change notification, if the provider supports it (like PlayerIdentitySO)
-            if (provider is PlayerIdentitySO playerIdentity) // Example for specific type, could use reflection or another interface if needed generally
-            {
-                playerIdentity.OnProviderDataChanged += HandleProviderDataChanged;
-            }
-            // TODO: Add similar subscription logic if NpcInventory or other providers implement a general change event.
         }
 
         // Perform the initial calculation of all roles after subscriptions are set up.
@@ -201,13 +201,6 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
 
              provider.OnRoleAdded -= HandleProviderRoleAdded;
              provider.OnRoleRemoved -= HandleProviderRoleRemoved;
-
-             // Unsubscribe from the general change notification
-             if (provider is PlayerIdentitySO playerIdentity)
-             {
-                 playerIdentity.OnProviderDataChanged -= HandleProviderDataChanged;
-             }
-             // TODO: Add unsubscription logic for other providers' general change events.
         }
         internalRoleProviders.Clear();
     }
@@ -383,6 +376,8 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
         {
             if (provider == null) continue; // Skip null providers if any slipped through
 
+            if (!provider.ShouldProvideRoles(npcContext)) continue;
+
             // Add dynamic roles provided by this component itself
             if (ReferenceEquals(provider, this))
             {
@@ -413,6 +408,16 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
         foreach (var role in currentRolesInternal.Except(previousRoles).ToList()) // Use ToList to prevent modification during iteration issues
         {
             OnRoleAdded?.Invoke(role);
+
+            if (
+                PlayerIdentityManager.Instance != null &&
+                PlayerIdentityManager.Instance.ShouldProvideRoles(npcContext) &&
+                role.Sticky
+            )
+            {
+                // If the PlayerIdentityManager is providing roles, we also reciprocally it when we get a role.
+                PlayerIdentityManager.Instance.AddRole(role);
+            }
         }
         foreach (var role in previousRoles.Except(currentRolesInternal).ToList()) // Use ToList here too
         {
@@ -448,15 +453,6 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     /// </summary>
     private void HandleProviderRoleRemoved(NpcRoleSO role)
     {
-        RecalculateAllRoles();
-    }
-
-    /// <summary>
-    /// Handles the event when an external provider signals a general data change requiring refresh.
-    /// </summary>
-    private void HandleProviderDataChanged()
-    {
-        // Debug.Log($"[{gameObject.name}] Received OnProviderDataChanged. Recalculating roles."); // Optional debug log
         RecalculateAllRoles();
     }
 

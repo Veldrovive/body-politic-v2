@@ -71,5 +71,5 @@ MonoBehaviour:
     Type: 2
     SceneName: AirportLevel
     PublicName: Last Call
-  LoadingScreenSceneName: 
+  LoadingScreenSceneName: LevelLoading
   minLoadingScreenDuration: 1

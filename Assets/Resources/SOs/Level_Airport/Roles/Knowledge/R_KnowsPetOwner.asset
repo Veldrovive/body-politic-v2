@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2bb3135f56f144868048b35eeaf9c15, type: 3}
+  m_Name: R_KnowsPetOwner
+  m_EditorClassIdentifier: 
+  identifierId: c0978d581c4dd47ec8389855ddb1d7b0
+  RoleName: Knows about bubbles
+  RoleDescription: 'The man by the food court has been '
+  RoleWeight: 0
+  RoleType: 7
+  Sticky: 1

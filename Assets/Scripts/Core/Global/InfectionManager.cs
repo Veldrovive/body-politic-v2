@@ -79,6 +79,8 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         {
             playerManager.SetControllableNpcs(infectedNpcs, true);
         }
+
+        UpdatePlayerIdentity();
     }
 
     /// <summary>
@@ -126,14 +128,11 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         if (data is InfectionManagerSaveableData infectionData)
         {
             infectedNpcs = infectionData.InfectedNpcs.Select(go => go.GetComponent<NpcContext>()).Where(npc => npc != null).ToList();
-            // Ensure all NPCs are registered after loading save data.
-            foreach (var npc in infectedNpcs)
-            {
-                RegisterNpc(npc);
-            }
             
             // Notify the player manager about the loaded infected NPCs.
             playerManager?.SetControllableNpcs(infectedNpcs);
+
+            UpdatePlayerIdentity();
         }
         else
         {
@@ -141,6 +140,22 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         }
     }
 
+    public void UpdatePlayerIdentity()
+    {
+        // The player identity keeps track of any "Sticky" roles that exist on infected NPCs. Whenever we
+        // change the infected NPCs, we iterate through and add all sticky roles to the player identity.
+        foreach (var npc in infectedNpcs)
+        {
+            foreach (var role in npc.Identity.GetAllRoles())
+            {
+                if (role.Sticky)
+                {
+                    PlayerIdentityManager.Instance.AddRole(role);
+                }
+            }
+        }
+    }
+    
     public void OnEventRaised(InfectionData data)
     {
         OnInfection(data.infectedNpc);
@@ -198,5 +213,7 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
                 new ActionCamSource("infection", 1, infectedNpc.transform, ActionCameraMode.ThirdPerson, infectionActionCameraDuration)
             );
         }
+
+        UpdatePlayerIdentity();
     }
 }

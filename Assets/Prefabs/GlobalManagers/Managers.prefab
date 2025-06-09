@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 8106561755936268605}
   - component: {fileID: 6335414319268155121}
   - component: {fileID: 3116719903882094897}
+  - component: {fileID: 8989966879260291349}
   - component: {fileID: 3809693611007301062}
   - component: {fileID: 983456098727416866}
   m_Layer: 0
@@ -267,8 +268,26 @@ MonoBehaviour:
   returnToRoutineKey: 114
   cycleFocusKey: 110
   itemPlacingKey: 98
+  quickSaveKey: 286
+  quickLoadKey: 290
   overwriteQueueModifier: 304
   defaultMovementSpeed: 2
+--- !u!114 &8989966879260291349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3616972317661252658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031dfabadff442b780570d073ac9c090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 8707118731231123420}
+  saveableConfig:
+    ConsumerId: 80a6481e-2b1c-4454-bd10-255222dfac19
+  DefaultRoles: []
 --- !u!114 &3809693611007301062
 MonoBehaviour:
   m_ObjectHideFlags: 0
