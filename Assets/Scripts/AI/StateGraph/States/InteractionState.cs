@@ -117,7 +117,8 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
         // Interactable.TryInitiateInteraction handles its own internal checks (proximity, role, etc.)
         InteractionStatus initiateResult = targetInteractable.TryInitiateInteraction(
             interactionToPerform,
-            this.gameObject // Initiator GameObject
+            this.gameObject, // Initiator GameObject
+            priority: 5
         );
         
         if (!initiateResult.CanInteract())

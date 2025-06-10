@@ -147,16 +147,15 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
             Debug.LogWarning($"PlayerIdentityManager not found on {gameObject.name}. Player roles will be missing.", this);
         }
         
-        // TODO: XXX Uncomment when inventory (interactables) are re-implemented
-        // NpcContext npcContext = GetComponent<NpcContext>();
-        // if (npcContext.Inventory != null)
-        // {
-        //     internalRoleProviders.Add(npcContext.Inventory);
-        // }
-        // else
-        // {
-        //     Debug.LogWarning($"NpcInventory not found on {gameObject.name}. Inventory roles will be missing.", this);
-        // }
+        NpcContext npcContext = GetComponent<NpcContext>();
+        if (npcContext.Inventory != null)
+        {
+            internalRoleProviders.Add(npcContext.Inventory);
+        }
+        else
+        {
+            Debug.LogWarning($"NpcInventory not found on {gameObject.name}. Inventory roles will be missing.", this);
+        }
 
         // Add the additional role providers specified in the inspector.
         foreach (UnityEngine.Object providerObj in AdditionalRoleProviderObjects)
