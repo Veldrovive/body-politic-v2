@@ -14,7 +14,7 @@ public class SayStringListenerNode : EventListenerNode
         if (!string.IsNullOrEmpty(message) && npcContext != null)
         {
             npcContext.SpeechBubbleManager.ShowBubble(
-                message, bubbleDuration, true    
+                message, bubbleDuration    
             );
         }
     }

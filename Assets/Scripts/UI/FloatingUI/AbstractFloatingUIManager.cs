@@ -57,6 +57,9 @@ public abstract class AbstractFloatingUIConfig
     [Header("Events")]
     public Action OnCreationComplete;
     public Action OnRemovalComplete;
+
+    [Header("Styling")]
+    public float? ContainerMaxWidthPercent = 40f;  // Maximum width of the floater container as a fraction of the screen width
 }
 
 [RequireComponent(typeof(UIDocument))]
@@ -80,7 +83,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     
     private IPanel cachedPanel;  // Cached panel reference for efficiency
     
-    protected abstract void OnSetupFloater(VisualElement floaterRoot, TConfig floaterConfig);
+    protected abstract bool OnSetupFloater(VisualElement floaterRoot, TConfig floaterConfig);
     protected abstract void OnUpdateFloater(VisualElement floaterRoot, TConfig floaterConfig);
     protected abstract void OnRemoveFloater(VisualElement floaterRoot, TConfig floaterConfig);
 
@@ -184,6 +187,10 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
         
         floaterData.Container = new VisualElement();
         floaterData.Container.name = $"FloaterContainer_{floaterData.Id}";
+        if (floaterConfig.ContainerMaxWidthPercent.HasValue)
+        {
+            floaterData.Container.style.maxWidth = Length.Percent(floaterConfig.ContainerMaxWidthPercent.Value);
+        }
         floaterData.Container.style.position = Position.Absolute;
         floaterData.Container.style.visibility = Visibility.Hidden;  // Start hidden until position is set correctly
 
@@ -191,9 +198,14 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
         floaterData.Instance.name = $"Floater_{floaterData.Id}";
         floaterData.Container.Add(floaterData.Instance);
         
-        uiDocument.rootVisualElement.Add(floaterData.Container);
+        bool setupSucceeded = OnSetupFloater(floaterData.Instance, floaterConfig);  // Sets up the internals so that the geometry is correct next frame
+        if (!setupSucceeded)
+        {
+            Debug.LogWarning($"FloatingUIManager: Floater setup failed for {typeof(TConfig).Name}. Floater will not be created.", this);
+            return null;
+        }
         
-        OnSetupFloater(floaterData.Instance, floaterConfig);  // Sets up the internals so that the geometry is correct next frame
+        uiDocument.rootVisualElement.Add(floaterData.Container);
         
         // Before the geometry of the floater is updated, we keep it in the Initializing state
         floaterDatas[floaterData.Id] = floaterData;

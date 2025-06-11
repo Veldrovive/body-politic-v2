@@ -17,7 +17,7 @@ public class NpcContextSaveableData : SaveableData
 [RequireComponent(typeof(StateGraphController))]
 [RequireComponent(typeof(NpcMovementManager))]
 [RequireComponent(typeof(NpcSuspicionTracker))]
-[RequireComponent(typeof(SpeechBubbleManager))]
+[RequireComponent(typeof(SpeechBubbleFloatingUIManager))]
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(NpcAnimationManager))]
 [RequireComponent(typeof(NpcDetectorReactor))]
@@ -30,7 +30,7 @@ public class NpcContext : SaveableGOConsumer
     public StateGraphController StateGraphController { get; private set; }
     public NpcMovementManager MovementManager { get; private set; }
     public NpcSuspicionTracker SuspicionTracker { get; private set; }
-    public SpeechBubbleManager SpeechBubbleManager { get; private set; }
+    public SpeechBubbleFloatingUIManager SpeechBubbleManager { get; private set; }
     public NpcAnimationManager AnimationManager { get; private set; }
     public NavMeshAgent NavMeshAgent { get; private set; }
     public NpcDetectorReactor DetectorReactor { get; private set; }
@@ -81,7 +81,7 @@ public class NpcContext : SaveableGOConsumer
         StateGraphController = GetComponent<StateGraphController>();
         MovementManager = GetComponent<NpcMovementManager>();
         SuspicionTracker = GetComponent<NpcSuspicionTracker>();
-        SpeechBubbleManager = GetComponent<SpeechBubbleManager>();
+        SpeechBubbleManager = GetComponent<SpeechBubbleFloatingUIManager>();
         AnimationManager = GetComponent<NpcAnimationManager>();
         NavMeshAgent = GetComponent<NavMeshAgent>();
         DetectorReactor = GetComponent<NpcDetectorReactor>();

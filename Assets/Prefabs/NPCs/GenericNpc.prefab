@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 5412603953881350774}
   - component: {fileID: 1802905592461804675}
   - component: {fileID: 3065160016559865694}
-  - component: {fileID: 4493147730884358426}
+  - component: {fileID: 177197453923943728}
   - component: {fileID: 576656727529733126}
   - component: {fileID: 3189426731784081209}
   - component: {fileID: 1384171195896954992}
@@ -203,6 +203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 743709bfb999e4721b25a2fcad54ea5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
+  saveableConfig:
+    ConsumerId: 0e47e0ae-006c-4632-ba1e-789bfbd73ee9
   DefaultRoles:
   - {fileID: 11400000, guid: a1ad6638461664f5c97c49503c66fb7d, type: 2}
   AdditionalRoleProviderObjects: []
@@ -257,6 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570fd70f77664e78b4230688b9767710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
+  saveableConfig:
+    ConsumerId: 3dc315be-6f70-4b4e-83c8-b4d4e767b8d4
   inventoryCapacity: 5
   _handAttachPoint: {fileID: 4472334584291331936}
 --- !u!114 &1802905592461804675
@@ -271,6 +277,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f8261a388940cd80b2829eebcccc6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
+  saveableConfig:
+    ConsumerId: 4e2498e4-99de-4b86-b116-b1f627ba9b0c
 --- !u!114 &3065160016559865694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +299,7 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
---- !u!114 &4493147730884358426
+--- !u!114 &177197453923943728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,16 +308,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1945626931996106311}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea04e5e8fff74ea4be530ba2786af486, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b13f2c8faf445eeb89588eb8ff5b478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubbleUIDocument: {fileID: 3065160016559865694}
-  trackedTransform: {fileID: 5667167069351560069}
+  floaterTemplate: {fileID: 9197481963319205126, guid: 6189b17a17a344f5daf0ff403dbd0f33, type: 3}
+  uiDocument: {fileID: 3065160016559865694}
   viewCamera: {fileID: 0}
+  trackedTransform: {fileID: 5667167069351560069}
   transitionInTime: 0.4
   transitionOutTime: 0.2
   betweenBubbleTime: 0.2
   screenSpaceOffset: {x: 0, y: 0}
+  maxWidth: 40
 --- !u!114 &576656727529733126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,6 +332,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d0e0d4135f54ab29af56d1cd1a3bc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
+  saveableConfig:
+    ConsumerId: eaac0c7a-788a-4814-b3ae-cfb57593e856
   strollSpeed: 1
   walkSpeed: 2
   runSpeed: 3.5
@@ -409,6 +423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19556bcbb45d4aa2a44be257e3dd6e56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
+  saveableConfig:
+    ConsumerId: f2076703-b989-4699-a420-bf2865e9867a
   infectNpcInteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
   shootNpcInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
   shooterSuspicionThreshold: 5
@@ -426,6 +443,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2206e520af054b42bc157344541fd585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 4126593065883827398}
+  saveableConfig:
+    ConsumerId: 9f2fecc1-45a3-4e27-a616-13da687520fe
   routineStateGraph: {fileID: 1447074388558317057}
   IdleOnExit: 0
 --- !u!114 &1447074388558317057

@@ -110,7 +110,7 @@ public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUICon
     /// Called once when the floater is first created. Use this to find elements
     /// in the UXML and set their initial state.
     /// </summary>
-    protected override void OnSetupFloater(VisualElement floaterRoot, TestFloatingUIConfig floaterConfig)
+    protected override bool OnSetupFloater(VisualElement floaterRoot, TestFloatingUIConfig floaterConfig)
     {
         Debug.Log("OnSetupFloater called.");
         var titleLabel = floaterRoot.Q<Label>("title-label");
@@ -118,6 +118,8 @@ public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUICon
         {
             titleLabel.text = "Tracking Target";
         }
+
+        return true;
     }
 
     /// <summary>

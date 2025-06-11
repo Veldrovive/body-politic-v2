@@ -173,8 +173,6 @@ public class SaveableGOConverter : JsonConverter
             return null;
         }
 
-        string producerId = null;
-
         if (reader.TokenType == JsonToken.StartObject)
         {
             GOReference reference = serializer.Deserialize<GOReference>(reader);

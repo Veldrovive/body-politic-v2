@@ -41,7 +41,7 @@ public class SayRoleMissingListenerNode : EventListenerNode
         if (!string.IsNullOrEmpty(message) && npcContext != null)
         {
             npcContext.SpeechBubbleManager.ShowBubble(
-                message, 3f, true    
+                message, 3f    
             );
         }
     }

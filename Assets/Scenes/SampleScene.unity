@@ -7819,7 +7819,7 @@ MonoBehaviour:
   floaterTemplate: {fileID: 9197481963319205126, guid: 6189b17a17a344f5daf0ff403dbd0f33, type: 3}
   uiDocument: {fileID: 0}
   viewCamera: {fileID: 0}
-  positionType: 2
+  positionType: 0
   targetTransform: {fileID: 1962764899}
   targetWorldPosition: {x: 0, y: 0, z: 0}
   screenPositionType: 1
