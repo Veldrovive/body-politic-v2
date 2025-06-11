@@ -261,6 +261,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4102933364882050337, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: interactableDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 3b9116a8139354faabba4c9d8f850cff, type: 2}
+    - target: {fileID: 4102933364882050337, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: interactionInstances.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -351,9 +355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd9373c34d1ce4dc8a0a51df7f17b22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linkedSaveableProducer: {fileID: 0}
+  linkedSaveableProducer: {fileID: 7792813401179566035}
   saveableConfig:
-    ConsumerId: 
+    ConsumerId: 8290cec6-fc1e-4da6-9549-5517d566b93a
   prefabToPrint: 1
   printLocation: {fileID: 5919994340963105730}
   printArea: {fileID: 3771137537146515475}
@@ -363,3 +367,14 @@ MonoBehaviour:
     UseConstant: 0
     ConstantValue: 0
     Variable: {fileID: 11400000, guid: 6a58dc6467e804d55936e0c06c9627ea, type: 2}
+--- !u!114 &7792813401179566035 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7659253329689517800, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+  m_PrefabInstance: {fileID: 463449454233071931}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7371570595119723824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

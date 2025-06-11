@@ -30,6 +30,7 @@ public class InteractionInstance
     [Tooltip("Designer notes for this specific interaction instance.")]
     [TextArea(3, 10)]
     public string DesignerNotes;
+    
     [Tooltip("The definition asset describing the interaction type, requirements, and effects.")]
     public InteractionDefinitionSO InteractionDefinition;
 
@@ -80,6 +81,8 @@ public class InteractableSaveableData : SaveableData
 /// </summary>
 public class Interactable : SaveableGOConsumer
 {
+    [SerializeField] private InteractableDefinitionSO interactableDefinition;
+    public InteractableDefinitionSO InteractableDefinition => interactableDefinition;
     [Tooltip("List of interactions available on this object.")]
     [SerializeField] protected List<InteractionInstance> interactionInstances = new List<InteractionInstance>();
 
