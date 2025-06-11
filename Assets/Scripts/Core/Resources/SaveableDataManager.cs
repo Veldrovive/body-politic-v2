@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -433,7 +434,7 @@ public class SaveableDataManager : MonoBehaviour
             }
 
             // Now we can set the data on the producer.
-            context.Producer.LoadSaveData(data);
+            context.Producer.LoadSaveData(data, false);
             // Debug.Log($"Loaded data for producer {data.ProducerId}.");
         }
     }
@@ -448,7 +449,7 @@ public class SaveableDataManager : MonoBehaviour
                 continue;
             }
 
-            saveableSO.LoadSaveData(soData.Data);
+            saveableSO.LoadSaveData(soData.Data, false);
             // Debug.Log($"Loaded data for SaveableSO {soData.SOName} with ID {soData.SOId}.");
         }
     }
@@ -559,15 +560,41 @@ public class SaveableDataManager : MonoBehaviour
             return null;
         }
 
-        try
-        {
+        // try
+        // {
             string json = System.IO.File.ReadAllText(saveFilePath);
             return LoadSaveData(json);
-        }
-        catch (Exception ex)
+        // }
+        // catch (Exception ex)
+        // {
+        //     Debug.LogError($"Failed to load save file: {ex.Message}");
+        //     throw;
+        //     // return null;
+        // }
+    }
+
+    public void BlankLoad()
+    {
+        // Used to start the level with no save data.
+        // To do this, we only need to call the Load methods of each producer and saveable SO with blankLoad true.
+        // Step 1: Iterate over all producers and call LoadSaveData with blankLoad true.
+        List<ProducerGOContext> orderedProducers = producers.Values.ToList();
+        orderedProducers.Sort((a, b) => a.Producer.Config.LoadOrder.CompareTo(b.Producer.Config.LoadOrder));
+        
+        foreach (var producerContext in orderedProducers)
         {
-            Debug.LogError($"Failed to load save file: {ex.Message}");
-            return null;
+            if (producerContext.IsDestroyed)
+            {
+                Debug.LogWarning($"Producer {producerContext.ProducerId} is marked as destroyed. Skipping blank load.");
+                continue;
+            }
+            producerContext.Producer.LoadSaveData(null, true);
+        }
+        
+        // Step 2: Iterate over all saveable SOs and call LoadSaveData with blankLoad true.
+        foreach (var saveableSO in saveableSOs.Values)
+        {
+            saveableSO.LoadSaveData(null, true);
         }
     }
     

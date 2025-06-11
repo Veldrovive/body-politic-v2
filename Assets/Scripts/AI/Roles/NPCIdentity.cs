@@ -89,48 +89,36 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not NpcIdentitySaveableData npcData)
+        if (!blankLoad)
         {
-            Debug.LogWarning($"Invalid save data type for {gameObject.name}. Expected NpcIdentitySaveableData.", this);
-            return;
-        }
-
-        dynamicRoles.Clear();
-        if (data != null && npcData.DynamicRoles != null)
-        {
-            foreach (NpcRoleSO role in npcData.DynamicRoles)
+            if (data is not NpcIdentitySaveableData npcData)
             {
-                if (role != null)
+                Debug.LogWarning($"Invalid save data type for {gameObject.name}. Expected NpcIdentitySaveableData.", this);
+                return;
+            }
+
+            dynamicRoles.Clear();
+            if (data != null && npcData.DynamicRoles != null)
+            {
+                foreach (NpcRoleSO role in npcData.DynamicRoles)
                 {
-                    dynamicRoles.Add(role);
-                }
-                else
-                {
-                    Debug.LogWarning($"Null role found in saved data for {gameObject.name}. Skipping.", this);
+                    if (role != null)
+                    {
+                        dynamicRoles.Add(role);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Null role found in saved data for {gameObject.name}. Skipping.", this);
+                    }
                 }
             }
+            else
+            {
+                Debug.LogWarning($"No valid dynamic roles found in saved data for {gameObject.name}.", this);
+            }
         }
-        else
-        {
-            Debug.LogWarning($"No valid dynamic roles found in saved data for {gameObject.name}.", this);
-        }
-        // Recalculate roles after setting the save data
-        RecalculateAllRoles();
-    }
-
-    // ******** Lifecycle Methods ********
-    private void Awake()
-    {
-        npcContext = gameObject.GetComponent<NpcContext>();
-    }
-
-    /// <summary>
-    /// Subscribe to role change events from providers and perform initial role calculation.
-    /// </summary>
-    void Start()
-    {
         // Clear list in case Awake runs multiple times (e.g. editor domain reload)
         internalRoleProviders.Clear();
 
@@ -183,9 +171,15 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
             provider.OnRoleAdded += HandleProviderRoleAdded;
             provider.OnRoleRemoved += HandleProviderRoleRemoved;
         }
-
-        // Perform the initial calculation of all roles after subscriptions are set up.
+        
+        // Recalculate roles after setting the save data
         RecalculateAllRoles();
+    }
+
+    // ******** Lifecycle Methods ********
+    private void Awake()
+    {
+        npcContext = gameObject.GetComponent<NpcContext>();
     }
 
     /// <summary>

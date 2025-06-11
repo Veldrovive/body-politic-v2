@@ -103,64 +103,67 @@ public class NpcInventory : SaveableGOConsumer, IRoleProvider
     /// InteractionContext that has the NPC gameobject as the initiator.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not NpcInventorySaveableData npcData)
+        if (!blankLoad)
         {
-            Debug.LogError($"NpcInventory: LoadSaveData received data of type {data.GetType().Name}, expected NpcInventorySaveableData.", this);
-            return;
-        }
-        
-        if (SaveableDataManager.Instance == null)
-        {
-            throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot set save data.");
-        }
+            if (data is not NpcInventorySaveableData npcData)
+            {
+                Debug.LogError($"NpcInventory: LoadSaveData received data of type {data.GetType().Name}, expected NpcInventorySaveableData.", this);
+                return;
+            }
+            
+            if (SaveableDataManager.Instance == null)
+            {
+                throw new InvalidOperationException("ResourceDataManager is not initialized. Cannot set save data.");
+            }
 
-        void TryPickUpItem(Holdable item)
-        {
-            InteractionContext dummyContext = new(
-                this.gameObject,
-                item,
-                item.GetPickUpDefinition()
-            );
-            // Attempt to acquire the item, which will handle the visual attachment and role updates.
-            item.HandlePickUp(dummyContext);
-        }
-        
-        // If there is a held item, acquire it first so that it goes into the hand slot.
-        if (npcData.HeldItemGO != null)
-        {
-            Holdable heldItem = npcData.HeldItemGO?.GetComponent<Holdable>();
-            if (heldItem == null)
+            void TryPickUpItem(Holdable item)
             {
-                Debug.LogWarning($"NpcInventory: LoadSaveData held item is not a Holdable or is null. GameObject: {npcData.HeldItemGO?.name}", this);
+                InteractionContext dummyContext = new(
+                    this.gameObject,
+                    item,
+                    item.GetPickUpDefinition()
+                );
+                // Attempt to acquire the item, which will handle the visual attachment and role updates.
+                item.HandlePickUp(dummyContext);
             }
-            else
+            
+            // If there is a held item, acquire it first so that it goes into the hand slot.
+            if (npcData.HeldItemGO != null)
             {
-                TryPickUpItem(heldItem);
+                Holdable heldItem = npcData.HeldItemGO?.GetComponent<Holdable>();
+                if (heldItem == null)
+                {
+                    Debug.LogWarning($"NpcInventory: LoadSaveData held item is not a Holdable or is null. GameObject: {npcData.HeldItemGO?.name}", this);
+                }
+                else
+                {
+                    TryPickUpItem(heldItem);
+                }
             }
-        }
-        
-        // Then we can loop through the inventory slots and acquire each item.
-        foreach (GameObject invItem in npcData.InventorySlotsGOs)
-        {
-            Holdable item = invItem?.GetComponent<Holdable>();
-            if (item == null)
+            
+            // Then we can loop through the inventory slots and acquire each item.
+            foreach (GameObject invItem in npcData.InventorySlotsGOs)
             {
-                Debug.LogWarning($"NpcInventory: LoadSaveData inventory item is not a Holdable or is null. GameObject: {invItem?.name}", this);
+                Holdable item = invItem?.GetComponent<Holdable>();
+                if (item == null)
+                {
+                    Debug.LogWarning($"NpcInventory: LoadSaveData inventory item is not a Holdable or is null. GameObject: {invItem?.name}", this);
+                }
+                else
+                {
+                    TryPickUpItem(item);
+                }
             }
-            else
+            
+            // And finally if the currently held item is not the same as the one in the save data, we store it in the inventory.
+            // This will happen when there is no held item as the first inventory slot will then go into the hand instead.
+            if (_heldItem != null && _heldItem.gameObject != npcData.HeldItemGO)
             {
-                TryPickUpItem(item);
+                // Store the held item in the inventory
+                TryStoreHeldItem();
             }
-        }
-        
-        // And finally if the currently held item is not the same as the one in the save data, we store it in the inventory.
-        // This will happen when there is no held item as the first inventory slot will then go into the hand instead.
-        if (_heldItem != null && _heldItem.gameObject != npcData.HeldItemGO)
-        {
-            // Store the held item in the inventory
-            TryStoreHeldItem();
         }
     }
 

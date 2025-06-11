@@ -54,16 +54,19 @@ public class NpcContext : SaveableGOConsumer
         };
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is NpcContextSaveableData npcData)
+        if (!blankLoad)
         {
-            arbitraryAccessData = npcData.ArbitraryAccessData ?? new Dictionary<string, object>();
-        }
-        else
-        {
-            Debug.LogError($"Expected NpcContextSaveableData but received {data.GetType().Name}.", this);
-            arbitraryAccessData = new Dictionary<string, object>();
+            if (data is NpcContextSaveableData npcData)
+            {
+                arbitraryAccessData = npcData.ArbitraryAccessData ?? new Dictionary<string, object>();
+            }
+            else
+            {
+                Debug.LogError($"Expected NpcContextSaveableData but received {data.GetType().Name}.", this);
+                arbitraryAccessData = new Dictionary<string, object>();
+            }
         }
     }
 

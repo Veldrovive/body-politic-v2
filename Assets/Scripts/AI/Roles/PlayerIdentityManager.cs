@@ -62,21 +62,24 @@ public class PlayerIdentityManager : SaveableGOConsumer, IRoleProvider
         return saveData;
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is PlayerIdentitySaveableData identityData)
+        if (!blankLoad)
         {
-            dynamicRoles.Clear();
-            allRolesCache.Clear();
-            allRolesCache.UnionWith(DefaultRoles);
-            foreach (var role in identityData.DynamicRoles)
+            if (data is PlayerIdentitySaveableData identityData)
             {
-                AddRole(role);
+                dynamicRoles.Clear();
+                allRolesCache.Clear();
+                allRolesCache.UnionWith(DefaultRoles);
+                foreach (var role in identityData.DynamicRoles)
+                {
+                    AddRole(role);
+                }
             }
-        }
-        else
-        {
-            Debug.LogError("Invalid save data type for PlayerIdentityManager.", this);
+            else
+            {
+                Debug.LogError("Invalid save data type for PlayerIdentityManager.", this);
+            }
         }
     }
 

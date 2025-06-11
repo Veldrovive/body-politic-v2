@@ -227,33 +227,36 @@ public class NpcMovementManager : SaveableGOConsumer
         return data;
     }
     
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not NpcMovementManagerSaveableData npcMovementData)
+        if (!blankLoad)
         {
-            Debug.LogError($"NpcMovementManager: LoadSaveData called with invalid data type: {data.GetType()}. Expected NpcMovementManagerSaveableData.", this);
-            return;
-        }
-        
-        // It's recommended to disable the agent before warping
-        navMeshAgent.enabled = false;
-
-        transform.position = npcMovementData.Position;
-        transform.rotation = npcMovementData.Rotation;
-        transform.localScale = npcMovementData.Scale;
-
-        // Re-enable the agent to allow Warp to correctly place it on the NavMesh
-        navMeshAgent.enabled = true;
-
-        // Warp the agent to the new position
-        navMeshAgent.Warp(npcMovementData.Position);
-        // If there is an active request, pass it through SetMovementTarget again to recalculate the path
-        if (currentMovementRequest != null)
-        {
-            MovementFailureReason? failureReason = SetMovementTarget(currentMovementRequest);
-            if (failureReason.HasValue)
+            if (data is not NpcMovementManagerSaveableData npcMovementData)
             {
-                Debug.LogError($"NpcMovementManager: Failed to reapply movement request after loading save data: {failureReason.Value}", this);
+                Debug.LogError($"NpcMovementManager: LoadSaveData called with invalid data type: {data.GetType()}. Expected NpcMovementManagerSaveableData.", this);
+                return;
+            }
+        
+            // It's recommended to disable the agent before warping
+            navMeshAgent.enabled = false;
+
+            transform.position = npcMovementData.Position;
+            transform.rotation = npcMovementData.Rotation;
+            transform.localScale = npcMovementData.Scale;
+
+            // Re-enable the agent to allow Warp to correctly place it on the NavMesh
+            navMeshAgent.enabled = true;
+
+            // Warp the agent to the new position
+            navMeshAgent.Warp(npcMovementData.Position);
+            // If there is an active request, pass it through SetMovementTarget again to recalculate the path
+            if (currentMovementRequest != null)
+            {
+                MovementFailureReason? failureReason = SetMovementTarget(currentMovementRequest);
+                if (failureReason.HasValue)
+                {
+                    Debug.LogError($"NpcMovementManager: Failed to reapply movement request after loading save data: {failureReason.Value}", this);
+                }
             }
         }
     }

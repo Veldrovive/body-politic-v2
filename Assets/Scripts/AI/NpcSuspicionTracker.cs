@@ -92,29 +92,32 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not NpcSuspicionTrackerSaveableData trackerData)
+        if (!blankLoad)
         {
-            Debug.LogWarning($"Invalid save data type provided to {nameof(NpcSuspicionTracker)}. Expected {nameof(NpcSuspicionTrackerSaveableData)}, got {data.GetType().Name}.", this);
-            return;
-        }
-
-        // Clear existing sources
-        activeSources.Clear();
-        currentMaxSuspicion = 0;
-
-        // Populate from save data
-        foreach (var source in trackerData.SuspicionSources)
-        {
-            if (source != null && !string.IsNullOrEmpty(source.SourceName) && source.Level > 0 && source.EndTime > Time.time)
+            if (data is not NpcSuspicionTrackerSaveableData trackerData)
             {
-                activeSources[source.SourceName] = source;
+                Debug.LogWarning($"Invalid save data type provided to {nameof(NpcSuspicionTracker)}. Expected {nameof(NpcSuspicionTrackerSaveableData)}, got {data.GetType().Name}.", this);
+                return;
             }
-        }
 
-        // Recalculate max suspicion level
-        RecalculateMaxSuspicion();
+            // Clear existing sources
+            activeSources.Clear();
+            currentMaxSuspicion = 0;
+
+            // Populate from save data
+            foreach (var source in trackerData.SuspicionSources)
+            {
+                if (source != null && !string.IsNullOrEmpty(source.SourceName) && source.Level > 0 && source.EndTime > Time.time)
+                {
+                    activeSources[source.SourceName] = source;
+                }
+            }
+
+            // Recalculate max suspicion level
+            RecalculateMaxSuspicion();
+        }
     }
 
     // --- Public Properties ---

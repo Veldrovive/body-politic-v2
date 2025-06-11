@@ -17,6 +17,8 @@ class FixingContext
     public string StepGUID = null;  // Holds a reference to the step that was added to the fixer.
 }
 
+// TODO: Implement save system for Fixable state
+
 [DefaultExecutionOrder(-50)]
 public class FixableManager : MonoBehaviour
 {

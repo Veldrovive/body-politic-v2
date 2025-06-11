@@ -49,15 +49,27 @@ public abstract class AbstractVariableSO<T> : SaveableSO
         return data;
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is VariableSOSaveableData<T> variableData)
+        if (blankLoad)
         {
-            Value = variableData.Value;
+            // If _resetOnPlay is enabled, reset the value to default
+            if (_resetOnPlay)
+            {
+                Value = _startValue;
+            }
         }
         else
         {
-            Debug.LogError($"Invalid data type for {name}. Expected VariableSOSaveableData<{typeof(T)}> but got {data.GetType()}");
+            // Then we load the value from the save data
+            if (data is VariableSOSaveableData<T> variableData)
+            {
+                Value = variableData.Value;
+            }
+            else
+            {
+                Debug.LogError($"Invalid data type for {name}. Expected VariableSOSaveableData<{typeof(T)}> but got {data.GetType()}");
+            }
         }
     }
 }

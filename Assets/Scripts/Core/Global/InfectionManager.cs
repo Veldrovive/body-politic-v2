@@ -43,47 +43,6 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
     [SerializeField] protected InfectionDataEventSO gameEvent = default;
 
     /// <summary>
-    /// Called when the component becomes enabled and active.
-    /// Registers the listener with the specified event channel.
-    /// </summary>
-    protected virtual void Start()
-    {
-        // Filter out Npcs that are not enabled
-        allNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy || !npc.gameObject.activeSelf);
-        infectedNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy);
-        
-        if (gameEvent == null)
-        {
-            InfectionDataEventSO infectionEvent = GlobalData.Instance?.InfectionEvent;
-            if (infectionEvent != null)
-            {
-                gameEvent = infectionEvent;
-                // Debug.Log($"Infection Event SO automatically assigned from GlobalData for {this.gameObject.name}.", this);
-            }
-            else
-            {
-                Debug.LogError("Infection Event SO not found in GlobalData. Please assign it in the inspector.", this);
-            }
-        }
-        
-        // Ensure the gameEvent is assigned before attempting to register.
-        if (gameEvent == null)
-        {
-            Debug.LogError($"GameEvent is not assigned in the inspector for {this.GetType().Name} on GameObject {this.gameObject.name}. Cannot register listener.", this);
-            return;
-        }
-        gameEvent.RegisterListener(this);
-        
-        // Initialize the player manager with the infected NPCs.
-        if (playerManager != null)
-        {
-            playerManager.SetControllableNpcs(infectedNpcs, true);
-        }
-
-        UpdatePlayerIdentity();
-    }
-
-    /// <summary>
     /// Called when the component is disabled or destroyed.
     /// Unregisters the listener from the event channel.
     /// </summary>
@@ -123,21 +82,53 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         };
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is InfectionManagerSaveableData infectionData)
+        if (!blankLoad)
         {
-            infectedNpcs = infectionData.InfectedNpcs.Select(go => go.GetComponent<NpcContext>()).Where(npc => npc != null).ToList();
-            
-            // Notify the player manager about the loaded infected NPCs.
-            playerManager?.SetControllableNpcs(infectedNpcs);
+            if (data is InfectionManagerSaveableData infectionData)
+            {
+                infectedNpcs = infectionData.InfectedNpcs.Select(go => go.GetComponent<NpcContext>()).Where(npc => npc != null).ToList();
+            }
+            else
+            {
+                Debug.LogError("Invalid save data type for InfectionManager.", this);
+            }
+        }
+        
+        // Filter out Npcs that are not enabled
+        allNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy || !npc.gameObject.activeSelf);
+        infectedNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy);
+        
+        if (gameEvent == null)
+        {
+            InfectionDataEventSO infectionEvent = GlobalData.Instance?.InfectionEvent;
+            if (infectionEvent != null)
+            {
+                gameEvent = infectionEvent;
+                // Debug.Log($"Infection Event SO automatically assigned from GlobalData for {this.gameObject.name}.", this);
+            }
+            else
+            {
+                Debug.LogError("Infection Event SO not found in GlobalData. Please assign it in the inspector.", this);
+            }
+        }
+        
+        // Ensure the gameEvent is assigned before attempting to register.
+        if (gameEvent == null)
+        {
+            Debug.LogError($"GameEvent is not assigned in the inspector for {this.GetType().Name} on GameObject {this.gameObject.name}. Cannot register listener.", this);
+            return;
+        }
+        gameEvent.RegisterListener(this);
+        
+        // Initialize the player manager with the infected NPCs.
+        if (playerManager != null)
+        {
+            playerManager.SetControllableNpcs(infectedNpcs, true);
+        }
 
-            UpdatePlayerIdentity();
-        }
-        else
-        {
-            Debug.LogError("Invalid save data type for InfectionManager.", this);
-        }
+        UpdatePlayerIdentity();
     }
 
     public void UpdatePlayerIdentity()

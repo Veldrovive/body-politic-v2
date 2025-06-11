@@ -10,7 +10,7 @@ public class SaveableGOPointer : SaveableGOConsumer
         return null;
     }
     
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
         // This consumer does not load any data. It is just a pointer to the GameObject.
     }

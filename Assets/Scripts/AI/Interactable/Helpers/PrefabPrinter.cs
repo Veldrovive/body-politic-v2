@@ -61,18 +61,23 @@ public class PrefabPrinter : AbstractInteractionReactor
         };
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is PrefabPrinterSaveableData printerData)
+        if (!blankLoad)
         {
-            trackedProducedItems = new HashSet<GameObject>(printerData.trackedProducedItems);
-            lastProducedItemCount = printerData.lastProducedItemCount;
-            printDefEnabled = printerData.printDefEnabled;
+            if (data is PrefabPrinterSaveableData printerData)
+            {
+                trackedProducedItems = new HashSet<GameObject>(printerData.trackedProducedItems);
+                lastProducedItemCount = printerData.lastProducedItemCount;
+                printDefEnabled = printerData.printDefEnabled;
+            }
+            else
+            {
+                Debug.LogWarning($"PrefabPrinter received invalid save data: {data.GetType().Name}.", this);
+            }
         }
-        else
-        {
-            Debug.LogWarning($"PrefabPrinter received invalid save data: {data.GetType().Name}.", this);
-        }
+
+        Initialize();  // We always need to initialize so that we can register the interaction lifecycle callback.
     }
 
     #endregion
@@ -102,11 +107,6 @@ public class PrefabPrinter : AbstractInteractionReactor
     {
         base.OnValidate();
         
-        Initialize();
-    }
-
-    private void Start()
-    {
         Initialize();
     }
 

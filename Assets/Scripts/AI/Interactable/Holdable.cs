@@ -49,8 +49,7 @@ public class Holdable : Interactable
     [Header("Initial State")]
     [Tooltip("Optional: Assign an NPC GameObject here if this item should start held by them.")]
     [SerializeField] private GameObject initialHolder;
-
-    private bool didLoad = false;
+    
     public override SaveableData GetSaveData()
     {
         SaveableData baseData = base.GetSaveData();
@@ -72,21 +71,69 @@ public class Holdable : Interactable
         return holdableData;
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not HoldableSaveableData holdableData)
+        base.LoadSaveData(data, blankLoad);  // Sets the base properties from InteractableSaveableData
+
+        if (!blankLoad)
         {
-            throw new InvalidCastException($"Expected HoldableSaveableData for loading, but got {data.GetType().Name} for Holdable '{gameObject.name}'.");
-        }
+            if (data is not HoldableSaveableData holdableData)
+            {
+                throw new InvalidCastException($"Expected HoldableSaveableData for loading, but got {data.GetType().Name} for Holdable '{gameObject.name}'.");
+            }
         
-        base.LoadSaveData(data);  // Sets the base properties from InteractableSaveableData
-        // Now set the specific Holdable properties
-        transform.position = holdableData.Position;
-        transform.rotation = holdableData.Rotation;
-        transform.localScale = holdableData.Scale;
-        // And put into the world. The actual state will be set when NPCs are loaded.
-        SetVisualState(HoldableVisualState.InWorld);
-        didLoad = true; // Mark as loaded to prevent re-initialization
+            // Now set the specific Holdable properties
+            transform.position = holdableData.Position;
+            transform.rotation = holdableData.Rotation;
+            transform.localScale = holdableData.Scale;
+            // And put into the world. The actual state will be set when NPCs are loaded.
+            SetVisualState(HoldableVisualState.InWorld);
+        }
+        else
+        {
+            // If we are doing a blank load, we also need to set our state based on the initial conditions
+            // --- Handle Initial Holder ---
+            bool startedHeld = false;
+            if (initialHolder != null)
+            {
+                NpcContext holderContext = initialHolder.GetComponent<NpcContext>();
+                if (holderContext != null && holderContext.Inventory != null)
+                {
+                    InteractionContext initialPickupContext = new InteractionContext(initialHolder, this, pickUpDefinition);
+                    HandlePickUp(initialPickupContext);
+                    if(CurrentHolder == initialHolder)
+                    {
+                        startedHeld = true; // Successfully started held
+                    }
+                    else
+                    {
+                        Debug.LogError($"Holdable '{gameObject.name}' failed to initialize as held by '{initialHolder.name}'.", this);
+                    }
+                } else {
+                    Debug.LogError($"Holdable '{gameObject.name}' has InitialHolder '{initialHolder.name}' assigned, but it lacks NpcContext or NpcInventory.", initialHolder);
+                    initialHolder = null;
+                }
+            }
+
+            // --- Set Initial Interaction Enabled States ---
+            // Must be done *after* attempting initial hold
+            if (pickUpDefinition != null)
+            {
+                // Can only pick up if NOT currently held (or in inventory, though HandlePickUp sets IsHeld=true)
+                SetInteractionEnableInfo(pickUpDefinition, !startedHeld, true, "Item is already held or in inventory.");
+            }
+            if (putDownDefinition != null)
+            {
+                // Can only put down IF currently held
+                SetInteractionEnableInfo(putDownDefinition, startedHeld, true, "Item is not currently held.");
+            }
+
+            // Ensure visual state is correct if not initially held
+            if (!startedHeld)
+            {
+                SetVisualState(HoldableVisualState.InWorld);
+            }
+        }
     }
 
     // --- State Properties ---
@@ -189,57 +236,6 @@ public class Holdable : Interactable
         else if (putDownDefinition != null)
         {
               Debug.LogError($"Holdable '{gameObject.name}' failed to find or add InteractionInstance for PutDownDefinition '{putDownDefinition.name}'.", this);
-        }
-    }
-
-    /// <summary>
-    /// Sets initial enabled state for PickUp/PutDown interactions and handles starting held.
-    /// </summary>
-    protected virtual void Start()
-    {
-        if (!didLoad)  // if we loaded then the state is already correct from that
-        {
-            // --- Handle Initial Holder ---
-            bool startedHeld = false;
-            if (initialHolder != null)
-            {
-                NpcContext holderContext = initialHolder.GetComponent<NpcContext>();
-                if (holderContext != null && holderContext.Inventory != null)
-                {
-                    InteractionContext initialPickupContext = new InteractionContext(initialHolder, this, pickUpDefinition);
-                    HandlePickUp(initialPickupContext);
-                    if(CurrentHolder == initialHolder)
-                    {
-                        startedHeld = true; // Successfully started held
-                    }
-                    else
-                    {
-                        Debug.LogError($"Holdable '{gameObject.name}' failed to initialize as held by '{initialHolder.name}'.", this);
-                    }
-                } else {
-                    Debug.LogError($"Holdable '{gameObject.name}' has InitialHolder '{initialHolder.name}' assigned, but it lacks NpcContext or NpcInventory.", initialHolder);
-                    initialHolder = null;
-                }
-            }
-
-            // --- Set Initial Interaction Enabled States ---
-            // Must be done *after* attempting initial hold
-            if (pickUpDefinition != null)
-            {
-                // Can only pick up if NOT currently held (or in inventory, though HandlePickUp sets IsHeld=true)
-                SetInteractionEnableInfo(pickUpDefinition, !startedHeld, true, "Item is already held or in inventory.");
-            }
-            if (putDownDefinition != null)
-            {
-                // Can only put down IF currently held
-                SetInteractionEnableInfo(putDownDefinition, startedHeld, true, "Item is not currently held.");
-            }
-
-            // Ensure visual state is correct if not initially held
-            if (!startedHeld)
-            {
-                SetVisualState(HoldableVisualState.InWorld);
-            }
         }
     }
 

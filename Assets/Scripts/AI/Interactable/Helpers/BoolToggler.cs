@@ -56,14 +56,15 @@ public class BoolToggler : AbstractInteractionReactor
         }
     }
     
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
+    {
+        base.LoadSaveData(data, blankLoad);
+        Initialize();
+    }
+    
     protected override void OnValidate()
     {
         base.OnValidate();
-        Initialize();
-    }
-
-    private void Start()
-    {
         Initialize();
     }
 

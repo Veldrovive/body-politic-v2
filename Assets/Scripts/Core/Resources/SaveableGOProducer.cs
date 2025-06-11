@@ -76,36 +76,56 @@ public class SaveableGOProducer : MonoBehaviour
         return data;
     }
 
-    public void LoadSaveData(ProducerGOSaveableData data)
+    public List<SaveableGOConsumer> GetOrderedConsumers()
     {
-        // If we are a prefab we will not have an ID. If this is the case, we load the id and the data.
-        // If we already have an ID, we need to make sure that the ID matches the one in the data.
-        if (string.IsNullOrEmpty(config.ProducerId))
+        // Orders the consumer by their execution order
+        // and returns the list.
+        consumers.Sort((a, b) => a.SaveableConfig.LoadOrder.CompareTo(b.SaveableConfig.LoadOrder));
+        return consumers;
+    }
+    
+    public void LoadSaveData(ProducerGOSaveableData data, bool blankLoad)
+    {
+        List<SaveableGOConsumer> orderedConsumers = GetOrderedConsumers();
+        if (blankLoad)
         {
-            config.ProducerId = data.ProducerId;
-            config.LoadOrder = data.LoadOrder;
+            // Then we don't have any data. We just call LoadSaveData on each consumer to let them handle it.
+            foreach (var consumer in orderedConsumers)
+            {
+                consumer.LoadSaveData(null, true);
+            }
         }
         else
         {
-            if (config.ProducerId != data.ProducerId)
+            // If we are a prefab we will not have an ID. If this is the case, we load the id and the data.
+            // If we already have an ID, we need to make sure that the ID matches the one in the data.
+            if (string.IsNullOrEmpty(config.ProducerId))
             {
-                Debug.LogError($"Producer ID mismatch: {config.ProducerId} != {data.ProducerId}. Cannot load save data.");
-                return;
-            }
-        }
-        
-        foreach (var consumerData in data.ChildConsumerData)
-        {
-            string consumerId = consumerData.Key;
-            SaveableData consumerSaveData = consumerData.Value;
-            SaveableGOConsumer consumer = consumers.Find(c => c.SaveableConfig.ConsumerId == consumerId);
-            if (consumer != null)
-            {
-                consumer.LoadSaveData(consumerSaveData);
+                config.ProducerId = data.ProducerId;
+                config.LoadOrder = data.LoadOrder;
             }
             else
             {
-                Debug.LogWarning($"Consumer with ID {consumerId} not found for producer {config.ProducerId}. Skipping load.");
+                if (config.ProducerId != data.ProducerId)
+                {
+                    Debug.LogError($"Producer ID mismatch: {config.ProducerId} != {data.ProducerId}. Cannot load save data.");
+                    return;
+                }
+            }
+
+            foreach (var consumer in orderedConsumers)
+            {
+                string consumerId = consumer.SaveableConfig.ConsumerId;
+                data.ChildConsumerData.TryGetValue(consumerId, out SaveableData consumerData);
+                if (consumerData == null)
+                {
+                    // There are consumer types that do not save any data, such as the SaveableGOPointer. This is
+                    // not an error, although it would be nice to indicate when that is the case and when not so
+                    // we could catch load errors where data was expected but not found.
+                    continue;
+                }
+                
+                consumer.LoadSaveData(consumerData, false);
             }
         }
     }

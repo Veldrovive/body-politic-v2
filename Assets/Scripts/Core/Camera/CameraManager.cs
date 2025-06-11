@@ -70,22 +70,35 @@ public class CameraManager : SaveableGOConsumer
         return data;
     }
     
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is CameraManagerSaveableData cameraData)
+        if (!blankLoad)
         {
-            targetViewCurveParam = cameraData.ViewCurveParam;
-            curViewCurveParam = cameraData.ViewCurveParam;
-            targetViewRotParam = cameraData.ViewRotParam;
-            curViewRotParam = cameraData.ViewRotParam;
-            targetFocusCenter = cameraData.FocusCenter;
-            curFocusCenter = cameraData.FocusCenter;
-            attachedToTransform = cameraData.AttachedToTransform;
-            isSnappedToTransform = attachedToTransform; // If we are attached to the transform, we are snapped to it
+            if (data is CameraManagerSaveableData cameraData)
+            {
+                targetViewCurveParam = cameraData.ViewCurveParam;
+                curViewCurveParam = cameraData.ViewCurveParam;
+                targetViewRotParam = cameraData.ViewRotParam;
+                curViewRotParam = cameraData.ViewRotParam;
+                targetFocusCenter = cameraData.FocusCenter;
+                curFocusCenter = cameraData.FocusCenter;
+                attachedToTransform = cameraData.AttachedToTransform;
+                isSnappedToTransform = attachedToTransform; // If we are attached to the transform, we are snapped to it
+            }
+            else
+            {
+                Debug.LogError("CameraManager received invalid save data!", this);
+            }
         }
-        else
+        
+        if (playerManager != null)
         {
-            Debug.LogError("CameraManager received invalid save data!", this);
+            // Subscribe AFTER PlayerManager Awake/Start have run
+            playerManager.OnFocusChanged += HandleFocusChanged;
+
+            // Query initial state
+            NpcContext initialNpc = playerManager.GetFocusedNpc();
+            InitializeFocus(initialNpc); // Use helper method
         }
     }
 
@@ -103,19 +116,6 @@ public class CameraManager : SaveableGOConsumer
         {
             Debug.LogError("CameraManager could not find PlayerManager! Following will not work.", this);
             enabled = false;
-        }
-    }
-    
-    void Start()
-    {
-        if (playerManager != null)
-        {
-            // Subscribe AFTER PlayerManager Awake/Start have run
-            playerManager.OnFocusChanged += HandleFocusChanged;
-
-            // Query initial state
-            NpcContext initialNpc = playerManager.GetFocusedNpc();
-            InitializeFocus(initialNpc); // Use helper method
         }
     }
     

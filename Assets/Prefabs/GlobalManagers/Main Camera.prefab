@@ -109,6 +109,7 @@ MonoBehaviour:
   linkedSaveableProducer: {fileID: 7706898105576086098}
   saveableConfig:
     ConsumerId: 08f3263f-0042-43b2-9436-3e0adc2646d1
+    LoadOrder: 0
   managedCamera: {fileID: 0}
   playerManager: {fileID: 0}
   targetTransform: {fileID: 0}
@@ -214,5 +215,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config:
-    ProducerId: 
-    LoadOrder: 0
+    ProducerId: e90a90b9-6ea4-4313-b209-fa67a6f33660
+    LoadOrder: -0.99

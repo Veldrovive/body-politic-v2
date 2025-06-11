@@ -29,7 +29,7 @@ public abstract class AbstractInteractionReactor : SaveableGOConsumer
         return null;
     }
 
-    public override void LoadSaveData(SaveableData data) { }
+    public override void LoadSaveData(SaveableData data, bool blankLoad) { }
 
     protected virtual void Awake()
     {

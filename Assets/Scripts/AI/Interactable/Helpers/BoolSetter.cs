@@ -40,14 +40,15 @@ public class BoolSetter : AbstractInteractionReactor
         );
     }
 
-    protected override void OnValidate()
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        base.OnValidate();
+        base.LoadSaveData(data, blankLoad);
         Initialize();
     }
 
-    private void Start()
+    protected override void OnValidate()
     {
+        base.OnValidate();
         Initialize();
     }
 

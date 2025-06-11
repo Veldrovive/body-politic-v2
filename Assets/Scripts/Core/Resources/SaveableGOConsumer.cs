@@ -11,6 +11,7 @@ using UnityEditor.SceneManagement;
 public class ConsumerGOSaveableConfig
 {
     [SerializeField] public string ConsumerId = null;  // Should get set by initialization code.
+    public float LoadOrder = 0f;  // Used to determine the order in which saveables are loaded. Higher is later.
 }
 
 public abstract class SaveableGOConsumer : MonoBehaviour
@@ -20,7 +21,7 @@ public abstract class SaveableGOConsumer : MonoBehaviour
     public ConsumerGOSaveableConfig SaveableConfig => saveableConfig;
     
     public abstract SaveableData GetSaveData();
-    public abstract void LoadSaveData(SaveableData data);
+    public abstract void LoadSaveData(SaveableData data, bool blankLoad);
     public virtual void HandleDestroyOnLoad(){ }  // By default, component just let themselves be destroyed with no side effects.
     
     public string GetProducerId()

@@ -91,31 +91,56 @@ public class PlayerManager : SaveableGOConsumer
         };
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is PlayerManagerSaveableData playerData)
+        if (!blankLoad)
         {
-            if (playerData.CurrentFocusedNpcId != null)
+            if (data is PlayerManagerSaveableData playerData)
             {
-                // Try to find the NPC in the controllable list
-                NpcContext npc = controllableNpcs.FirstOrDefault(n => n.gameObject == playerData.CurrentFocusedNpcId);
-                if (npc != null)
+                if (playerData.CurrentFocusedNpcId != null)
                 {
-                    SetFocus(npc);
+                    // Try to find the NPC in the controllable list
+                    NpcContext npc = controllableNpcs.FirstOrDefault(n => n.gameObject == playerData.CurrentFocusedNpcId);
+                    if (npc != null)
+                    {
+                        SetFocus(npc);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Could not find NPC with ID {playerData.CurrentFocusedNpcId.name} in controllable NPCs. Focus not set.", this);
+                        InitializeFocus();
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning($"Could not find NPC with ID {playerData.CurrentFocusedNpcId.name} in controllable NPCs. Focus not set.", this);
+                    Debug.LogWarning("PlayerManagerSaveableData has no CurrentFocusedNpcId. Focus not set.", this);
                 }
             }
             else
             {
-                Debug.LogWarning("PlayerManagerSaveableData has no CurrentFocusedNpcId. Focus not set.", this);
+                Debug.LogError("Invalid save data type for PlayerManager. Expected PlayerManagerSaveableData.", this);
             }
         }
         else
         {
-            Debug.LogError("Invalid save data type for PlayerManager. Expected PlayerManagerSaveableData.", this);
+            InitializeFocus();
+        }
+        
+        if (inputManager != null)
+        {
+            inputManager.OnClicked += HandleClicked;
+            inputManager.OnHoverChanged += HandleHover;
+            inputManager.OnKeyPressed += HandleKeyPressed;
+            inputManager.OnHeldModifierKeysChanged += HandleHeldModifierKeysChanged; // Keep subscription even if unused for now
+        }
+        else
+        {
+            Debug.LogWarning("PlayerManager: InputManager not found in Start. Input handling will be disabled.", this);
+        }
+
+        if (currentFocusedNpc != null)
+        {
+            OnFocusChanged?.Invoke(null, currentFocusedNpc);
         }
     }
 
@@ -146,29 +171,6 @@ public class PlayerManager : SaveableGOConsumer
         else
         {
             Debug.LogError("Movement marker prefab is not assigned. Movement marker will not be created.", this);
-        }
-    }
-
-    /// <summary> Subscribes to events, invokes initial focus event, performs first proximity update. </summary>
-    void Start() // [cite: 1014]
-    {
-        InitializeFocus();
-        
-        if (inputManager != null)
-        {
-            inputManager.OnClicked += HandleClicked;
-            inputManager.OnHoverChanged += HandleHover;
-            inputManager.OnKeyPressed += HandleKeyPressed;
-            inputManager.OnHeldModifierKeysChanged += HandleHeldModifierKeysChanged; // Keep subscription even if unused for now
-        }
-        else
-        {
-             Debug.LogWarning("PlayerManager: InputManager not found in Start. Input handling will be disabled.", this);
-        }
-
-        if (currentFocusedNpc != null)
-        {
-            OnFocusChanged?.Invoke(null, currentFocusedNpc);
         }
     }
 

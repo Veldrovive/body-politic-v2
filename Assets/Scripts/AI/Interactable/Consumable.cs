@@ -48,20 +48,19 @@ public class Consumable : Holdable
         }
     }
 
-    /// <summary>
-    /// Sets initial enabled state for PickUp/PutDown/Consume interactions and handles starting held.
-    /// </summary>
-    protected override void Start()
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        // Let the base Holdable handle its initial setup (including initial holder and PickUp/PutDown states)
-        base.Start();
+        base.LoadSaveData(data, blankLoad);
 
-        // --- Set Initial Consume Interaction Enabled State ---
-        // Consume action is only possible if the item is currently being held.
-        // The base Start() method determines the initial 'IsHeld' state.
-        if (consumeInteractionDefinition != null)
+        if (blankLoad)
         {
-            SetInteractionEnableInfo(consumeInteractionDefinition, IsHeld, true, "Item must be held to be consumed.");
+            // --- Set Initial Consume Interaction Enabled State ---
+            // Consume action is only possible if the item is currently being held.
+            // The base Start() method determines the initial 'IsHeld' state.
+            if (consumeInteractionDefinition != null)
+            {
+                SetInteractionEnableInfo(consumeInteractionDefinition, IsHeld, true, "Item must be held to be consumed.");
+            }
         }
     }
 

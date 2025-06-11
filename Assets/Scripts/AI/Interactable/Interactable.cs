@@ -107,26 +107,30 @@ public class Interactable : SaveableGOConsumer
         };
     }
 
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not InteractableSaveableData interactableData)
+        if (!blankLoad)
         {
-            Debug.LogError($"Invalid save data type for {gameObject.name}. Expected InteractableSaveableData.");
-            return;
-        }
+            if (data is not InteractableSaveableData interactableData)
+            {
+                Debug.LogError($"Invalid save data type for {gameObject.name}. Expected InteractableSaveableData.");
+                return;
+            }
         
-        // We demand that the interactionInstances already has the definitions loaded in it.
-        // We cannot dynamically load definitions here as they contain function references that cannot be serialized.
-        // This does mean that interactions cannot be created dynamically, they must only be enabled and disabled.
-        foreach (var interactionInstance in interactableData.InteractionInstancesData)
-        {
-            SetInteractionEnableInfo(
-                interactionInstance.InteractionDefinition,
-                interactionInstance.IsEnabled,
-                interactionInstance.DisabledImpliesHidden,
-                interactionInstance.DisabledReason
-            );
+            // We demand that the interactionInstances already has the definitions loaded in it.
+            // We cannot dynamically load definitions here as they contain function references that cannot be serialized.
+            // This does mean that interactions cannot be created dynamically, they must only be enabled and disabled.
+            foreach (var interactionInstance in interactableData.InteractionInstancesData)
+            {
+                SetInteractionEnableInfo(
+                    interactionInstance.InteractionDefinition,
+                    interactionInstance.IsEnabled,
+                    interactionInstance.DisabledImpliesHidden,
+                    interactionInstance.DisabledReason
+                );
+            }
         }
+        // We don't have any logic necessary for a blank load, so we can just return.
     }
 
     /// <summary>

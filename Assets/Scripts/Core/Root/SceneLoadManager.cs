@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -59,6 +60,24 @@ public class SceneLoadManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // When we start, we check whether we are in a level or in the main menu.
+        // If we are already in a level, we immediately trigger a blank load to ensure everything is set up correctly.
+        // Otherwise, we load the main menu which will mean that
+        // Get the scene ID of the currently active scene.
+        SceneId currentSceneId = GetCurrentScenedId();
+        if (currentSceneId == SceneId.MainMenu)
+        {
+            Debug.Log("Current scene is Main Menu. No action needed.");
+        }
+        else
+        {
+            Debug.Log($"Current scene is {currentSceneId}. Performing blank load.");
+            SaveableDataManager.Instance.BlankLoad();
+        }
+    }
+    
     public string GetScenePath(string name)
     {
         // Ensure the SceneObj is assigned and has a valid name.
@@ -116,7 +135,7 @@ public class SceneLoadManager : MonoBehaviour
         {
             // Levels are heavy and require a loading scene to visually progress while the async load happens.
             // Start the coroutine to load the level with a loading screen.
-            StartCoroutine(LoadLevelWithLoadingScreen(sceneMapping));
+            StartCoroutine(LoadLevelWithLoadingScreen(sceneMapping, startWithBlankLoad: true));
         }
     }
 
@@ -125,7 +144,7 @@ public class SceneLoadManager : MonoBehaviour
     /// </summary>
     /// <param name="sceneMapping">The scene mapping data for the level.</param>
     /// <param name="levelSceneName">The name of the level scene to load.</param>
-    private IEnumerator LoadLevelWithLoadingScreen(SceneMapping sceneMapping, Action<bool> callback = null)
+    private IEnumerator LoadLevelWithLoadingScreen(SceneMapping sceneMapping, bool startWithBlankLoad = false, Action<bool> callback = null)
     {
         // // Unload the currently active scene if it's not the main menu.
         // Scene activeScene = SceneManager.GetActiveScene();
@@ -222,7 +241,11 @@ public class SceneLoadManager : MonoBehaviour
         asyncLoad.allowSceneActivation = true;
         
         // Optional: Wait an extra frame to ensure the loaded level initializes before unloading the loading screen.
-        yield return null; 
+        yield return null;
+        if (startWithBlankLoad)
+        {
+            SaveableDataManager.Instance.BlankLoad();
+        }
 
         // After the level is loaded (asyncLoad.isDone is true), we can find the loaded scene.
         Scene loadedLevelScene = SceneManager.GetSceneByName(sceneMapping.SceneName);
@@ -275,7 +298,7 @@ public class SceneLoadManager : MonoBehaviour
 
         bool? success = null;
         // We are ready to load the scene. We can use LoadLevelWithLoadingScreen as a helper
-        yield return LoadLevelWithLoadingScreen(sceneMapping, res => success = res);
+        yield return LoadLevelWithLoadingScreen(sceneMapping, false, res => success = res);
 
         // Wait until the scene is loaded and the success flag is set.
         while (!success.HasValue)

@@ -125,154 +125,157 @@ public class StateGraphController : SaveableGOConsumer
     /// Sets the save data for this object.
     /// </summary>
     /// <param name="data">The save data to set.</param>
-    public override void LoadSaveData(SaveableData data)
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (data is not StateGraphControllerSaveableData stateData)
+        if (!blankLoad)
         {
-            Debug.LogError($"{gameObject.name} State Controller tried to load save data but the data is not of type StateGraphControllerSaveableData. Data: {data}");
-            return;
-        }
-        
-        // Step 1: Load the graphs
-        // Maps graph IDs to their components. Used to fill in the execution contexts later.
-        Dictionary<string, StateGraph> loadedGraphs = new Dictionary<string, StateGraph>();
-        // Load the existing graphs from the game object
-        foreach (StateGraph graph in gameObject.GetComponents<StateGraph>())
-        {
-            loadedGraphs[graph.id] = graph;
-        }
-        
-        // For every other graph, we need to create a new StateGraph component and 
-        foreach (StateGraphSaveableData gData in stateData.CurrentGraphs)
-        {
-            if (loadedGraphs.ContainsKey(gData.Id))
+            if (data is not StateGraphControllerSaveableData stateData)
             {
-                // This is an error. This indicates something about how graphs are stored is wrong. The only
-                // existing graph should be the routine state graph and that is not saved in the save data.
-                Debug.LogError($"{gameObject.name} State Controller tried to load a state graph with an id that already exists. GraphId: {gData.Id}", this);
-                continue;  // Skip this graph as it is already loaded
+                Debug.LogError($"{gameObject.name} State Controller tried to load save data but the data is not of type StateGraphControllerSaveableData. Data: {data}");
+                return;
             }
-            Component addedComponent = gameObject.AddComponent(typeof(StateGraph));
-            StateGraph stateGraph = addedComponent as StateGraph;
-            stateGraph.SetData(gData);
-            loadedGraphs[gData.Id] = stateGraph;
-        }
-        
-        // Step 2: Reconstruct the execution contexts
-        ExecutionContext ConstructExecutionContext(StateGraphControllerSaveableData.ExecutionContextSaveableData data)
-        {
-            if (data == null)
+            
+            // Step 1: Load the graphs
+            // Maps graph IDs to their components. Used to fill in the execution contexts later.
+            Dictionary<string, StateGraph> loadedGraphs = new Dictionary<string, StateGraph>();
+            // Load the existing graphs from the game object
+            foreach (StateGraph graph in gameObject.GetComponents<StateGraph>())
             {
-                return null;
+                loadedGraphs[graph.id] = graph;
             }
-            // In order to load a context we need to do two things:
-            // 1. Find the graph by its ID. If it does not exist, we should log an error and return null.
-            // 2. Find the node to execute by following the onLoad connection from the current node.
-            // If the current node does not exist, we log a warning and start from the start node.
-            StateGraph graph = loadedGraphs[data.GraphId];
-            if (graph == null)
+            
+            // For every other graph, we need to create a new StateGraph component and 
+            foreach (StateGraphSaveableData gData in stateData.CurrentGraphs)
             {
-                Debug.LogError($"{gameObject.name} State Controller tried to load an execution context for a graph that does not exist. GraphId: {data.GraphId}");
-                return null;  // The graph does not exist, so we cannot create an execution context
-            }
-            // Now we need to find the node to execute by following the onLoad connection
-            string currentNodeId = data.NodeIdToExecute;
-            StateGraphNode currentNode = graph.GetNodeById(currentNodeId);
-            string afterLoadNodeId = null;
-            if (currentNode == null)
-            {
-                // This indicates that the state graph has changed since the save was made. This could happen in
-                // some circumstances like it the routine graph was edited in an update. We should fail gracefully
-                // by restarting from the start node.
-                Debug.LogWarning($"{gameObject.name} State Controller tried to load an execution context for a node that does not exist. NodeId: {currentNodeId}. Starting from the start node instead.");
-                StartNode startNode = graph.GetStartNode();
-                StateGraphNode postStartNode = graph.GetStartNodeConnection(startNode);
-                afterLoadNodeId = postStartNode.id;  // This is the node we will execute after loading
-            }
-            else
-            {
-                // Otherwise we need to follow the onLoad connection to find the node we should execute after loading
-                StateGraphNode postLoadNode = graph.GetNodeAfterPortConnection(currentNodeId, StateNode.LOAD_IN_PORT_NAME);
-                if (postLoadNode == null)
+                if (loadedGraphs.ContainsKey(gData.Id))
                 {
-                    // This indicates that the load in port connection does not exist. This is a design error, but
-                    // not cause for a fatal error. We should just log a warning and start from the start node.
-                    Debug.LogWarning($"{gameObject.name} State Controller tried to load an execution context for a node that does not have a post-load connection. NodeId: {currentNodeId}. Starting from the start node instead.");
+                    // This is an error. This indicates something about how graphs are stored is wrong. The only
+                    // existing graph should be the routine state graph and that is not saved in the save data.
+                    Debug.LogError($"{gameObject.name} State Controller tried to load a state graph with an id that already exists. GraphId: {gData.Id}", this);
+                    continue;  // Skip this graph as it is already loaded
+                }
+                Component addedComponent = gameObject.AddComponent(typeof(StateGraph));
+                StateGraph stateGraph = addedComponent as StateGraph;
+                stateGraph.SetData(gData);
+                loadedGraphs[gData.Id] = stateGraph;
+            }
+            
+            // Step 2: Reconstruct the execution contexts
+            ExecutionContext ConstructExecutionContext(StateGraphControllerSaveableData.ExecutionContextSaveableData data)
+            {
+                if (data == null)
+                {
+                    return null;
+                }
+                // In order to load a context we need to do two things:
+                // 1. Find the graph by its ID. If it does not exist, we should log an error and return null.
+                // 2. Find the node to execute by following the onLoad connection from the current node.
+                // If the current node does not exist, we log a warning and start from the start node.
+                StateGraph graph = loadedGraphs[data.GraphId];
+                if (graph == null)
+                {
+                    Debug.LogError($"{gameObject.name} State Controller tried to load an execution context for a graph that does not exist. GraphId: {data.GraphId}");
+                    return null;  // The graph does not exist, so we cannot create an execution context
+                }
+                // Now we need to find the node to execute by following the onLoad connection
+                string currentNodeId = data.NodeIdToExecute;
+                StateGraphNode currentNode = graph.GetNodeById(currentNodeId);
+                string afterLoadNodeId = null;
+                if (currentNode == null)
+                {
+                    // This indicates that the state graph has changed since the save was made. This could happen in
+                    // some circumstances like it the routine graph was edited in an update. We should fail gracefully
+                    // by restarting from the start node.
+                    Debug.LogWarning($"{gameObject.name} State Controller tried to load an execution context for a node that does not exist. NodeId: {currentNodeId}. Starting from the start node instead.");
                     StartNode startNode = graph.GetStartNode();
                     StateGraphNode postStartNode = graph.GetStartNodeConnection(startNode);
                     afterLoadNodeId = postStartNode.id;  // This is the node we will execute after loading
                 }
                 else
                 {
-                    afterLoadNodeId = postLoadNode.id;  // This is the node we will execute after loading
+                    // Otherwise we need to follow the onLoad connection to find the node we should execute after loading
+                    StateGraphNode postLoadNode = graph.GetNodeAfterPortConnection(currentNodeId, StateNode.LOAD_IN_PORT_NAME);
+                    if (postLoadNode == null)
+                    {
+                        // This indicates that the load in port connection does not exist. This is a design error, but
+                        // not cause for a fatal error. We should just log a warning and start from the start node.
+                        Debug.LogWarning($"{gameObject.name} State Controller tried to load an execution context for a node that does not have a post-load connection. NodeId: {currentNodeId}. Starting from the start node instead.");
+                        StartNode startNode = graph.GetStartNode();
+                        StateGraphNode postStartNode = graph.GetStartNodeConnection(startNode);
+                        afterLoadNodeId = postStartNode.id;  // This is the node we will execute after loading
+                    }
+                    else
+                    {
+                        afterLoadNodeId = postLoadNode.id;  // This is the node we will execute after loading
+                    }
                 }
+
+                ExecutionContext context = new ExecutionContext(
+                    graph,
+                    afterLoadNodeId,
+                    data.IsSavable,
+                    data.Ephemeral,
+                    data.Priority,
+                    null // CurrentState will be set later when the state is activated
+                );
+                return context;
+            }
+            
+            // Load the current execution context
+            ExecutionContext newCurrentExecutionContext = ConstructExecutionContext(stateData.CurrentExecutionContextData);
+            // Load the saved routine context
+            ExecutionContext newSavedRoutineContext = ConstructExecutionContext(stateData.SavedRoutineContextData);
+            // And the new queue
+            List<ExecutionContext> newQueue = stateData.ExecutionDataQueue
+                .Select(ConstructExecutionContext)
+                .Where(context => context != null)  // Filter out any null contexts
+                .ToList();
+            
+            // Step 3: End the current execution, set the new contexts, and begin the new execution
+            // I got an AI to write this part so it breaks everything I abstain from responsibility.
+            
+            // --- Phase 1: Forcefully Tear Down the Current State ---
+            // We must ensure that whatever was running is stopped completely and cleanly before
+            // we introduce the new, loaded state. This prevents zombie states or event listeners.
+            if (currentExecutionContext != null && currentExecutionContext.CurrentState != null)
+            {
+                // Forcefully stop and clean up the active AbstractState component. This detaches
+                // all event listeners and destroys the state component, preventing it from
+                // running any further logic.
+                CleanupCurrentState(); 
+            }
+            // Discard any in-memory contexts. They are now obsolete and will be fully replaced
+            // by the data we've just loaded and reconstructed.
+            currentExecutionContext = null;
+            savedRoutineContext = null;
+            
+            // We could remove old graphs here, but we assume that we only had the routine when we started so
+            // for simplicity we will not remove any graphs. Also if any do exist they will just sit there doing nothing.
+            
+            // --- Phase 2: Assign the Newly Loaded State ---
+            // Now that the controller is in a clean, empty state, we can safely assign the new data.
+            
+            // The old execution queue is irrelevant; replace it with the loaded queue.
+            this.executionDequeue.Clear();
+            foreach (var context in newQueue)
+            {
+                this.executionDequeue.AddLast(context);
             }
 
-            ExecutionContext context = new ExecutionContext(
-                graph,
-                afterLoadNodeId,
-                data.IsSavable,
-                data.Ephemeral,
-                data.Priority,
-                null // CurrentState will be set later when the state is activated
-            );
-            return context;
-        }
-        
-        // Load the current execution context
-        ExecutionContext newCurrentExecutionContext = ConstructExecutionContext(stateData.CurrentExecutionContextData);
-        // Load the saved routine context
-        ExecutionContext newSavedRoutineContext = ConstructExecutionContext(stateData.SavedRoutineContextData);
-        // And the new queue
-        List<ExecutionContext> newQueue = stateData.ExecutionDataQueue
-            .Select(ConstructExecutionContext)
-            .Where(context => context != null)  // Filter out any null contexts
-            .ToList();
-        
-        // Step 3: End the current execution, set the new contexts, and begin the new execution
-        // I got an AI to write this part so it breaks everything I abstain from responsibility.
-        
-        // --- Phase 1: Forcefully Tear Down the Current State ---
-        // We must ensure that whatever was running is stopped completely and cleanly before
-        // we introduce the new, loaded state. This prevents zombie states or event listeners.
-        if (currentExecutionContext != null && currentExecutionContext.CurrentState != null)
-        {
-            // Forcefully stop and clean up the active AbstractState component. This detaches
-            // all event listeners and destroys the state component, preventing it from
-            // running any further logic.
-            CleanupCurrentState(); 
-        }
-        // Discard any in-memory contexts. They are now obsolete and will be fully replaced
-        // by the data we've just loaded and reconstructed.
-        currentExecutionContext = null;
-        savedRoutineContext = null;
-        
-        // We could remove old graphs here, but we assume that we only had the routine when we started so
-        // for simplicity we will not remove any graphs. Also if any do exist they will just sit there doing nothing.
-        
-        // --- Phase 2: Assign the Newly Loaded State ---
-        // Now that the controller is in a clean, empty state, we can safely assign the new data.
-        
-        // The old execution queue is irrelevant; replace it with the loaded queue.
-        this.executionDequeue.Clear();
-        foreach (var context in newQueue)
-        {
-            this.executionDequeue.AddLast(context);
-        }
+            // Set the active and saved contexts to the ones we reconstructed from the save data.
+            // The new currentExecutionContext has its CurrentState as 'null', which is the signal
+            // for the execution logic to activate its first state.
+            this.currentExecutionContext = newCurrentExecutionContext;
+            this.savedRoutineContext = newSavedRoutineContext;
+            
+            // Restore the controller's behavioral configuration from the save file.
+            this.IdleOnExit = stateData.IdleOnExit;
 
-        // Set the active and saved contexts to the ones we reconstructed from the save data.
-        // The new currentExecutionContext has its CurrentState as 'null', which is the signal
-        // for the execution logic to activate its first state.
-        this.currentExecutionContext = newCurrentExecutionContext;
-        this.savedRoutineContext = newSavedRoutineContext;
-        
-        // Restore the controller's behavioral configuration from the save file.
-        this.IdleOnExit = stateData.IdleOnExit;
-
-        // --- Phase 4: Begin the New Execution ---
-        // The controller's state variables are now perfectly configured. This final call
-        // "presses play" on the new state.
-        ProcessStateTransitions();
+            // --- Phase 4: Begin the New Execution ---
+            // The controller's state variables are now perfectly configured. This final call
+            // "presses play" on the new state.
+            ProcessStateTransitions();
+        }
     }
 
     /// <summary>

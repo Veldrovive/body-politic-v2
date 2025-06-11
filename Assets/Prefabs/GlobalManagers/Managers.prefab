@@ -176,8 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config:
-    ProducerId: 
-    LoadOrder: 0
+    ProducerId: b8926854-1f4a-45bf-8ca9-2ecd9f8ec31
+    LoadOrder: -1
 --- !u!114 &6560746526949030315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,6 +238,7 @@ MonoBehaviour:
   linkedSaveableProducer: {fileID: 8707118731231123420}
   saveableConfig:
     ConsumerId: 348de447-3980-48ef-b6d1-4562c7d89e7d
+    LoadOrder: -90
   allNpcs: []
   infectedNpcs: []
   focusOnInfection: 0
@@ -259,6 +260,7 @@ MonoBehaviour:
   linkedSaveableProducer: {fileID: 8707118731231123420}
   saveableConfig:
     ConsumerId: 2a8da4e8-b14c-4eba-9201-6df14887ab8f
+    LoadOrder: -85
   inputManager: {fileID: 8106561755936268605}
   movementMarkerPrefab: {fileID: 4578786293534885563, guid: 084ca064cc18444f8c2c208f3cdb5e8a, type: 3}
   movementMarkerSnapSpeed: 20
@@ -287,7 +289,9 @@ MonoBehaviour:
   linkedSaveableProducer: {fileID: 8707118731231123420}
   saveableConfig:
     ConsumerId: 80a6481e-2b1c-4454-bd10-255222dfac19
+    LoadOrder: -91
   DefaultRoles: []
+  allRoles: []
 --- !u!114 &3809693611007301062
 MonoBehaviour:
   m_ObjectHideFlags: 0

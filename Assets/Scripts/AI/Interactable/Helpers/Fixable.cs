@@ -3,7 +3,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-// TODO: Implement save system for Fixable state
+public class FixableSaveableData : SaveableData
+{
+    public bool IsBroken;
+}
 
 public class Fixable : AbstractInteractionReactor
 {
@@ -92,15 +95,40 @@ public class Fixable : AbstractInteractionReactor
         }
     }
 
-    protected override void OnValidate()
+    public override SaveableData GetSaveData()
     {
-        base.OnValidate();
+        return new FixableSaveableData()
+        {
+            IsBroken = isBroken
+        };
+    }
+
+    public override void LoadSaveData(SaveableData data, bool blankLoad)
+    {
+        base.LoadSaveData(data, blankLoad);
+
+        if (!blankLoad)
+        {
+            if (data is FixableSaveableData fixableData)
+            {
+                SetIsBroken(fixableData.IsBroken);
+            }
+            else
+            {
+                Debug.LogWarning($"Fixable received invalid save data: {data.GetType().Name}.", this);
+            }
+        }
+        else
+        {
+            SetIsBroken(false);
+        }
+        
         Initialize();
     }
 
-    private void Start()
+    protected override void OnValidate()
     {
-        SetIsBroken(false);
+        base.OnValidate();
         Initialize();
     }
 
