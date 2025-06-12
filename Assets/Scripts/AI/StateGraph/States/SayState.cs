@@ -44,6 +44,7 @@ public class SayState : GenericAbstractState<SayStateOutcome, SayStateConfigurat
     private LogLevel m_logLevel = LogLevel.Info;
     
     private float startTime = -1;
+    private string bubbleId = null;
 
     public override void ConfigureState(SayStateConfiguration configuration)
     {
@@ -56,6 +57,10 @@ public class SayState : GenericAbstractState<SayStateOutcome, SayStateConfigurat
 
     public override bool InterruptState()
     {
+        if (!string.IsNullOrEmpty(m_textToSay))
+        {
+            npcContext.SpeechBubbleManager.RemoveBubble(bubbleId);
+        }
         // Allow interrupting this state
         return true;
     }
@@ -81,7 +86,7 @@ public class SayState : GenericAbstractState<SayStateOutcome, SayStateConfigurat
         
         if (!Mathf.Approximately(m_textDuration, 0))
         {
-            npcContext.SpeechBubbleManager.ShowBubble(m_textToSay, m_textDuration);
+            bubbleId = npcContext.SpeechBubbleManager.ShowBubble(m_textToSay, m_textDuration);
         }
         // else: No point in showing the bubble if the duration is 0
 

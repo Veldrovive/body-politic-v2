@@ -51,15 +51,7 @@ public abstract class AbstractVariableSO<T> : SaveableSO
 
     public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        if (blankLoad)
-        {
-            // If _resetOnPlay is enabled, reset the value to default
-            if (_resetOnPlay)
-            {
-                Value = _startValue;
-            }
-        }
-        else
+        if (!blankLoad)
         {
             // Then we load the value from the save data
             if (data is VariableSOSaveableData<T> variableData)

@@ -254,11 +254,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1058932700429700094, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.663
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1058932700429700094, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.166
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2075951780575458857, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: m_LocalPosition.x
@@ -300,6 +300,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4102933364882050337, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: interactableDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: b1a34e05b6f554ee6a7fcb4339eee60d, type: 2}
     - target: {fileID: 4102933364882050337, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: interactionInstances.Array.size
       value: 3
@@ -364,6 +368,30 @@ PrefabInstance:
       propertyPath: interactionInstances.Array.data[2].DisabledImpliesHidden.UseConstant
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4609880194290221278, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.000000014901161
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609880194290221278, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.663
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609880194290221278, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.16600038
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609880194290221278, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609880194290221278, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609880194290221278, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: m_Name
       value: Toilet Variant
@@ -424,6 +452,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8779675895918541611, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
   m_PrefabInstance: {fileID: 8745673225990338124}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1375283595716028580 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7659253329689517800, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+  m_PrefabInstance: {fileID: 8745673225990338124}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836707522735911495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1836707522735911495 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
@@ -441,6 +480,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e498c62e5ae46938bc848dc2f02966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 1375283595716028580}
+  saveableConfig:
+    ConsumerId: 8d9a913b-c414-4551-aa3a-38139661f6a3
+    LoadOrder: 0
   breakInteractionDefinition: {fileID: 11400000, guid: 59732e0ba9acc4d18b561d1b7030b09d, type: 2}
   fixInteractionDefinition: {fileID: 11400000, guid: 66d0168f2fa5c478d9d49fad264e3f1e, type: 2}
   nonBrokenInteractions:
@@ -463,6 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ced38c0f8fe445c9ec0c0ad5ab33064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visualDefinition: {fileID: 0}
   useCustomAction: 0
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
@@ -485,6 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ced38c0f8fe445c9ec0c0ad5ab33064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visualDefinition: {fileID: 0}
   useCustomAction: 0
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1

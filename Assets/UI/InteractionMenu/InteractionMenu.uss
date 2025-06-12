@@ -1,0 +1,83 @@
+:root {
+    --color-background: rgb(245, 243, 237);
+    --color-text-primary: rgb(10, 10, 10);
+    --color-text-secondary: rgb(64, 63, 62);
+    --color-text-disabled: rgb(181, 178, 173);
+    --color-border: rgb(229, 226, 218);
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/munro/munro.ttf?fileID=12800000&guid=7fad61cf4dff6480a90f1a6557c7bba7&type=3#munro");
+}
+
+.interaction-menu-container {
+    width: auto;
+    border-radius: 16px;
+    border-width: 2px;
+    border-color: var(--color-border);
+    background-color: var(--color-background);
+    padding: 20px;
+    flex-direction: column;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+.title {
+    font-size: 24px;
+    -unity-font-style: bold;
+    color: var(--color-text-primary);
+    -unity-text-align: middle-center;
+    margin-bottom: 0;
+    margin-top: 14px;
+    min-width: auto;
+}
+
+.description {
+    font-size: 20px;
+    -unity-font-style: normal;
+    color: var(--color-text-secondary);
+    white-space: normal;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.actions-container {
+    flex-grow: 1;
+}
+
+.interaction-button {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+    flex-grow: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.interaction-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.interaction-text {
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: var(--color-text-primary);
+    flex-shrink: 1;
+}
+
+.suspicion-icon {
+    display: none;
+    width: 24px;
+    height: 16px;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.interaction-button--disabled .interaction-text {
+    color: var(--color-text-disabled);
+    -unity-font-style: normal;
+}

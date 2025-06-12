@@ -12,6 +12,8 @@ public class RoleChecker : AbstractInteractionReactor
     [SerializeField] private InteractionLifecycleEvent interactionLifecycleTrigger;
     [SerializeField] private InteractionDefinitionSO targetInteractionDefinition;
 
+    [Tooltip("If true, every role will be allowed, even if they are disallowed by the disallowedRoles list.")]
+    [SerializeField] private BoolReference ignoreDisallowedCheck = new BoolReference(false);
     [SerializeField] private bool infectedDisallowed = false;
     [SerializeField] private List<NpcRoleSO> allowedRoles;
     [SerializeField] private List<NpcRoleSO> disallowedRoles;
@@ -88,8 +90,10 @@ public class RoleChecker : AbstractInteractionReactor
 
     private void SignalResult(NpcContext context, bool roleResult)
     {
-        if (infectedDisallowed && InfectionManager.Instance.IsNpcInfected(context))
+        if (!ignoreDisallowedCheck && infectedDisallowed && InfectionManager.Instance.IsNpcInfected(context))
         {
+            // Then you are infected, infected NPCs are disallowed, and we are not ignoring disallowed checks.
+            // Therefore, we signal disallowed.
             roleResult = false;
         }
         
@@ -113,8 +117,13 @@ public class RoleChecker : AbstractInteractionReactor
 
         bool hasAllowedRole = allowedRoles.Count == 0 || initiatorContext.Identity.HasAnyRole(allowedRoles);
         bool hasDisallowedRole = disallowedRoles.Count == 0 || initiatorContext.Identity.HasAnyRole(disallowedRoles);
-        
-        if (allowedRoles.Count == 0 && disallowedRoles.Count == 0)
+
+        if (ignoreDisallowedCheck.Value)
+        {
+            // Then it doesn't matter if you have a disallowed role or not, you are allowed.
+            SignalResult(initiatorContext, true);
+        }
+        else if (allowedRoles.Count == 0 && disallowedRoles.Count == 0)
         {
             // A great success! In this case I guess everyone is allowed.
             SignalResult(initiatorContext, true);

@@ -1,6 +1,5 @@
 .menu-container {
-    position: absolute;
-    translate: -50% -50%;
+    position: relative;
     width: auto;
     max-width: 320px;
     background-color: rgba(15, 20, 40, 0);

@@ -110,7 +110,7 @@ public class NPCIdentityEditor : Editor
                     EditorGUILayout.ObjectField(role.RoleName ?? "Unnamed Role", role, typeof(NpcRoleSO), false);
                     EditorGUI.EndDisabledGroup();
                 }
-                 EditorGUI.indentLevel--;
+                EditorGUI.indentLevel--;
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.Space(2); // Add a little vertical space between types

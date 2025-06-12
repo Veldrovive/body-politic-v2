@@ -31,6 +31,7 @@ public class SequentialSayState : GenericAbstractState<SequentialSayStateOutcome
     private float startTime = -1;
     private int currentIndex = 0;
     private float waitDuration = 0;
+    private string bubbleId = null;
     
     private static string SEQUENCE_POSITION_DATA_KEY = "SequencePosition";
 
@@ -41,6 +42,10 @@ public class SequentialSayState : GenericAbstractState<SequentialSayStateOutcome
 
     public override bool InterruptState()
     {
+        if (!string.IsNullOrEmpty(bubbleId))
+        {
+            npcContext.SpeechBubbleManager.RemoveBubble(bubbleId);
+        }
         // Allow interrupting this state
         return true;
     }
@@ -61,7 +66,7 @@ public class SequentialSayState : GenericAbstractState<SequentialSayStateOutcome
         
         if (!Mathf.Approximately(data.TextDuration, 0) && !string.IsNullOrEmpty(data.Text))
         {
-            npcContext.SpeechBubbleManager.ShowBubble(data.Text, data.TextDuration);
+            bubbleId = npcContext.SpeechBubbleManager.ShowBubble(data.Text, data.TextDuration);
         }
         // else: No point in showing the bubble if the duration is 0
 

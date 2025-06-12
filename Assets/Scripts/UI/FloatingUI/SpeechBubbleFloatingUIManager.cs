@@ -37,7 +37,7 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
     
     private FloaterData currentFloaterData;
 
-    public bool ShowBubble(string toSay, float duration, Action onFinishCallback = null)
+    public string ShowBubble(string toSay, float duration, Action onFinishCallback = null)
     {
         if (currentFloaterData != null)
         {
@@ -73,13 +73,38 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
         {
             // Failed to create floater, log an error
             Debug.LogError("Failed to create Speech Bubble floater.", this);
-            return false;
+            return null;
         }
         
         // Otherwise, store the floater data
         currentFloaterData = floaterDatas[floaterId];
 
-        return true;
+        return currentFloaterData.Id;
+    }
+
+    public void RemoveBubble(string floaterId = null)
+    {
+        if (floaterId == null)
+        {
+            // Then we remove whatever is currently active
+            if (currentFloaterData != null)
+            {
+                // Remove the current floater
+                RemoveFloater(currentFloaterData.Id);
+                currentFloaterData = null;
+            }
+        }
+        else
+        {
+            // We check if this is the current floater. If not, then we don't do anything
+            if (currentFloaterData != null && currentFloaterData.Id == floaterId)
+            {
+                // Remove the current floater
+                RemoveFloater(currentFloaterData.Id);
+                currentFloaterData = null;
+            }
+        }
+        
     }
     
     protected override bool OnSetupFloater(VisualElement floaterRoot, SpeechBubbleFloatingUIConfig floaterConfig)

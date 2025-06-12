@@ -121,6 +121,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7761615090751829619, guid: 60dc7b5eee8604882a5cef41864f3bcf, type: 3}
   m_PrefabInstance: {fileID: 8259866828969015495}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5857278270840393343 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2587822196104935096, guid: 60dc7b5eee8604882a5cef41864f3bcf, type: 3}
+  m_PrefabInstance: {fileID: 8259866828969015495}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566685225217889436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6566685225217889436 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2990808473267203163, guid: 60dc7b5eee8604882a5cef41864f3bcf, type: 3}
@@ -138,11 +149,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7cd476e99654765a6b85177fcbdc74a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 5857278270840393343}
   saveableConfig:
-    SaveableId: 
+    ConsumerId: 8e0e6aab-4adc-47df-8d63-c5fbd88fcb7f
     LoadOrder: -1
+  interactableDefinition: {fileID: 11400000, guid: 5261f51e00594430ba3811f84ead89b7, type: 2}
   interactionInstances: []
-  itemDefinition: {fileID: 11400000, guid: 5261f51e00594430ba3811f84ead89b7, type: 2}
   pickUpDefinition: {fileID: 11400000, guid: 8c74dcecab53a416ba85fd8cb586c479, type: 2}
   putDownDefinition: {fileID: 11400000, guid: 314ced7816e6242a9b8e3a29858d7cb1, type: 2}
   gripPoint: {fileID: 1807696978736844468}
@@ -167,6 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ced38c0f8fe445c9ec0c0ad5ab33064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visualDefinition: {fileID: 0}
   useCustomAction: 0
   StateGraphGUID: fbde8e75-9b56-44b6-8d2e-425aa14e31b5
   PreventDuplicates: 1

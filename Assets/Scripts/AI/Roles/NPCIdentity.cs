@@ -56,6 +56,7 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     /// This is used to determine what role to show the user in the UI.
     /// </summary>
     private NpcRoleSO primaryRole;
+    public NpcRoleSO PrimaryRole => primaryRole;
 
     private NpcContext npcContext;
 

@@ -4565,6 +4565,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GetSus10
       objectReference: {fileID: 0}
+    - target: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7659253329689517800, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: config.ProducerId
       value: 9673d3c2-9045-4681-ad5f-c67ca3fee3fa
@@ -6494,6 +6498,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2118282414207727054, guid: b62b55e9442c04593a43aea0b84c1c77, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3116719903882094897, guid: b62b55e9442c04593a43aea0b84c1c77, type: 3}
       propertyPath: defaultMovementSpeed
       value: 2
@@ -6587,7 +6595,8 @@ PrefabInstance:
       value: 49a46a23-7df4-4f0d-9485-bdc31a9f6986
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2118282414207727054, guid: b62b55e9442c04593a43aea0b84c1c77, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b62b55e9442c04593a43aea0b84c1c77, type: 3}
@@ -9339,6 +9348,10 @@ PrefabInstance:
     - target: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: m_Name
       value: GetSus5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7659253329689517800, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: config.ProducerId
@@ -14501,6 +14514,10 @@ PrefabInstance:
     - target: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: m_Name
       value: GetSus1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7659253329689517800, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
       propertyPath: config.ProducerId

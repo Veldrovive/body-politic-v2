@@ -29,8 +29,6 @@ public class HoldableSaveableData : InteractableSaveableData
 public class Holdable : Interactable
 {
     [Header("Holdable Configuration")]
-    [Tooltip("Reference to the ScriptableObject defining shared properties for this item type.")]
-    [SerializeField] protected HoldableDefinitionSO itemDefinition;
 
     [Tooltip("The interaction definition used to initiate picking up this item.")]
     [SerializeField] private InteractionDefinitionSO pickUpDefinition;
@@ -488,7 +486,7 @@ public class Holdable : Interactable
     /// </summary>
     public HoldableDefinitionSO GetItemDefinition()
     {
-        return itemDefinition;
+        return InteractableDefinition as HoldableDefinitionSO;
     }
 
     /// <summary>

@@ -8,35 +8,13 @@ using System.Linq; // Required for LINQ operations like Sum
 public class InventoryUIManager : MonoBehaviour
 {
     [SerializeField] private PlayerManager playerManager;
-
-    // Below is the asset that will be used for inventoryUIDocument
-    // <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    // <ui:Template name="InventorySlot" src="project://database/Assets/UI/Inventory/InventorySlot.uxml?fileID=9197481963319205126&amp;guid=0736c7a60bb2042e696b11e8511de27f&amp;type=3#InventorySlot" />
-    // <Style src="project://database/Assets/UI/Inventory/InventoryStyles.uss?fileID=7433441132597879392&amp;guid=8f8864f7dabe5483cac4d51ac3eb8159&amp;type=3#InventoryStyles" />
-    //     <ui:VisualElement name="InventoryContainer" class="inventory-container">
-    // <ui:VisualElement name="SlotsContainer" class="slots-container">
-    // <ui:Instance template="InventorySlot" />
-    //     <ui:Instance template="InventorySlot" />
-    //     </ui:VisualElement>
-    // <ui:VisualElement name="Separator" class="separator" />
-    // <ui:Instance template="InventorySlot" name="HeldItemSlot" class="held-item-slot" />
-    // </ui:VisualElement>
-    // </ui:UXML>
+    
     [SerializeField] [Tooltip("The document component that contains the InventoryUI element.")]
     private UIDocument inventoryUIDocument;
 
     private IPanel _cachedPanel;
     private VisualElement _rootVisualElement; // Cache the root VE
-
-    // Below is the asset that will be used for slotUITemplate
-    // <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    // <ui:Style src="InventoryStyles.uss" />
-    //
-    //     <ui:VisualElement name="SlotRoot" class="slot">
-    // <ui:VisualElement name="SlotBackground" class="slot-background"/>
-    // <ui:Image name="ItemIcon" class="item-icon"/>
-    // </ui:VisualElement>
-    // </ui:UXML>
+    
     [SerializeField] [Tooltip("UXML template asset for a single inventory slot")]
     private VisualTreeAsset slotUITemplate;
 

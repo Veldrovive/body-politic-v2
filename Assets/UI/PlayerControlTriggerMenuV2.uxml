@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/PlayerControlTriggerMenu.uss?fileID=7433441132597879392&amp;guid=c0c6021144699431b833bdad510f3b4f&amp;type=3#PlayerControlTriggerMenu" />
+    <ui:VisualElement name="MenuContainer" class="menu-container" style="flex-grow: 1;">
+        <ui:Label text="Action Title" name="TitleLabel" class="title-text" />
+        <ui:Label text="Action Description&#10;" name="DescriptionLabel" class="description-text" />
+        <ui:Button text="Execute" double-click-selects-word="true" name="ExecuteButton" class="execute-button" />
+    </ui:VisualElement>
+</ui:UXML>

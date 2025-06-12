@@ -15,6 +15,7 @@ public class Consumable : Holdable
 
     [Tooltip("If true, consuming this item will notify the InfectionManager.")]
     [SerializeField] private bool infected = false;
+    public bool Infected => infected;
 
     // --- Internal References ---
     private InteractionInstance _consumeInstance;
@@ -133,9 +134,9 @@ public class Consumable : Holdable
         // If the item definition is of the derived class ConsumableDefinitionSO, then it also has a .ConsumedRole
         // that we will add to the dynamic roles of the initiator
         
-        if (itemDefinition is ConsumableDefinitionSO)
+        if (InteractableDefinition is ConsumableDefinitionSO)
         {
-            ConsumableDefinitionSO consumeDefinition = itemDefinition as ConsumableDefinitionSO;
+            ConsumableDefinitionSO consumeDefinition = InteractableDefinition as ConsumableDefinitionSO;
 
             if (consumeDefinition != null && consumeDefinition.ConsumedRole != null)
             {

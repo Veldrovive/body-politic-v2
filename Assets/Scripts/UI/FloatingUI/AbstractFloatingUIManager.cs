@@ -60,15 +60,16 @@ public abstract class AbstractFloatingUIConfig
 
     [Header("Styling")]
     public float? ContainerMaxWidthPercent = 40f;  // Maximum width of the floater container as a fraction of the screen width
+    public float? ContainerMinWidthPercent = null;  // Minimum width of the floater container as a fraction of the screen width
 }
 
 [RequireComponent(typeof(UIDocument))]
 public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     where TConfig : AbstractFloatingUIConfig
 {
-    [SerializeField] private VisualTreeAsset floaterTemplate;
-    [SerializeField] private UIDocument uiDocument;
-    [SerializeField] private Camera viewCamera;
+    [SerializeField] protected VisualTreeAsset floaterTemplate;
+    [SerializeField] protected UIDocument uiDocument;
+    [SerializeField] protected Camera viewCamera;
     
     protected class FloaterData
     {
@@ -87,7 +88,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     protected abstract void OnUpdateFloater(VisualElement floaterRoot, TConfig floaterConfig);
     protected abstract void OnRemoveFloater(VisualElement floaterRoot, TConfig floaterConfig);
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if (floaterTemplate == null)
         {
@@ -190,6 +191,11 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
         if (floaterConfig.ContainerMaxWidthPercent.HasValue)
         {
             floaterData.Container.style.maxWidth = Length.Percent(floaterConfig.ContainerMaxWidthPercent.Value);
+        }
+
+        if (floaterConfig.ContainerMinWidthPercent.HasValue)
+        {
+            floaterData.Container.style.minWidth = Length.Percent(floaterConfig.ContainerMinWidthPercent.Value);
         }
         floaterData.Container.style.position = Position.Absolute;
         floaterData.Container.style.visibility = Visibility.Hidden;  // Start hidden until position is set correctly

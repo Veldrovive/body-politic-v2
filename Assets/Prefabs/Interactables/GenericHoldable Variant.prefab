@@ -255,6 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ced38c0f8fe445c9ec0c0ad5ab33064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visualDefinition: {fileID: 0}
   useCustomAction: 0
   StateGraphGUID: e67a6b09-f113-4cea-b1fd-895a3d58a79d
   PreventDuplicates: 1
@@ -276,6 +277,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ced38c0f8fe445c9ec0c0ad5ab33064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2587822196104935096 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7659253329689517800, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
+  m_PrefabInstance: {fileID: 5306059227635886160}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2990808473267203163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2990808473267203163 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6927544156335784971, guid: 3915f20c581d84f01a742a26aac4a274, type: 3}
@@ -293,9 +305,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef0023f70d142c7aaf843b9045c99db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2587822196104935096}
   saveableConfig:
-    SaveableId: 
+    ConsumerId: 9221a3b0-db8c-4dca-b141-ce95fde2c484
     LoadOrder: -1
+  interactableDefinition: {fileID: 11400000, guid: b3d67180142974d20b4851fefc635450, type: 2}
   interactionInstances: []
   itemDefinition: {fileID: 11400000, guid: b3d67180142974d20b4851fefc635450, type: 2}
   pickUpDefinition: {fileID: 11400000, guid: b6ced52af55524ad1a6a8acd452eb6e1, type: 2}

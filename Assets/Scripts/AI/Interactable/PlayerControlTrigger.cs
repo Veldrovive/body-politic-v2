@@ -20,6 +20,9 @@ public class PlayerControlTrigger : MonoBehaviour
 {
     private string playerControlTriggerLayerName = "PlayerControlTrigger";
 
+    [SerializeField] private PlayerControlTriggerVisualDefinition visualDefinition;
+    public PlayerControlTriggerVisualDefinition VisualDefinition => visualDefinition;
+
     [Header("Action Type")]
     [Tooltip("Check this box to use a Custom Action ScriptableObject instead of defining parameters for a standard 'MoveTo->Interact' sequence.")]
     [SerializeField] private bool useCustomAction = false;
@@ -264,6 +267,7 @@ public class PlayerControlTrigger : MonoBehaviour
     {
         // Auto-assign target interactable if not set
         AutoSetInteractable();
+        TryGetComponent<PlayerControlTriggerVisualDefinition>(out visualDefinition);
     }
     
     /// <summary>

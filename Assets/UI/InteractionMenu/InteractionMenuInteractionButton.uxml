@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/InteractionMenu/InteractionMenu.uss?fileID=7433441132597879392&amp;guid=3cc6f618e0be4c95842be888de60941e&amp;type=3#InteractionMenu" />
+    <ui:VisualElement name="ButtonRoot" class="interaction-button" style="padding-right: 14px; padding-left: 14px;">
+        <ui:Label name="InteractionLabel" text="Test" class="interaction-text" />
+        <ui:Image name="SuspicionIcon" class="suspicion-icon" />
+    </ui:VisualElement>
+</ui:UXML>
