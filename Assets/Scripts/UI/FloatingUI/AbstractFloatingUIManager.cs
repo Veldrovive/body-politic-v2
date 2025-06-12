@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum floatingUIAnchor
+public enum FloatingUIAnchor
 {
     // Corners
     TopLeft,
@@ -32,12 +32,15 @@ public enum FloatingUIPositionType
 {
     Transform,
     WorldPosition,
-    ScreenPosition
+    ScreenPosition,
+    CursorPosition
 }
 
 [Serializable]
 public abstract class AbstractFloatingUIConfig
 {
+    public VisualTreeAsset FloaterTemplate;
+    
     [Header("Lifetime")]
     public UnityEngine.Object LifetimeOwner;  // The owner of the floater, used to determine when to destroy it
     
@@ -49,7 +52,7 @@ public abstract class AbstractFloatingUIConfig
     public ScreenPositionType TargetScreenPositionType = ScreenPositionType.Pixel;
     public Vector2 TargetScreenPosition;
     
-    public floatingUIAnchor Anchor = floatingUIAnchor.TopLeft;
+    public FloatingUIAnchor Anchor = FloatingUIAnchor.TopLeft;
     public Vector2 ScreenSpaceOffset = Vector2.zero;
     
     public bool KeepOnScreen = false;
@@ -61,13 +64,18 @@ public abstract class AbstractFloatingUIConfig
     [Header("Styling")]
     public float? ContainerMaxWidthPercent = 40f;  // Maximum width of the floater container as a fraction of the screen width
     public float? ContainerMinWidthPercent = null;  // Minimum width of the floater container as a fraction of the screen width
+
+    public AbstractFloatingUIConfig(VisualTreeAsset template, UnityEngine.Object lifetimeOwner)
+    {
+        FloaterTemplate = template;
+        LifetimeOwner = lifetimeOwner;
+    }
 }
 
 [RequireComponent(typeof(UIDocument))]
 public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     where TConfig : AbstractFloatingUIConfig
 {
-    [SerializeField] protected VisualTreeAsset floaterTemplate;
     [SerializeField] protected UIDocument uiDocument;
     [SerializeField] protected Camera viewCamera;
     
@@ -90,11 +98,6 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (floaterTemplate == null)
-        {
-            Debug.LogError("FloatingUIManager: No floater template found", this);
-        }
-        
         if (uiDocument == null)
         {
             uiDocument = GetComponent<UIDocument>();
@@ -168,7 +171,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     [CanBeNull]
     public virtual string CreateFloater(TConfig floaterConfig)
     {
-        if (floaterTemplate == null)
+        if (floaterConfig.FloaterTemplate == null)
         {
             Debug.LogError("FloatingUIManager: No floater template found", this);
             return null;
@@ -200,7 +203,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
         floaterData.Container.style.position = Position.Absolute;
         floaterData.Container.style.visibility = Visibility.Hidden;  // Start hidden until position is set correctly
 
-        floaterData.Instance = floaterTemplate.CloneTree();
+        floaterData.Instance = floaterConfig.FloaterTemplate.CloneTree();
         floaterData.Instance.name = $"Floater_{floaterData.Id}";
         floaterData.Container.Add(floaterData.Instance);
         
@@ -268,6 +271,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
             FloatingUIPositionType.Transform => ConvertWorldToPanelPosition(floaterData.Config.TargetTransform.position),
             FloatingUIPositionType.WorldPosition => ConvertWorldToPanelPosition(floaterData.Config.TargetWorldPosition),
             FloatingUIPositionType.ScreenPosition => floaterData.Config.TargetScreenPosition,
+            FloatingUIPositionType.CursorPosition => Input.mousePosition,
             _ => null
         };
         if (floaterData.Config.PositionType == FloatingUIPositionType.ScreenPosition && floaterData.Config.TargetScreenPositionType == ScreenPositionType.Normalized)
@@ -281,8 +285,8 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
         
         if (!potentialScreenPosition.HasValue)
         {
-            // There is no valid screen position. Indicate that to the caller
-            Debug.LogWarning("Floating UI Manager has no screen position for " + typeof(TConfig).Name);
+            // There is no valid screen position. There a few reasons this could happen but none of them are an error.
+            // Debug.LogWarning("Floating UI Manager has no screen position for " + typeof(TConfig).Name);
             return false;
         }
         
@@ -294,28 +298,28 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
             // case floatingUIAnchor.TopLeft:
             //     elementPosition += new Vector2(0, 0);
             //     break;
-            case floatingUIAnchor.TopRight:
+            case FloatingUIAnchor.TopRight:
                 elementPosition += new Vector2(-width, 0);
                 break;
-            case floatingUIAnchor.BottomLeft:
+            case FloatingUIAnchor.BottomLeft:
                 elementPosition += new Vector2(0, -height);
                 break;
-            case floatingUIAnchor.BottomRight:
+            case FloatingUIAnchor.BottomRight:
                 elementPosition += new Vector2(-width, -height);
                 break;
-            case floatingUIAnchor.TopCenter:
+            case FloatingUIAnchor.TopCenter:
                 elementPosition += new Vector2(-width / 2, 0);
                 break;
-            case floatingUIAnchor.BottomCenter:
+            case FloatingUIAnchor.BottomCenter:
                 elementPosition += new Vector2(-width / 2, -height);
                 break;
-            case floatingUIAnchor.MiddleLeft:
+            case FloatingUIAnchor.MiddleLeft:
                 elementPosition += new Vector2(0, -height / 2);
                 break;
-            case floatingUIAnchor.MiddleRight:
+            case FloatingUIAnchor.MiddleRight:
                 elementPosition += new Vector2(-width, -height / 2);
                 break;
-            case floatingUIAnchor.Center:
+            case FloatingUIAnchor.Center:
                 elementPosition += new Vector2(-width / 2, -height / 2);
                 break;
         }

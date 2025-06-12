@@ -5,17 +5,11 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class InteractionMenuFloatingUIConfig : AbstractFloatingUIConfig
-{
-    public InteractableDefinitionSO TargetInteractableDefinition;
-    public Interactable TargetInteractable;
-    public List<PlayerControlTrigger> Triggers;
-    public InteractionMenuInstanceManager InstanceManager;
-}
+
 
 public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMenuFloatingUIConfig>
 {
-    [SerializeField] private VisualTreeAsset actionButtonTemplate;
+    [SerializeField] private InteractionMenuVisualDefinitionSO interactionMenuVisualDefinition;
     
     [SerializeField]
     [Tooltip("Default prefab for the trigger icon displayed in world space.")]
@@ -55,12 +49,12 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
         
         InteractionMenuInstanceManager instanceManager = new InteractionMenuInstanceManager(
             floaterRoot,
+            floaterConfig.visualDefinition,
             floaterConfig.TargetInteractable,
             floaterConfig.TargetInteractableDefinition,
-            floaterConfig.Triggers,
-            actionButtonTemplate
+            floaterConfig.Triggers
         );
-        instanceManager.UpdateActions(isSuspiciousIcon, CloseMenu);
+        instanceManager.UpdateActions(CloseMenu);
         floaterConfig.InstanceManager = instanceManager;
 
         return true;
@@ -69,7 +63,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
     protected override void OnUpdateFloater(VisualElement floaterRoot, InteractionMenuFloatingUIConfig floaterConfig)
     {
         // We only update the interaction definition buttons as the title and description are expected to be static.
-        floaterConfig.InstanceManager.UpdateActions(isSuspiciousIcon, CloseMenu);
+        floaterConfig.InstanceManager.UpdateActions(CloseMenu);
     }
 
     protected override void OnRemoveFloater(VisualElement floaterRoot, InteractionMenuFloatingUIConfig floaterConfig)
@@ -237,42 +231,25 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
         {
             CloseMenu();
         }
-        PlayerControlTriggerVisualDefinition visualDef = newActiveMenuTriggerGO.GetComponent<PlayerControlTriggerVisualDefinition>();
-        List<PlayerControlTrigger> triggers = newActiveMenuTriggerGO.GetComponents<PlayerControlTrigger>().ToList();
         
-        // We also need a reference to the Interactable which lives on the parent of the trigger in order to get the definition
-        Interactable interactable = triggers[0]?.TargetInteractable;
+        Interactable interactable = newActiveMenuTriggerGO.transform.parent.GetComponent<Interactable>();
         if (interactable == null)
         {
-            Debug.LogError($"WSCMM: Cannot open menu for '{newActiveMenuTriggerGO.transform.parent.name}' - no Interactable found on the trigger parent.", newActiveMenuTriggerGO);
+            Debug.LogError($"WSCMM: Cannot open menu for '{newActiveMenuTriggerGO.name}' - missing Interactable component.", newActiveMenuTriggerGO);
             return false; // Cannot open a menu without an interactable
         }
+        
+        var config = InteractionMenuInstanceManager.GenerateFloatingUIConfig(
+            interactable,
+            interactionMenuVisualDefinition,
 
-        InteractableDefinitionSO interactableDefinition = interactable.InteractableDefinition;
-        if (interactableDefinition == null)
-        {
-            Debug.LogError($"WSCMM: Cannot open menu for '{newActiveMenuTriggerGO.transform.parent.name}' - no InteractableDefinition found on the Interactable.", newActiveMenuTriggerGO);
-            return false; // Cannot open a menu without an interactable definition
-        }
-
-        InteractionMenuFloatingUIConfig config = new InteractionMenuFloatingUIConfig()
-        {
-            LifetimeOwner = newActiveMenuTriggerGO,
-            
-            PositionType = FloatingUIPositionType.Transform,
-            TargetTransform = visualDef.IconPositionTransform,
-            
-            Anchor = floatingUIAnchor.BottomCenter,
-            ScreenSpaceOffset = Vector2.up * verticalOffset, // Use the vertical offset to position the menu above the icon
-            
-            ContainerMaxWidthPercent = maxWidth,
-            ContainerMinWidthPercent = minWidth,
-            KeepOnScreen = keepOnScreen,
-            
-            TargetInteractable = interactable,
-            TargetInteractableDefinition = interactableDefinition,
-            Triggers = triggers
-        };
+            positionType: FloatingUIPositionType.Transform,
+            targetObject: newActiveMenuTriggerGO.transform,
+            maxWidth: maxWidth,
+            minWidth: minWidth,
+            verticalOffset: verticalOffset,
+            keepOnScreen: keepOnScreen
+        );
         
         string floaterId = CreateFloater(config);
         if (floaterId == null)

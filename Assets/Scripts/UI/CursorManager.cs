@@ -15,6 +15,22 @@ public class CursorManager : MonoBehaviour
     [SerializeField] private Texture2D selectionCursor;
     [SerializeField] private Vector2 selectionCursorHotSpot;
     
+    public static CursorManager Instance;
+
+    private void Awake()
+    {
+        // Ensure only one instance of CursorManager exists
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         // Set the default cursor at the start

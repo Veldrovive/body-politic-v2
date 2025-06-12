@@ -77,6 +77,15 @@
     flex-shrink: 0;
 }
 
+.infection-icon{
+    display: none;
+    width: 24px;
+    height: 16px;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
 .interaction-button--disabled .interaction-text {
     color: var(--color-text-disabled);
     -unity-font-style: normal;

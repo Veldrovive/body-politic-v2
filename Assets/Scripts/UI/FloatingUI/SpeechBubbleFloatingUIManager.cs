@@ -17,10 +17,14 @@ public class SpeechBubbleFloatingUIConfig : AbstractFloatingUIConfig
     
     // Internal variables
     public float StartTime = -1;
+    
+    public SpeechBubbleFloatingUIConfig(VisualTreeAsset template, UnityEngine.Object lifetimeOwner) : base(template, lifetimeOwner) { }
 }
 
 public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBubbleFloatingUIConfig>
 {
+    [SerializeField] private VisualTreeAsset speechBubbleTemplate;
+    
     [SerializeField] [Tooltip("The element to position the bubble on.")]
     private Transform trackedTransform;
     
@@ -51,14 +55,12 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
             Duration = duration
         };
 
-        SpeechBubbleFloatingUIConfig config = new SpeechBubbleFloatingUIConfig()
+        SpeechBubbleFloatingUIConfig config = new SpeechBubbleFloatingUIConfig(speechBubbleTemplate, this)
         {
-            LifetimeOwner = this,
-
             PositionType = FloatingUIPositionType.Transform,
             TargetTransform = trackedTransform,
             
-            Anchor = floatingUIAnchor.BottomRight,
+            Anchor = FloatingUIAnchor.BottomRight,
             ScreenSpaceOffset = screenSpaceOffset,
             
             OnRemovalComplete = onFinishCallback,

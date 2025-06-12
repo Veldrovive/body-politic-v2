@@ -43,14 +43,31 @@ public abstract class AbstractCustomPlayerAction : MonoBehaviour, IActionDefinit
 {
     [Header("Base Action Info")]
     [Tooltip("The user-facing name displayed in UI menus.")]
-    [SerializeField] private string uiTitle;
+    [SerializeField] protected string uiTitle;
     [Tooltip("The user-facing description displayed in UI tooltips.")]
-    [SerializeField] [TextArea] private string uiDescription;
+    [SerializeField] [TextArea] protected string uiDescription;
 
     // --- IActionDefinition Implementation ---
     public string DisplayName => uiTitle;
     public string Description => uiDescription;
 
+    public virtual Interactable GetTargetInteractable()
+    {
+        if (TryGetComponent<Interactable>(out Interactable interactable))
+        {
+            return interactable;
+        }
+        else if (transform.parent.TryGetComponent<Interactable>(out Interactable parentInteractable))
+        {
+            return parentInteractable;
+        }
+        else
+        {
+            Debug.LogWarning($"CustomPlayerActionHandler on {gameObject.name} has no Interactable component or parent Interactable. Returning null.", this);
+            return null;
+        }
+    }
+    
     /// <summary>
     /// Checks the possibility and visibility of this specific custom action instance.
     /// Subclasses MUST override this to implement the logic using their direct scene references

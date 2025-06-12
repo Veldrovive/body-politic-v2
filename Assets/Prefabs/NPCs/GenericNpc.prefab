@@ -298,7 +298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: 14e5bf3dd574f4b3996272f594c71e87, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: d864de463f02a43b2aeb912fc9cefe55, type: 3}
+  sourceAsset: {fileID: 0}
   m_SortingOrder: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -315,9 +315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b13f2c8faf445eeb89588eb8ff5b478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floaterTemplate: {fileID: 9197481963319205126, guid: 6189b17a17a344f5daf0ff403dbd0f33, type: 3}
   uiDocument: {fileID: 3065160016559865694}
   viewCamera: {fileID: 0}
+  speechBubbleTemplate: {fileID: 9197481963319205126, guid: 6189b17a17a344f5daf0ff403dbd0f33, type: 3}
   trackedTransform: {fileID: 5667167069351560069}
   transitionInTime: 0.4
   transitionOutTime: 0.2
@@ -640,6 +640,7 @@ GameObject:
   - component: {fileID: 7975063001280181541}
   - component: {fileID: 2508640099247890471}
   - component: {fileID: 8273193492733291491}
+  - component: {fileID: 7731745991292347066}
   m_Layer: 7
   m_Name: ControlTrigger
   m_TagString: Untagged
@@ -737,16 +738,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualDefinition: {fileID: 0}
-  useCustomAction: 0
+  useCustomAction: 1
   StateGraphGUID: eb0c4d4a-0b03-4371-bab7-0c57309a5deb
   PreventDuplicates: 1
   customAvailableFroms: 00000000
-  customAction: {fileID: 0}
+  customAction: {fileID: 7731745991292347066}
   targetInteractableObject: {fileID: 1384171195896954992}
-  targetInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+  targetInteractionDefinition: {fileID: 0}
   moveToTargetTransform: {fileID: 0}
   requireExactPosition: 0
   requireFinalAlignment: 0
+--- !u!114 &7731745991292347066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725557642565333427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f918d548b004ceeae11b75dd586b460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiTitle: 
+  uiDescription: 
+  shootDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
 --- !u!1 &3319651364951055184
 GameObject:
   m_ObjectHideFlags: 0

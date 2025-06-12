@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d1b1db46ec4dac9c0d2355b0b95396, type: 3}
+  m_Name: DefaultInteractionMenuVisualDefinition
+  m_EditorClassIdentifier: 
+  baseMenuAsset: {fileID: 9197481963319205126, guid: 354e9d9df1824df799f6bf2b9c160023, type: 3}
+  baseActionButtonTemplate: {fileID: 9197481963319205126, guid: 0fab695607ff4df0a35e6745a97f1568, type: 3}
+  suspiciousSprite: {fileID: 21300000, guid: daf2c72091c5b47e9bf4479b526ca187, type: 3}
+  holdableMenuAsset: {fileID: 9197481963319205126, guid: 354e9d9df1824df799f6bf2b9c160023, type: 3}
+  holdableActionButtonTemplate: {fileID: 9197481963319205126, guid: 0fab695607ff4df0a35e6745a97f1568, type: 3}
+  consumableMenuAsset: {fileID: 9197481963319205126, guid: d4629ce8d67524d6c917ebac70abc183, type: 3}
+  consumableActionButtonTemplate: {fileID: 9197481963319205126, guid: 0fab695607ff4df0a35e6745a97f1568, type: 3}
+  infectionSprite: {fileID: 21300000, guid: 4acf12020aa2e4bcf885c57ef18706af, type: 3}
+  npcMenuAsset: {fileID: 9197481963319205126, guid: 354e9d9df1824df799f6bf2b9c160023, type: 3}
+  npcActionButtonTemplate: {fileID: 9197481963319205126, guid: 0fab695607ff4df0a35e6745a97f1568, type: 3}

@@ -1,7 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Linq; // Required for Action
+using System.Linq;
+using Unity.VisualScripting; // Required for Action
 
 public enum HoldableVisualState
 {
@@ -28,13 +29,14 @@ public class HoldableSaveableData : InteractableSaveableData
 /// </summary>
 public class Holdable : Interactable
 {
-    [Header("Holdable Configuration")]
+    [Header("Holdable Configuration")] 
 
     [Tooltip("The interaction definition used to initiate picking up this item.")]
     [SerializeField] private InteractionDefinitionSO pickUpDefinition;
 
     [Tooltip("The interaction definition used to initiate putting down this item.")]
     [SerializeField] private InteractionDefinitionSO putDownDefinition;
+    [SerializeField] private bool putDownAlwaysDisabled = false;
 
     [Tooltip("Assign the child Transform that represents the point and orientation to align with the holder's hand.")]
     [SerializeField] private Transform gripPoint;
@@ -123,7 +125,8 @@ public class Holdable : Interactable
             if (putDownDefinition != null)
             {
                 // Can only put down IF currently held
-                SetInteractionEnableInfo(putDownDefinition, startedHeld, true, "Item is not currently held.");
+                bool putDownEnabled = !putDownAlwaysDisabled && startedHeld;
+                SetInteractionEnableInfo(putDownDefinition, putDownEnabled, true, "Item is not currently held.");
             }
 
             // Ensure visual state is correct if not initially held
@@ -275,7 +278,7 @@ public class Holdable : Interactable
             }
             if(putDownDefinition != null)
             {
-                SetInteractionEnableInfo(putDownDefinition, true, true, "Item is not currently held.");
+                SetInteractionEnableInfo(putDownDefinition, !putDownAlwaysDisabled, true, "Item is not currently held.");
             }
 
             // Fire the pickup event AFTER state is fully updated

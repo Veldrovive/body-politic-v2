@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/InteractionMenu/InteractionMenu.uss?fileID=7433441132597879392&amp;guid=3cc6f618e0be4c95842be888de60941e&amp;type=3#InteractionMenu" />
+    <ui:VisualElement name="MarginAddingContainer" style="flex-grow: 1; margin-bottom: 20px;">
+        <ui:VisualElement name="InteractionMenuContainer" class="interaction-menu-container">
+            <ui:Label name="TitleLabel" text="Ornate Silver Locket" class="title">
+                <ui:Image name="InfectionIcon" class="infection-icon" />
+            </ui:Label>
+            <ui:Label name="DescriptionLabel" text="A small, intricately-carved locket. It feels cold to the touch and hums with a faint, magical energy." class="description" />
+            <ui:VisualElement name="ActionsContainer" class="actions-container" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

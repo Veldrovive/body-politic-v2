@@ -311,9 +311,9 @@ MonoBehaviour:
     LoadOrder: -1
   interactableDefinition: {fileID: 11400000, guid: b3d67180142974d20b4851fefc635450, type: 2}
   interactionInstances: []
-  itemDefinition: {fileID: 11400000, guid: b3d67180142974d20b4851fefc635450, type: 2}
   pickUpDefinition: {fileID: 11400000, guid: b6ced52af55524ad1a6a8acd452eb6e1, type: 2}
   putDownDefinition: {fileID: 11400000, guid: f4187a82612a741fdb3bf10291ebf70d, type: 2}
+  putDownAlwaysDisabled: 1
   gripPoint: {fileID: 7761615090751829619}
   inventorySprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   initialHolder: {fileID: 0}

@@ -157,8 +157,9 @@ MonoBehaviour:
   interactionInstances: []
   pickUpDefinition: {fileID: 11400000, guid: 8c74dcecab53a416ba85fd8cb586c479, type: 2}
   putDownDefinition: {fileID: 11400000, guid: 314ced7816e6242a9b8e3a29858d7cb1, type: 2}
+  putDownAlwaysDisabled: 1
   gripPoint: {fileID: 1807696978736844468}
-  inventorySprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  inventorySprite: {fileID: 21300000, guid: fdc1a382c14184c2ca770bd50d941586, type: 3}
   initialHolder: {fileID: 0}
   consumeInteractionDefinition: {fileID: 11400000, guid: f17c29486b1a54462b781c9455ea1035, type: 2}
   infected: 0

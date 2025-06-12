@@ -15,6 +15,9 @@ public class TestFloatingUIConfig : AbstractFloatingUIConfig
     // but you would add them here. For example:
     // public string Title;
     // public string Description;
+    
+    public TestFloatingUIConfig(VisualTreeAsset template, UnityEngine.Object lifetimeOwner) 
+        : base(template, lifetimeOwner) { }
 }
 
 
@@ -26,6 +29,8 @@ public class TestFloatingUIConfig : AbstractFloatingUIConfig
 public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUIConfig>
 {
     [Header("Default Floater Configuration")]
+    [SerializeField] private VisualTreeAsset floaterTemplate;
+    
     [Tooltip("The type of positioning to use for the default floater.")]
     [SerializeField] private FloatingUIPositionType positionType = FloatingUIPositionType.Transform;
 
@@ -41,7 +46,7 @@ public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUICon
     [SerializeField] private Vector2 targetScreenPosition;
 
     [Tooltip("The anchor point on the floater that will align with the target position.")]
-    [SerializeField] private floatingUIAnchor anchor = floatingUIAnchor.BottomLeft;
+    [SerializeField] private FloatingUIAnchor anchor = FloatingUIAnchor.BottomLeft;
 
     [Tooltip("An additional pixel offset applied after anchoring.")]
     [SerializeField] private Vector2 screenSpaceOffset = new Vector2(10, 10);
@@ -66,12 +71,8 @@ public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUICon
         }
 
         // Create a configuration object from our serialized fields.
-        var defaultConfig = new TestFloatingUIConfig
+        var defaultConfig = new TestFloatingUIConfig(floaterTemplate, gameObject)
         {
-            // --- Lifetime ---
-            // Tie the floater's lifetime to this GameObject. When this object
-            // is destroyed, the floater will be automatically removed.
-            LifetimeOwner = this.gameObject,
 
             // --- Positioning ---
             PositionType = this.positionType,

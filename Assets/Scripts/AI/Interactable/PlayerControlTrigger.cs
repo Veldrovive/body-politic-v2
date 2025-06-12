@@ -121,7 +121,7 @@ public class PlayerControlTrigger : MonoBehaviour
                 return failedStatus;
             }
             // Pass the initiator. There is no target interactable in this case as custom actions define their own.
-            InteractionStatus status = customAction.GetStatus(initiator, null);
+            InteractionStatus status = customAction.GetStatus(initiator, customAction.GetTargetInteractable());
             
             // Check if this graph is already in the interaction queue of the initiator
             NpcContext initiatorContext = initiator.GetComponent<NpcContext>();

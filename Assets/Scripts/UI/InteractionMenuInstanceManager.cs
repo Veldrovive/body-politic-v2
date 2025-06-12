@@ -3,9 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
+
+public class InteractionMenuFloatingUIConfig : AbstractFloatingUIConfig
+{
+    public InteractionMenuVisualDefinitionSO visualDefinition;
+    public InteractableDefinitionSO TargetInteractableDefinition;
+    public Interactable TargetInteractable;
+    public List<PlayerControlTrigger> Triggers;
+    public InteractionMenuInstanceManager InstanceManager;
+    
+    public InteractionMenuFloatingUIConfig(VisualTreeAsset template, UnityEngine.Object lifetimeOwner) 
+        : base(template, lifetimeOwner) { }
+}
 
 public class InteractionMenuInstanceManager
 {
+    private InteractionMenuVisualDefinitionSO visualDefinition;
     private VisualElement floaterRoot;
     private Interactable targetInteractable;
     private InteractableDefinitionSO interactableDefinition;
@@ -15,22 +29,29 @@ public class InteractionMenuInstanceManager
     private Label descriptionLabel;
     private VisualElement actionsContainer;
     private VisualTreeAsset actionButtonTemplate;  // Template for the interaction buttons.
+    private Dictionary<string, object> kwargs;  // Additional parameters for the interaction menu, if needed.
     
     private List<InteractionButtonData> currentButtonsData = new List<InteractionButtonData>();
     private List<InteractionButtonData> newButtonsData = new List<InteractionButtonData>();  // Avoid extra GC allocations by reusing the same list.
     
     public InteractionMenuInstanceManager(
         VisualElement floaterRoot,
+        InteractionMenuVisualDefinitionSO visualDefinition,
         Interactable targetInteractable,
         InteractableDefinitionSO interactableDefinition,
         List<PlayerControlTrigger> triggers,
-        VisualTreeAsset actionButtonTemplate
+        Dictionary<string, object> kwargs = null
     )
     {
+        this.visualDefinition = visualDefinition;
         this.floaterRoot = floaterRoot;
         this.interactableDefinition = interactableDefinition;
         this.triggers = triggers;
-        this.actionButtonTemplate = actionButtonTemplate;
+        this.actionButtonTemplate = visualDefinition.GetActionButtonTemplateForInteractable(targetInteractable);
+        this.targetInteractable = targetInteractable;
+        
+        // Set the event so that when the floater is destroyed, we can clean up.
+        floaterRoot.RegisterCallback<DetachFromPanelEvent>(evt => OnRootDestroyed());
         
         titleLabel = floaterRoot.Q<Label>("TitleLabel");
         descriptionLabel = floaterRoot.Q<Label>("DescriptionLabel");
@@ -56,6 +77,33 @@ public class InteractionMenuInstanceManager
         }
     }
 
+    private void SetCursorMode(bool selecting)
+    {
+        if (selecting)
+        {
+            CursorManager.Instance.SetCursor(CursorType.Selection);
+        }
+        else
+        {
+            CursorManager.Instance.SetCursor(CursorType.Default);
+        }
+    }
+
+    private void OnActionButtonHover(MouseEnterEvent evt)
+    {
+        SetCursorMode(true);
+    }
+    
+    private void OnActionButtonLeave(MouseLeaveEvent evt)
+    {
+        SetCursorMode(false);
+    }
+
+    private void OnRootDestroyed()
+    {
+        SetCursorMode(false);
+    }
+    
     private void InitializeBasicInteractable()
     {
         titleLabel.text = interactableDefinition.Name;
@@ -86,6 +134,20 @@ public class InteractionMenuInstanceManager
         InitializeBasicInteractable();
         // We also need to get whether this consumable is infected or not.
         bool isInfected = consumable.Infected;
+        if (isInfected)
+        {
+            Sprite infectionSprite = visualDefinition.InfectionSprite;
+            Image infectionIcon = floaterRoot.Q<Image>("InfectionIcon");
+            if (infectionIcon != null && infectionSprite != null)
+            {
+                infectionIcon.sprite = infectionSprite;
+                infectionIcon.style.display = DisplayStyle.Flex; // Make it visible.
+            }
+            else
+            {
+                Debug.LogWarning("Infection icon or sprite is missing in the UI.");
+            }
+        }
     }
     
     private struct InteractionButtonData
@@ -96,7 +158,6 @@ public class InteractionMenuInstanceManager
         public string InteractionTitle;
 
         public PlayerControlTrigger Trigger;
-        public InteractionDefinitionSO interactionDefinition;
         public Interactable interactable;
         public GameObject initiator;
         
@@ -133,26 +194,24 @@ public class InteractionMenuInstanceManager
     /// then the UI is not updated. If there has been a change, it clears the entire container and rebuilds it.
     /// Also manages the callbacks for each interaction button, including hover states and click actions.
     /// </summary>
-    /// <param name="actionsContainer"></param>
-    /// <param name="triggers"></param>
-    public void UpdateActions(Sprite isSuspiciousIcon, Action onActionClicked = null)
+    /// <param name="onActionClicked"></param>
+    public void UpdateActions(Action onActionClicked = null)
     {
+        Sprite isSuspiciousIcon = visualDefinition.SuspiciousSprite;
         newButtonsData.Clear();
         foreach (var trigger in triggers)
         {
-            InteractionDefinitionSO interactionDef = trigger.TargetInteractionDefinition;
             Interactable interactable = trigger.TargetInteractable;
             GameObject initiator = PlayerManager.Instance.CurrentFocusedNpc.gameObject;
             
-            InteractionStatus interactionStatus = interactionDef.GetStatus(initiator, interactable);
+            InteractionStatus interactionStatus = trigger.GetActionStatus(initiator);
             InteractionButtonData buttonData = new InteractionButtonData()
             {
                 IsVisible = interactionStatus.IsVisible,
                 IsSuspicious = interactionStatus.IsSuspicious,
                 CanInteract = interactionStatus.CanInteract(ignoreProximity: true),
-                InteractionTitle = interactionDef.DisplayName,
+                InteractionTitle = trigger.Title,
                 
-                interactionDefinition = interactionDef,
                 interactable = interactable,
                 initiator = initiator,
                 Trigger = trigger,
@@ -170,6 +229,8 @@ public class InteractionMenuInstanceManager
             Debug.Log("Updating interaction buttons in the UI.");
             
             actionsContainer.Clear();
+            actionsContainer.RegisterCallback<MouseEnterEvent>(OnActionButtonHover);
+            actionsContainer.RegisterCallback<MouseLeaveEvent>(OnActionButtonLeave);
             foreach (var buttonData in newButtonsData)
             {
                 // Instantiate the button from the UXML template.
@@ -218,5 +279,101 @@ public class InteractionMenuInstanceManager
             currentButtonsData.Clear();
             currentButtonsData.AddRange(newButtonsData);
         }
+    }
+
+    public static InteractionMenuFloatingUIConfig GenerateFloatingUIConfig(
+        // GameObject controlTriggerGO,
+        Interactable interactable,
+        InteractionMenuVisualDefinitionSO visualDefinition,
+        UnityEngine.Object lifetimeOwner = null,
+        FloatingUIPositionType positionType = FloatingUIPositionType.Transform,
+        object targetObject = null,  // Can a screen position, world position, or transform
+        FloatingUIAnchor anchor = FloatingUIAnchor.BottomCenter,
+        float verticalOffset = 0f,
+        float maxWidth = 15f,
+        float minWidth = 10f,
+        bool keepOnScreen = true
+    )
+    {
+        if (lifetimeOwner == null)
+        {
+            lifetimeOwner = interactable;
+        }
+        
+        if (interactable == null)
+        {
+            Debug.LogError($"WSCMM: Cannot open menu for '{interactable.name}' - no Interactable found on the trigger parent.", interactable);
+            return null; // Cannot open a menu without an interactable
+        }
+        PlayerControlTriggerVisualDefinition visualDef = interactable.GetComponentInChildren<PlayerControlTriggerVisualDefinition>();
+        GameObject controlTriggerGO = visualDef?.gameObject;
+        
+        List<PlayerControlTrigger> triggers = controlTriggerGO?.GetComponents<PlayerControlTrigger>().ToList();
+        
+        InteractableDefinitionSO interactableDefinition = interactable.InteractableDefinition;
+        if (interactableDefinition == null)
+        {
+            Debug.LogError($"WSCMM: Cannot open menu for '{interactable.name}' - no InteractableDefinition found on the Interactable.", interactable);
+            return null; // Cannot open a menu without an interactable definition
+        }
+        
+        VisualTreeAsset menuTemplate = visualDefinition.GetMenuAssetForInteractable(interactable);
+        InteractionMenuFloatingUIConfig config = new InteractionMenuFloatingUIConfig(menuTemplate, lifetimeOwner)
+        {
+            Anchor = anchor,
+            ScreenSpaceOffset = Vector2.up * verticalOffset, // Use the vertical offset to position the menu above the icon
+            
+            ContainerMaxWidthPercent = maxWidth,
+            ContainerMinWidthPercent = minWidth,
+            KeepOnScreen = keepOnScreen,
+            
+            visualDefinition = visualDefinition,
+            TargetInteractable = interactable,
+            TargetInteractableDefinition = interactableDefinition,
+            Triggers = triggers
+        };
+
+        if (positionType == FloatingUIPositionType.Transform)
+        {
+            if (targetObject is not Transform targetTransform)
+            {
+                Debug.LogError("Target object for Transform position type must be a Transform.");
+                return null;
+            }
+            config.PositionType = positionType;
+            config.TargetTransform = targetTransform;
+        }
+        else if (positionType == FloatingUIPositionType.WorldPosition)
+        {
+            if (targetObject is not Vector3 targetPosition)
+            {                
+                Debug.LogError("Target object for WorldPosition position type must be a Vector3.");
+                return null;
+            }
+            config.PositionType = positionType;
+            config.TargetWorldPosition = targetPosition;
+        }
+        else if (positionType == FloatingUIPositionType.ScreenPosition)
+        {
+            if (targetObject is not Vector2 targetScreenPosition)
+            {
+                Debug.LogError("Target object for ScreenPosition position type must be a Vector2.");
+                return null;
+            }
+            config.PositionType = positionType;
+            config.TargetScreenPosition = targetScreenPosition;
+        }
+        else if (positionType == FloatingUIPositionType.CursorPosition)
+        {
+            config.PositionType = positionType;
+            // Cursor position will be handled by the FloatingUIManager, no need to set a target.
+        }
+        else
+        {
+            Debug.LogError($"Unsupported position type: {positionType}");
+            return null;
+        }
+        
+        return config;
     }
 }

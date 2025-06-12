@@ -125,6 +125,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: e25bc6f77e50542cb9dfb008cef3db72, type: 2}
     - target: {fileID: 1966949494653882168, guid: 60dc7b5eee8604882a5cef41864f3bcf, type: 3}
+      propertyPath: inventorySprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 241c42e7b33374eeda61cd4c08d6ab8a, type: 3}
+    - target: {fileID: 1966949494653882168, guid: 60dc7b5eee8604882a5cef41864f3bcf, type: 3}
       propertyPath: interactableDefinition
       value: 
       objectReference: {fileID: 11400000, guid: e25bc6f77e50542cb9dfb008cef3db72, type: 2}
