@@ -1,18 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
-
-// public class InventoryFloatingUIConfig : AbstractFloatingUIConfig
-// {
-//     public InteractableDefinitionSO TargetInteractableDefinition;
-//     public Interactable TargetInteractable;
-//     public List<PlayerControlTrigger> Triggers;
-//     public InteractionMenuInstanceManager InstanceManager;
-//     
-//     public InventoryFloatingUIConfig(VisualTreeAsset template, UnityEngine.Object lifetimeOwner) : base(template, lifetimeOwner) {}
-// }
 
 public class InventoryFloatingUIManager : AbstractFloatingUIManager<InteractionMenuFloatingUIConfig>
 {
