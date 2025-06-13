@@ -483,6 +483,10 @@ PrefabInstance:
       value: 6648118342207406149
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'm_nodes.Array.data[24]'
+      value: 8345543153296343124
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.size
       value: 62
       objectReference: {fileID: 0}
@@ -581,6 +585,18 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: 'managedReferences[6648118342207406149]'
       value: Assembly-CSharp SayRoleMissingListenerNode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'managedReferences[8345543153296343117]'
+      value: Assembly-CSharp RestartNode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'managedReferences[8345543153296343123]'
+      value: Assembly-CSharp InteractionStateNode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: 'managedReferences[8345543153296343124]'
+      value: Assembly-CSharp MoveToStateNode
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[0].inputPort.nodeId
@@ -1039,6 +1055,18 @@ PrefabInstance:
       value: 6fcd8aeb-b736-4320-bac8-fb0fcf85387b
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_guid
+      value: a214ca57-c066-419f-be79-6b3a55b48366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_guid
+      value: 93ff0b89-fa6e-4163-89fb-ce01e038180f
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_guid
+      value: 63fb9443-7bdf-4cb1-8c19-4af86ec29d39
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[10].outputPort.nodeId
       value: 67efdcb0-091d-4096-a956-933387d143ca
       objectReference: {fileID: 0}
@@ -1465,6 +1493,20 @@ PrefabInstance:
         PublicKeyToken=null
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].typeName
+      value: RestartNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].typeName
+      value: InteractionStateNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].typeName
+      value: MoveToStateNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[0].inputPort.portInfo.Name
       value: In
       objectReference: {fileID: 0}
@@ -1706,11 +1748,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406149].m_position.x
-      value: 232
+      value: 299
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406149].m_position.y
-      value: 549
+      value: 733
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_position.x
+      value: 2143
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_position.y
+      value: 318
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_position.x
+      value: 1833
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_position.y
+      value: 344
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_position.x
+      value: 1221
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_position.y
+      value: 267
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[0].outputPort.portInfo.Name
@@ -2446,7 +2512,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406149].m_position.width
-      value: 142
+      value: 223
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_position.width
+      value: 87
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_position.width
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_position.width
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[10].inputPort.portInfo.PortType
@@ -2822,7 +2900,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406149].m_position.height
+      value: 153
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_position.height
       value: 77
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_position.height
+      value: 330
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_position.height
+      value: 506
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: m_connections.Array.data[60].outputPort.portInfo.PortType
@@ -2854,7 +2944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].m_ports.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016751].m_ports.Array.size
@@ -2890,7 +2980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416326].m_ports.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416327].m_ports.Array.size
@@ -2910,7 +3000,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416331].m_ports.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416332].m_ports.Array.size
@@ -2927,6 +3017,18 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406149].m_ports.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_ports.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.size
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406148].pluralRolesTemplate
@@ -3005,6 +3107,14 @@ PrefabInstance:
       value: 64430ebb-5666-4f7e-995a-2e9acf6630fb
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].configuration.StateId
+      value: 873dd082-d761-4a63-8f58-3b736c9d1d06
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.StateId
+      value: 9fb222cc-0ae9-4f5a-b158-a5dbfab18199
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.StateName
       value: Move to far point
       objectReference: {fileID: 0}
@@ -3067,6 +3177,14 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].configuration.StateName
       value: Move to table
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].configuration.StateName
+      value: Change color
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.StateName
+      value: Move to control
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016647].configuration.m_logLevel
@@ -3298,7 +3416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].m_ports.Array.data[7].Name
-      value: RoleCheckFailed
+      value: OnInteractionRejected
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].m_ports.Array.data[8].Name
@@ -3446,7 +3564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416326].m_ports.Array.data[7].Name
-      value: RoleCheckFailed
+      value: OnInteractionRejected
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416326].m_ports.Array.data[8].Name
@@ -3526,7 +3644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416331].m_ports.Array.data[7].Name
-      value: RoleCheckFailed
+      value: OnInteractionRejected
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416331].m_ports.Array.data[8].Name
@@ -3595,6 +3713,74 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118342207406149].m_ports.Array.data[0].Name
       value: Say Role Missing
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_ports.Array.data[0].Name
+      value: Restart
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[0].Name
+      value: Interrupted
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[1].Name
+      value: LoadIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[2].Name
+      value: CompletedInteraction
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[3].Name
+      value: Error
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[4].Name
+      value: ProximityCheckFailed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[5].Name
+      value: RoleCheckFailed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[6].Name
+      value: In
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[7].Name
+      value: OnInteractionRejected
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.DesiredSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[0].Name
+      value: Interrupted
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[1].Name
+      value: LoadIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[2].Name
+      value: Arrived
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[3].Name
+      value: Error
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[4].Name
+      value: DoorRoleFailed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[5].Name
+      value: In
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[6].Name
+      value: On DoorRoleFailed
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.TargettingType
@@ -3666,6 +3852,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].configuration.TargettingType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargettingType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
@@ -3814,7 +4004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].m_ports.Array.data[7].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].m_ports.Array.data[8].PortType
@@ -3962,7 +4152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416326].m_ports.Array.data[7].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416326].m_ports.Array.data[8].PortType
@@ -4042,7 +4232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416331].m_ports.Array.data[7].PortType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416331].m_ports.Array.data[8].PortType
@@ -4117,6 +4307,78 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343117].m_ports.Array.data[0].PortType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[0].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[1].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[2].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[3].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[4].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[5].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[6].PortType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].m_ports.Array.data[7].PortType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.AcceptanceRadius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.StoppingDistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[0].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[1].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[2].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[3].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[4].PortType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[5].PortType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].m_ports.Array.data[6].PortType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.NumberOfSamplePoints
       value: 5
       objectReference: {fileID: 0}
@@ -4150,6 +4412,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].configuration.RequireExactPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.NumberOfSamplePoints
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.RequireExactPosition
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
@@ -4195,6 +4465,18 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].configuration.RequireFinalAlignment
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].configuration.InteractionDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: d4a24b3b270164c7f884c4eefbdcab4b, type: 2}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.AlignmentAngularSpeed
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.RequireFinalAlignment
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.AlignmentAngleTolerance
@@ -4245,6 +4527,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.AlignmentAngleTolerance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.SamplePointSearchRadius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetPosition.Variable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.TargetTransform.Variable
       value: 
       objectReference: {fileID: 0}
@@ -4258,6 +4552,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].configuration.TargetTransform.Variable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetTransform.Variable
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
@@ -4277,6 +4575,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetPosition.UseConstant
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.TargetTransform.UseConstant
       value: 1
       objectReference: {fileID: 0}
@@ -4290,6 +4592,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416340].configuration.TargetTransform.UseConstant
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetTransform.UseConstant
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
@@ -4328,6 +4634,14 @@ PrefabInstance:
       propertyPath: managedReferences[6648118321112416340].configuration.TargetTransform.ConstantValue
       value: 
       objectReference: {fileID: 1195937537}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].configuration.TargetInteractableGO.Variable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetTransform.ConstantValue
+      value: 
+      objectReference: {fileID: 863434243}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016646].configuration.TargetPosition.ConstantValue.x
       value: 0
@@ -4377,6 +4691,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetPosition.ConstantValue.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetPosition.ConstantValue.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343124].configuration.TargetPosition.ConstantValue.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].configuration.TargetInteractableGO.UseConstant
       value: 1
       objectReference: {fileID: 0}
@@ -4387,6 +4713,10 @@ PrefabInstance:
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118321112416331].configuration.TargetInteractableGO.UseConstant
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].configuration.TargetInteractableGO.UseConstant
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: managedReferences[6648118317909016736].configuration.TargetInteractableGO.ConstantValue
@@ -4400,6 +4730,10 @@ PrefabInstance:
       propertyPath: managedReferences[6648118321112416331].configuration.TargetInteractableGO.ConstantValue
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1447074388558317057, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+      propertyPath: managedReferences[8345543153296343123].configuration.TargetInteractableGO.ConstantValue
+      value: 
+      objectReference: {fileID: 419344489}
     - target: {fileID: 1802905592461804675, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
       propertyPath: linkedSaveableProducer
       value: 
@@ -5357,6 +5691,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1329787764379634255, guid: b544c9409bd1544b885bace9018d8fa3, type: 3}
+      propertyPath: config.ProducerId
+      value: e379e156-04a3-46a3-be35-5be01df93fe0
+      objectReference: {fileID: 0}
     - target: {fileID: 1737523090099212460, guid: b544c9409bd1544b885bace9018d8fa3, type: 3}
       propertyPath: m_Name
       value: Gun Variant

@@ -39,6 +39,10 @@ public class StateGraphView : GraphView
 
     public StateGraphView(SerializedObject serializedObject, StateGraphEditorWindow window)
     {
+        jsonSettings.Converters.Add(new EphemeralSOConverter());
+        jsonSettings.Converters.Add(new EphemeralGameObjectConverter());
+        jsonSettings.Converters.Add(new EphemeralTransformConverter());
+        
         m_serializedObject = serializedObject;
         m_stateGraph = (StateGraph)serializedObject.targetObject;
         m_window = window;
@@ -109,11 +113,11 @@ public class StateGraphView : GraphView
     /// <returns></returns>
     private GraphViewChange HandleGraphViewChanged(GraphViewChange graphViewChange)
     {
-        Debug.Log("Coupling view changes to underlying structure");
+        // Debug.Log("Coupling view changes to underlying structure");
         // Handle moving of nodes
         if (graphViewChange.movedElements != null)
         {
-            Debug.Log($"Elements moved: {graphViewChange.movedElements.Count()}");
+            // Debug.Log($"Elements moved: {graphViewChange.movedElements.Count()}");
             Undo.RecordObject(m_serializedObject.targetObject, "Moved Graph Element(s)");
             foreach (StateGraphEditorNode editorNode in graphViewChange.movedElements.OfType<StateGraphEditorNode>())
             {
@@ -130,7 +134,7 @@ public class StateGraphView : GraphView
             
             // Remove Nodes
             List<StateGraphEditorNode> nodesToRemove = graphViewChange.elementsToRemove.OfType<StateGraphEditorNode>().ToList();
-            Debug.Log($"Nodes removed: {nodesToRemove.Count}" );
+            // Debug.Log($"Nodes removed: {nodesToRemove.Count}" );
             
             // These are now the editor nodes that are being removed. Now we need to remove these from the graph.
             // Or actually we remove the editorNode.m_graphNode from the graph.
@@ -144,7 +148,7 @@ public class StateGraphView : GraphView
             
             // Remove Edges
             List<Edge> edgesToRemove = graphViewChange.elementsToRemove.OfType<Edge>().ToList();
-            Debug.Log($"Edges removed: {edgesToRemove.Count}" );
+            // Debug.Log($"Edges removed: {edgesToRemove.Count}" );
             // These are the edges that are being removed. We need to remove the connection from the graph.
             if (edgesToRemove.Count > 0)
             {
@@ -349,6 +353,21 @@ public class StateGraphView : GraphView
             Debug.LogWarning("No nodes to paste.");
             return;
         }
+        
+        // Change all the node IDs to new unique IDs
+        foreach (StateGraphNode node in nodesToPaste)
+        {
+            node.NewGUID();
+        }
+        
+        // Offset the positions of the pasted nodes to avoid overlap
+        foreach (StateGraphNode node in nodesToPaste)
+        {
+            node.SetPosition(new Rect(node.position.x + 20, node.position.y + 20, node.position.width, node.position.height));
+            
+            // Add the node to the graph
+            Add(node);
+        }
     }
 
     /// <summary>
@@ -358,7 +377,7 @@ public class StateGraphView : GraphView
     /// <returns>A JSON string representing the serializable data of the selected nodes.</returns>
     private string HandleCutCopyOperation(IEnumerable<GraphElement> elements)
     {
-        Debug.Log($"Cut/Copy attempted");
+        // Debug.Log($"Cut/Copy attempted");
 
         // Collect the underlying serializable node data
         List<string> nodeIdsToCopy = new List<string>();
