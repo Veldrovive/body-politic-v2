@@ -167,6 +167,7 @@ MonoBehaviour:
     ConsumerId: d7126c22-9139-44c9-b357-7a9a5edce8bd
     LoadOrder: 0
   InfectPoint: {fileID: 2810805423157551732}
+  speed: 1
   defaultFootStepSounds:
   - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
   - {fileID: 8300000, guid: 5c9bdbce37b06a24fa6ea793bcfd1907, type: 3}
@@ -232,6 +233,7 @@ MonoBehaviour:
   obstacleColliderLayer:
     serializedVersion: 2
     m_Bits: 1
+  reactionDefinition: {fileID: 11400000, guid: 8dbacabcee1f649138aaaa6a9fb6f90a, type: 2}
   reactionDefinitions:
   - MinSuspicion: 1
     Priority: 2

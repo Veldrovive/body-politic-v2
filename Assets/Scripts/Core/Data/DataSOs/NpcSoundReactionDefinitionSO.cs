@@ -65,6 +65,14 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
 
     [Header("Configration")] [SerializeField]
     public LayerMask LoSObstacleLayerMask;
+    
+    [Header("Inspect Reaction Configuration")]
+    [SerializeField] private float inspectDistance = 2f;  // The distance at which the NPC will inspect the sound emanation point
+    [SerializeField] private float inspectMaxDuration = 20f; // The maximum duration for which the NPC will inspect the sound emanation point
+    [SerializeField] private float inspectMaxDurationWithoutLoS = 20f; // The maximum duration for which the NPC will inspect the sound emanation point without line of sight
+    [SerializeField] private MovementSpeed inspectMovementSpeed = MovementSpeed.Run; // The movement speed at which the NPC will inspect the sound emanation point
+    [SerializeField] private string inspectEntryMessage = "Huh?"; // The message that the NPC will say when it starts inspecting the sound emanation point
+    [SerializeField] private float inspectEntryMessageDuration = 1f; // The duration for which the NPC will say the entry message
 
     private void AutoSet()
     {
@@ -213,6 +221,7 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
 
     private AbstractGraphFactory GetTestReactionFactory(NpcContext reactingNpc, SoundData soundData)
     {
+        Debug.LogWarning("Test reaction is not implemented yet. This is a placeholder for testing purposes.", reactingNpc.gameObject);
         return null;
     }
     
@@ -234,7 +243,19 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
     
     private AbstractGraphFactory GetInspectEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
     {
-        return null;
+        var config = new FollowGraphConfiguration()
+        {
+            TargetingType = FollowStateTargetingType.Position,
+            TargetPosition = new(soundData.EmanationPoint),
+            FollowDistance = inspectDistance,
+            MaxDuration = inspectMaxDuration,
+            MaxDurationWithoutLoS = inspectMaxDurationWithoutLoS,
+            Speed = inspectMovementSpeed,
+            EntryMessage = inspectEntryMessage,
+            EntryMessageDuration = inspectEntryMessageDuration,
+            EntryWaitDuration = inspectEntryMessageDuration
+        };
+        return new FollowGraphFactory(config);
     }
 
     #endregion

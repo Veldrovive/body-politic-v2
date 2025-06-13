@@ -12,8 +12,10 @@ public enum SoundLoudness
 [Flags]
 public enum SoundType
 {
-    Default = 0,
-    Footstep = 1,
+    // Default = 0,
+    Default = 1,
+    Footstep = 2,
+    
     // Further must be powers of 2 for flag usage
 }
 

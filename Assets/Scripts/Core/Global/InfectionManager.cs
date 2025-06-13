@@ -205,6 +205,7 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         }
         
         OnNpcInfected?.Invoke(infectedNpc);
+        infectedNpc.Identity.RecalculateAllRoles();  // Necessary to ensure the NPC gets the player roles.
 
         if (ActionCameraManager.Instance != null && triggerActionCameraOnInfection)
         {

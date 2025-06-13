@@ -64,8 +64,24 @@ public class FollowGraphFactory : GenericAbstractGraphFactory<FollowGraphConfigu
             
             LoSObstacleLayerMask = LayerMask.GetMask("Default")
         });
-        
-        graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, followState, StateNode.IN_PORT_NAME);
+
+        if (!string.IsNullOrEmpty(config.EntryMessage) && config.EntryMessageDuration > 0f)
+        {
+            // Then we start with an entry message
+            SayStateNode sayState = new SayStateNode(new SayStateConfiguration()
+            {
+                m_textToSay = config.EntryMessage,
+                m_textDuration = config.EntryMessageDuration,
+                m_waitDuration = config.EntryWaitDuration,
+            });
+            graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, sayState, StateNode.IN_PORT_NAME);
+            graph.ConnectStateFlow(sayState, SayStateOutcome.Timeout, followState);
+        }
+        else
+        {
+            // Directly connect the start point to the follow state
+            graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, followState, StateNode.IN_PORT_NAME);
+        }
         
         AddExitConnection(FollowStateExitConnection.FollowCompleted,
             followState, nameof(FollowStateOutcome.Completed), config.ExitMessage);

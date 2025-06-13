@@ -44,6 +44,12 @@ public class InteractableNpc : Interactable
         int priority = 0)
     {
         InteractionStatus statusResult = GetInteractionStatus(chosenDefinition, initiator);
+        if (!enabled)
+        {
+            // The NPC is dead or otherwise not interactable
+            statusResult.AddFailureReason(new (InteractionFailureReason.NpcDead, 10, "They're already dead."));
+        }
+        
         if (!statusResult.CanInteract())
         {
             // Then we should not move forward with the interaction

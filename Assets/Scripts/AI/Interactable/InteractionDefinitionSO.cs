@@ -13,6 +13,17 @@ public enum InteractionAvailableFrom
 // TODO: Make it so that IsVisible is dependent on if the item is in th correct "Available From" location. Also
 // convert that into a list so it can be available from multiple locations
 
+[Serializable]
+public class InteractionSoundResult
+{
+    public bool Enabled = false;
+    public AudioClip Clip;
+    public SoundType SType = SoundType.Default;
+    public int Suspiciousness;
+    public SoundLoudness Loudness;
+    public bool CausesReactions;
+}
+
 /// <summary>
 /// Defines the properties, requirements, and outcomes of a specific type of interaction.
 /// Implements IActionDefinition to check status based on initiator and target.
@@ -62,6 +73,10 @@ public class InteractionDefinitionSO : IdentifiableSO, IActionDefinition
     public List<InteractionAvailableFrom> InteractionAvailableFroms => interactionAvailableFroms;
     [Tooltip("Time in seconds the interaction takes to complete.")]
     [SerializeField] private float interactionDuration = 1.0f;
+    [Tooltip("The level of suspicion generated if this interaction is witnessed.")]
+    [SerializeField] private int witnessSuspicionLevel = 0;
+    
+    [Header("Animations")]
     [Tooltip("Animation trigger to play on the initiator when the interaction starts.")]
     [SerializeField] private string initiatorAnimationTrigger;
     [Tooltip("Animation trigger to play on the target object when the interaction starts.")]
@@ -72,8 +87,20 @@ public class InteractionDefinitionSO : IdentifiableSO, IActionDefinition
     [Tooltip("Whether to end the animation immediately when the interaction is interrupted.")]
     [SerializeField] private bool endAnimationOnInterrupt = true;
     public bool EndAnimationOnInterrupt => endAnimationOnInterrupt;
-    [Tooltip("The level of suspicion generated if this interaction is witnessed.")]
-    [SerializeField] private int witnessSuspicionLevel = 0;
+    
+    [Header("Sounds")]
+    [Tooltip("Sound played at the initiator's location when the interaction starts.")]
+    [SerializeField] private InteractionSoundResult initiatorSoundOnStart = new InteractionSoundResult();
+    public InteractionSoundResult InitiatorSoundOnStart => initiatorSoundOnStart;
+    [Tooltip("Sound played at the target's location when the interaction starts.")]
+    [SerializeField] private InteractionSoundResult targetSoundOnStart = new InteractionSoundResult();
+    public InteractionSoundResult TargetSoundOnStart => targetSoundOnStart;
+    [Tooltip("Sound played at the initiator's location when the interaction finishes.")]
+    [SerializeField] private InteractionSoundResult initiatorSoundOnFinish = new InteractionSoundResult();
+    public InteractionSoundResult InitiatorSoundOnFinish => initiatorSoundOnFinish;
+    [Tooltip("Sound played at the target's location when the interaction finishes.")]
+    [SerializeField] private InteractionSoundResult targetSoundOnFinish = new InteractionSoundResult();
+    public InteractionSoundResult TargetSoundOnFinish => targetSoundOnFinish;
     
     [Header("Human Readable Failure Reasons")]
     [Tooltip("List of human-readable failure reasons for this action.")]
@@ -94,7 +121,8 @@ public class InteractionDefinitionSO : IdentifiableSO, IActionDefinition
         { InteractionFailureReason.MustBeInHand, new HumanReadableFailureReason(InteractionFailureReason.MustBeInHand, 2, "I can't use this unless it is in my hand.") },
         { InteractionFailureReason.MustBeInInventory, new HumanReadableFailureReason(InteractionFailureReason.MustBeInInventory, 2, "I can't use this unless it is in my inventory.") },
         { InteractionFailureReason.NpcInterruptFailed, new HumanReadableFailureReason(InteractionFailureReason.NpcInterruptFailed, 6, "I couldn't get their attention.") },
-        { InteractionFailureReason.InternalError, new HumanReadableFailureReason(InteractionFailureReason.InternalError, 4, "INTERNAL ERROR. PLEASE TELL AIDAN HOW TO REPRODUCE.") }
+        { InteractionFailureReason.InternalError, new HumanReadableFailureReason(InteractionFailureReason.InternalError, 4, "INTERNAL ERROR. PLEASE TELL AIDAN HOW TO REPRODUCE.") },
+        { InteractionFailureReason.NpcDead, new HumanReadableFailureReason(InteractionFailureReason.NpcDead, 7, "They're dead.") }
     };
 
     public HumanReadableFailureReason GetHumanReadableFailureReason(InteractionFailureReason reason)

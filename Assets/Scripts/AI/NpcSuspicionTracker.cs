@@ -182,6 +182,13 @@ public class NpcSuspicionTracker : SaveableGOConsumer
         }
     }
 
+    private void OnDisable()
+    {
+        // When the component is disabled, clear all active sources
+        activeSources.Clear();
+        currentMaxSuspicion = 0;
+    }
+
     // --- Public Methods ---
 
     /// <summary>

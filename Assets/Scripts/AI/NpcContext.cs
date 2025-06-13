@@ -221,11 +221,6 @@ public class NpcContext : SaveableGOConsumer
 
     #region Sounds
     
-    // Stroll 24 bpm - Velocity 1
-    // Walk 99 bpm - Velocity 2
-    // Run 146 bpm - Velocity 3
-    // Sprint 173 - Velocity 5
-    
     [Header("Sounds")]
     [SerializeField] private List<AudioClip> defaultFootStepSounds;
 

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b234974cc0b845e4b23ac4c96488af74, type: 3}
+  m_Name: DR_GenericNpcDetectorReactionDefinition
+  m_EditorClassIdentifier: 
+  reactionDefinitions:
+  - MinSuspicion: 1
+    Priority: 2
+    ReactionType: 2
+  - MinSuspicion: 2
+    Priority: 2
+    ReactionType: 2
+  - MinSuspicion: 5
+    Priority: 2
+    ReactionType: 2
+  shootConfiguration:
+    RequiredRoleForShootInteraction: {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
+    ShootInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+    DistanceMargin: 2
+    MaxChaseDuration: 20
+    MaxChaseDurationWithoutLoS: 10

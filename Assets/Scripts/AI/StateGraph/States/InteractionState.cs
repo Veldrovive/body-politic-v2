@@ -85,8 +85,23 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
     [EventOutputPort("OnInteractionRejected")]
     public event Action<string> OnInteractionRejected;
 
+    void TriggerSound(InteractionSoundResult soundResult, GameObject creator)
+    {
+        SoundData data = new()
+        {
+            Clip = soundResult.Clip,
+            CreatorObject = creator,
+            EmanationPoint = creator.transform.position,
+            CausesReactions = soundResult.CausesReactions,
+            Loudness = soundResult.Loudness,
+            Suspiciousness = soundResult.Suspiciousness,
+            SType = soundResult.SType
+        };
+        npcContext.SoundHandler.RaiseSoundEvent(data);
+    }
+    
     #region Lifecycle
-
+    
     private void OnEnable()
     {
         targetInteractable = targetInteractableGO.Value.GetComponent<Interactable>();
@@ -170,6 +185,16 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
             }
         }
         
+        // --- Trigger Sounds ---
+        if (interactionToPerform.InitiatorSoundOnStart.Enabled)
+        {
+            TriggerSound(interactionToPerform.InitiatorSoundOnStart, this.gameObject);
+        }
+        if (interactionToPerform.TargetSoundOnStart.Enabled)
+        {
+            TriggerSound(interactionToPerform.TargetSoundOnStart, targetInteractableGO.Value);
+        }
+        
         // Check if the interaction that just started is suspicious based on InteractionDefinitionSO settings.
         if (initiateResult.IsSuspicious)
         {
@@ -213,6 +238,16 @@ public class InteractionState : GenericAbstractState<InteractionStateOutcome, In
 
             // Notify the Interactable component *before* signaling state completion.
             targetInteractable?.NotifyInteractionComplete(interactionToPerform, this.gameObject);
+            
+            // Trigger sounds
+            if (interactionToPerform.InitiatorSoundOnFinish.Enabled)
+            {
+                TriggerSound(interactionToPerform.InitiatorSoundOnFinish, this.gameObject);
+            }
+            if (interactionToPerform.TargetSoundOnFinish.Enabled)
+            {
+                TriggerSound(interactionToPerform.TargetSoundOnFinish, targetInteractableGO.Value);
+            }
             
             npcContext.SuspicionTracker?.RemoveSuspicionSource(StateId);
             

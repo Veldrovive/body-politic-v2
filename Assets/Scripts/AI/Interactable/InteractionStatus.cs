@@ -32,7 +32,9 @@ public enum InteractionFailureReason
     /// <summary>There was an internal error or exception during the interaction check.</summary>
     InternalError,
     /// <summary>Used for InteractableNPCs. Indicates that the InteractableNpc refused to interrupt into the animation state.</summary>
-    NpcInterruptFailed
+    NpcInterruptFailed,
+    /// <summary>Used for InteractableNPCs. Indicates that NPC is dead.</summary>
+    NpcDead,
 }
 
 [Serializable]

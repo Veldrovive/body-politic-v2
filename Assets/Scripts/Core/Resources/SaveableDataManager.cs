@@ -203,7 +203,7 @@ public class SaveableDataManager : MonoBehaviour
         }
     }
 
-    public GameObject InstantiateHoldable(HoldableType holdableType, Vector3 position, Quaternion rotation, string id = null) {
+    public GameObject InstantiateHoldable(HoldableType holdableType, Vector3 position, Quaternion rotation, string id = null, bool doBlankLoad = true) {
         HoldablePrefabMapping mapping = holdablePrefabMappings.Find(p => p.holdableType == holdableType);
         if (mapping == null) {
             // The prefab requested does not exist in the mappings.
@@ -241,7 +241,13 @@ public class SaveableDataManager : MonoBehaviour
         }
         RegisterProducer(producer, holdableType);
 
-        Debug.Log($"Instantiated holdable of type {holdableType} at {position}. Producer registered with ID {producer.Config.ProducerId}.", this);
+        if (doBlankLoad)
+        {
+            // Then we are not going to call LoadSaveData during the load so we should call it here.
+            producer.LoadSaveData(null, true);  // This will set up the producer without loading any data.
+        }
+
+        // Debug.Log($"Instantiated holdable of type {holdableType} at {position}. Producer registered with ID {producer.Config.ProducerId}.", this);
         return instance;
     }
     
@@ -401,7 +407,7 @@ public class SaveableDataManager : MonoBehaviour
             }
             
             // Instantiate the prefab at the origin (0, 0, 0) with no rotation. This will be set when we load the data.
-            GameObject instance = InstantiateHoldable(mapping.holdableType, Vector3.zero, Quaternion.identity, id: goDefinition.ProducerId);
+            GameObject instance = InstantiateHoldable(mapping.holdableType, Vector3.zero, Quaternion.identity, id: goDefinition.ProducerId, doBlankLoad: false);
             if (instance == null)
             {
                 Debug.LogError($"Failed to instantiate prefab for holdable type {goDefinition.HoldableType}. Cannot recreate producer {goDefinition.ProducerId}.");

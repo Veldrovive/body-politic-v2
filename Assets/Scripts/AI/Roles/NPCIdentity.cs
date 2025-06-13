@@ -351,7 +351,7 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     /// Central method to recalculate all aggregated roles from all providers.
     /// Updates internal collections, cache, and raises OnRoleAdded/OnRoleRemoved events for actual changes.
     /// </summary>
-    private void RecalculateAllRoles()
+    public void RecalculateAllRoles()
     {
         primaryRole = null; // Reset primary role
         HashSet<NpcRoleSO> previousRoles = new HashSet<NpcRoleSO>(currentRolesInternal);

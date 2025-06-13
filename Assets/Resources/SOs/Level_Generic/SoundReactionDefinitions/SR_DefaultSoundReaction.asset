@@ -29,19 +29,19 @@ MonoBehaviour:
     MinSuspicion: 1
     Priority: 1
     ReactionType: 1
-    SoundTypeWhitelist: 0
+    SoundTypeWhitelist: 1
     CanInterruptSelf: 1
   - name: Handle Mid Suspicion
     MinSuspicion: 5
     Priority: 1
     ReactionType: 2
-    SoundTypeWhitelist: 0
+    SoundTypeWhitelist: 1
     CanInterruptSelf: 1
   - name: Handle Footstep
     MinSuspicion: 1
     Priority: 1
     ReactionType: 1
-    SoundTypeWhitelist: -1
+    SoundTypeWhitelist: 2
     CanInterruptSelf: 1
   LoSObstacleLayerMask:
     serializedVersion: 2
