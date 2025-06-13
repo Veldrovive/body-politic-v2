@@ -49,6 +49,9 @@ public class NpcContext : SaveableGOConsumer
     private bool isDead = false;
     public bool IsDead => isDead;
     
+    [SerializeField] private MovementSpeed speed = MovementSpeed.Walk;
+    public MovementSpeed Speed => speed;
+
     public event Action<NpcContext> OnDeath;
 
     #region Saveable Data

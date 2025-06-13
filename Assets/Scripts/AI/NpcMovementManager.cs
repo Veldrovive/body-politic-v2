@@ -25,7 +25,8 @@ public enum MovementSpeed
     Stroll,
     Walk,
     Run,
-    Sprint
+    Sprint,
+    NpcSpeed
 }
 
 /// <summary>
@@ -970,15 +971,25 @@ public class NpcMovementManager : SaveableGOConsumer
     /// </summary>
     private float GetSpeedValue(MovementSpeed speedEnum)
     {
+        if (speedEnum == MovementSpeed.NpcSpeed)
+        {
+            if (npcContext.Speed == MovementSpeed.NpcSpeed)
+            {
+                // This will cause an infinite recursion, so we need to handle it
+                Debug.LogWarning("NpcMovementManager: Default speed is set to Default. This will cause an infinite recursion. Defaulting to walkSpeed.", this);
+                return walkSpeed;
+            }
+        }
         switch (speedEnum)
         {
             case MovementSpeed.Stroll: return strollSpeed;
             case MovementSpeed.Walk: return walkSpeed;
             case MovementSpeed.Run: return runSpeed;
             case MovementSpeed.Sprint: return sprintSpeed;
+            case MovementSpeed.NpcSpeed: return GetSpeedValue(npcContext.Speed);
             default:
                 Debug.LogWarning($"NpcMovementManager: Unknown MovementSpeed enum '{speedEnum}'. Defaulting to walkSpeed.", this);
-                return walkSpeed;
+                return GetSpeedValue(npcContext.Speed);
         }
     }
 

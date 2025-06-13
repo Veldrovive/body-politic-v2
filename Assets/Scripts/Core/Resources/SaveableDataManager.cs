@@ -173,7 +173,7 @@ public class SaveableDataManager : MonoBehaviour
     public void RegisterProducer(SaveableGOProducer producer, HoldableType holdableType = HoldableType.None, bool isDestroyed = false) {
         string producerId = producer.Config.ProducerId;
         if (producers.ContainsKey(producerId)) {
-            Debug.LogError("There is already a producer with the id " + producerId);
+            Debug.LogError("There is already a producer with the id " + producerId, producer);
             return;
         }
 
