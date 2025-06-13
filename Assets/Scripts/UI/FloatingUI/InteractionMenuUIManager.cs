@@ -294,6 +294,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
             .Select(hit => hit.collider.transform.parent.gameObject)
             // Filter out any hits where the collider has no parent.
             .Where(parent => parent != null)
+            .Where(triggerGO => triggerGO.transform.parent != PlayerManager.Instance.CurrentFocusedNpc.gameObject.transform)
             // Ensure the list contains only unique triggers, in case multiple child colliders
             // of the same trigger were hit.
             .Distinct()
@@ -320,6 +321,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
             .Select(hit => hit.collider.transform.parent.gameObject)
             // Filter out any hits where the collider has no parent.
             .Where(parent => parent != null)
+            .Where(triggerGO => triggerGO.transform.parent != PlayerManager.Instance.CurrentFocusedNpc.gameObject.transform)
             // Because we sorted by distance *before* processing, Distinct() will keep the *first*
             // instance it finds of each trigger, which corresponds to the closest one.
             .Distinct()

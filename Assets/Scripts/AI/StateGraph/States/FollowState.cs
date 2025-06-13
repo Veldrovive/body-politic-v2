@@ -85,6 +85,7 @@ public class FollowStateConfiguration : AbstractStateConfiguration
 public enum FollowStateOutcome
 {
     Completed,
+    Timeout,
     RoleDoorFailed,
     MovementManagerError,
 }
@@ -113,6 +114,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
     
     private bool isWithinDistance = false;
     private bool hasLoS = false;
+    private bool initialized = false;
 
     #endregion
     
@@ -142,8 +144,6 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             isExited = true;
             return;
         }
-        
-        
     }
 
     #region State Helpers
@@ -250,7 +250,12 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
         if (_internalState == FollowStateInternalState.Stopped)
         {
             // If we are keeping within distance, we move to MovingToTarget state.
-            if (_config.DistanceConfiguration == FollowStateDistanceConfiguration.KeepWithinDistance)
+            // We also begin moving if we are in the ExitWhenWithinDistance
+            if (
+                _config.DistanceConfiguration is 
+                    FollowStateDistanceConfiguration.KeepWithinDistance or
+                    FollowStateDistanceConfiguration.ExitWhenWithinDistance
+            )
             {
                 BeginMovingToTargetState();
             }
@@ -306,7 +311,10 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
         if (_internalState == FollowStateInternalState.Stopped)
         {
             // If we are keeping within LoS, we move to MovingToTarget state.
-            if (_config.LoSConfiguration == FollowStateLoSConfiguration.KeepWithinLoS)
+            if (_config.LoSConfiguration is 
+                FollowStateLoSConfiguration.KeepWithinLoS or 
+                FollowStateLoSConfiguration.ExitWhenWithinLoS
+            )
             {
                 BeginMovingToTargetState();
             }
@@ -425,20 +433,22 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
     /// Triggers exit based on the exit conditions. Does not handle the special case of exiting due to a role door.
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>
-    private void HandleShouldExit()
+    private FollowStateOutcome? HandleShouldExit()
     {
         if (_config.MaxDuration > 0f && Time.time - _startTime > _config.MaxDuration)
         {
-            TriggerExit(FollowStateOutcome.Completed);
-            isExited = true;
-            return;
+            // TriggerExit(FollowStateOutcome.Timeout);
+            // isExited = true;
+            // return;
+            return FollowStateOutcome.Timeout;
         }
         
         if (_config.MaxDurationWithoutLoS > 0f && !hasLoS && Time.time - _lastLoSSuccessTime > _config.MaxDurationWithoutLoS)
         {
-            TriggerExit(FollowStateOutcome.Completed);
-            isExited = true;
-            return;
+            // TriggerExit(FollowStateOutcome.Timeout);
+            // isExited = true;
+            // return;
+            return FollowStateOutcome.Timeout;
         }
 
         bool distanceExitConditionMet = false;
@@ -488,15 +498,16 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
         if (!useDistanceExitCondition && !useLoSExitCondition)
         {
             // We don't have any exit conditions to check.
-            return;
+            return null;
         }
         else if (useDistanceExitCondition && !useLoSExitCondition)
         {
             // Then we should exit if the distance condition is met not matter what because we don't care about LoS.
             if (distanceExitConditionMet)
             {
-                TriggerExit(FollowStateOutcome.Completed);
-                isExited = true;
+                // TriggerExit(FollowStateOutcome.Completed);
+                // isExited = true;
+                return FollowStateOutcome.Completed;
             }
         }
         else if (!useDistanceExitCondition && useLoSExitCondition)
@@ -504,8 +515,9 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             // Then we should exit if the LoS condition is met not matter what because we don't care about distance.
             if (loSExitConditionMet)
             {
-                TriggerExit(FollowStateOutcome.Completed);
-                isExited = true;
+                // TriggerExit(FollowStateOutcome.Completed);
+                // isExited = true;
+                return FollowStateOutcome.Completed;
             }
         }
         else
@@ -515,8 +527,9 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             {
                 if (distanceExitConditionMet && loSExitConditionMet)
                 {
-                    TriggerExit(FollowStateOutcome.Completed);
-                    isExited = true;
+                    // TriggerExit(FollowStateOutcome.Completed);
+                    // isExited = true;
+                    return FollowStateOutcome.Completed;
                 }
             }
             else
@@ -524,11 +537,15 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
                 // OR condition
                 if (distanceExitConditionMet || loSExitConditionMet)
                 {
-                    TriggerExit(FollowStateOutcome.Completed);
-                    isExited = true;
+                    // TriggerExit(FollowStateOutcome.Completed);
+                    // isExited = true;
+                    return FollowStateOutcome.Completed;
                 }
             }
         }
+        
+        // If we reach here, we have not met any exit conditions.
+        return null;
     }
 
     /// <summary>
@@ -569,7 +586,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             _lastLoSSuccessTime = Time.time;
         }
 
-        if (newIsWithinDistance != isWithinDistance)
+        if (newIsWithinDistance != isWithinDistance || !initialized)
         {
             if (newIsWithinDistance)
             {
@@ -581,7 +598,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             }
         }
 
-        if (newHasLoS != hasLoS)
+        if (newHasLoS != hasLoS  || !initialized)
         {
             if (newHasLoS)
             {
@@ -593,6 +610,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             }
         }
 
+        bool isAligned = true;
         if (_internalState == FollowStateInternalState.Stopped && _config.FaceTargetWhenStopped)
         {
             // Forward is the direction toward the target.
@@ -601,10 +619,27 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
                 : _config.TargetPosition.Value;
             
             Vector3 forwardTarget = targetPosition - npcContext.transform.position;
-            AlignToward(forwardTarget);
+            if (!AlignToward(forwardTarget))
+            {
+                isAligned = false;
+            }
         }
 
-        HandleShouldExit();
+        initialized = true;
+
+        FollowStateOutcome? exitCondition = HandleShouldExit();
+        if (exitCondition.HasValue)
+        {
+            if (_config.FaceTargetWhenStopped && !isAligned)
+            {
+                // Then we don't actually exit.
+                return;
+            }
+            // We have an exit condition and we aren't aligning, so we trigger the exit.
+            TriggerExit(exitCondition.Value);
+            isExited = true;
+            return;
+        }
     }
 
     private void Start()

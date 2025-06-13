@@ -13,7 +13,7 @@ public class InteractionStateConfiguration : AbstractStateConfiguration
 
     public InteractionStateConfiguration()
     {
-        TargetInteractableGO = new GameObjectReference();
+        TargetInteractableGO = new GameObjectReference((GameObject) null);
         InteractionDefinition = null;
     }
 

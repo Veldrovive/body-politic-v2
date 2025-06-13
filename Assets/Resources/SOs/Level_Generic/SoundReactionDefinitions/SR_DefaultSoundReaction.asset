@@ -42,7 +42,7 @@ MonoBehaviour:
     Priority: 1
     ReactionType: 1
     SoundTypeWhitelist: -1
-    CanInterruptSelf: 0
+    CanInterruptSelf: 1
   LoSObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 1

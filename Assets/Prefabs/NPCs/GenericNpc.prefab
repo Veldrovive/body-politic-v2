@@ -235,7 +235,13 @@ MonoBehaviour:
   reactionDefinitions:
   - MinSuspicion: 1
     Priority: 2
-    ReactionType: 1
+    ReactionType: 2
+  shootConfiguration:
+    RequiredRoleForShootInteraction: {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
+    ShootInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+    DistanceMargin: 2
+    MaxChaseDuration: 20
+    MaxChaseDurationWithoutLoS: 10
 --- !u!114 &4776853135727818125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,6 +769,10 @@ MonoBehaviour:
   uiTitle: 
   uiDescription: 
   shootDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+  requiredRoleForShootInteraction: {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
+  proximityMargin: 2
+  chaseDuration: 20
+  chaseDurationWithoutLoS: 10
 --- !u!1 &3319651364951055184
 GameObject:
   m_ObjectHideFlags: 0

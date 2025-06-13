@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public enum DetectionReactionType
 {
     Test,  // Triggers a visible reaction
+    Shoot,
     Curious,
     Follow,
     RatOut, // Triggers RatOutState
@@ -53,6 +54,9 @@ public class NpcDetectorReactor : LoSNpcDetector
     private NpcContext ownNpcContext;
     private float lastMaxSuspicion = 0;
 
+    [Header("Shoot Reaction")]
+    [SerializeField] private ShootGraphConfiguration shootConfiguration;
+
     protected override void InitializeFields()
     {
         base.InitializeFields();
@@ -99,11 +103,13 @@ public class NpcDetectorReactor : LoSNpcDetector
         
         // Find the highest min suspicion that is <= than actual highest suspicion seen
         DetectionReactionDefinition highestReaction = null;
+        int priority = 0;
         foreach (DetectionReactionDefinition reaction in sortedReactionDefinitions)
         {
             if (reaction.MinSuspicion <= maxSuspicion)
             {
                 highestReaction = reaction;
+                priority = reaction.Priority;
                 break;
             }
         }
@@ -115,13 +121,16 @@ public class NpcDetectorReactor : LoSNpcDetector
             {
                 case DetectionReactionType.Test:
                     // Call the test reaction handler
-                    HandleTestReaction(mostSuspiciousNpcContext);
+                    HandleTestReaction(mostSuspiciousNpcContext, priority);
                     break;
                 case DetectionReactionType.Curious:
-                    HandleCuriousReaction(mostSuspiciousNpcContext);
+                    HandleCuriousReaction(mostSuspiciousNpcContext, priority);
                     break;
                 case DetectionReactionType.Follow:
-                    HandleFollowReaction(mostSuspiciousNpcContext);
+                    HandleFollowReaction(mostSuspiciousNpcContext, priority);
+                    break;
+                case DetectionReactionType.Shoot:
+                    HandleShootReaction(mostSuspiciousNpcContext, priority);
                     break;
                 default:
                     Debug.LogError($"Unhandled reaction type: {highestReaction.ReactionType}");
@@ -132,18 +141,19 @@ public class NpcDetectorReactor : LoSNpcDetector
 
     #region Helpers
 
-    private void TriggerOverride(AbstractGraphFactory factory)
+    private void TriggerOverride(AbstractGraphFactory factory, int priority)
     {
-        ownNpcContext.StateGraphController.EnqueueStateGraph(
-            factory, true, false, false
-        );
+        // ownNpcContext.StateGraphController.EnqueueStateGraph(
+        //     factory, true, false, false, priority
+        // );
+        ownNpcContext.StateGraphController.TryInterrupt(factory, false, false, priority);
     }
 
     #endregion
 
     #region Reaction Handlers
 
-    private void HandleTestReaction(NpcContext targetNpc)
+    private void HandleTestReaction(NpcContext targetNpc, int priority)
     {
         Debug.Log($"Test reaction triggered on {gameObject.name} for {targetNpc.name}.");
         MoveGraphFactory factory = new(new MoveGraphConfiguration()
@@ -156,10 +166,10 @@ public class NpcDetectorReactor : LoSNpcDetector
             ArrivedMessage = "I guess it's fine...",
             PreStartMessage = "Hey, what are you doing?!",
         });
-        TriggerOverride(factory);
+        TriggerOverride(factory, priority);
     }
 
-    private void HandleCuriousReaction(NpcContext targetNpc)
+    private void HandleCuriousReaction(NpcContext targetNpc, int priority)
     {
         LookTowardGraphFactory factory = new(new LookTowardGraphConfiguration()
         {
@@ -178,10 +188,10 @@ public class NpcDetectorReactor : LoSNpcDetector
             ExitMessageDuration = 1.5f,
             ExitWaitDuration = 1.5f,
         });
-        TriggerOverride(factory);
+        TriggerOverride(factory, priority);
     }
     
-    private void HandleFollowReaction(NpcContext targetNpc)
+    private void HandleFollowReaction(NpcContext targetNpc, int priority)
     {
         FollowGraphFactory factory = new(new FollowGraphConfiguration()
         {
@@ -200,7 +210,14 @@ public class NpcDetectorReactor : LoSNpcDetector
             ExitMessageDuration = 2f,
             ExitWaitDuration = 2f, // Immediately exit the graph
         });
-        TriggerOverride(factory);
+        TriggerOverride(factory, priority);
+    }
+    
+    private void HandleShootReaction(NpcContext targetNpc, int priority)
+    {
+        shootConfiguration.TargetInteractable = targetNpc.InteractableNpc;
+        ShootGraphFactory factory = new(shootConfiguration);
+        TriggerOverride(factory, priority);
     }
     
     #endregion

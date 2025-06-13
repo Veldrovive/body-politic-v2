@@ -24,6 +24,13 @@ public class FollowGraphConfiguration : AbstractGraphFactoryConfig
     public float ExitWaitDuration = 0f; // Wait before exiting the graph
 }
 
+public enum FollowStateExitConnection
+{
+    FollowCompleted,
+    FollowErrorGeneric,
+    FollowErrorRoleDoorFailed,
+}
+
 /// <summary>
 /// The curious reaction is a follow state that causes an NPC to look at another NPC until it passes out of view
 /// or a duration is exceeded.
@@ -31,13 +38,13 @@ public class FollowGraphConfiguration : AbstractGraphFactoryConfig
 /// We can construct the follow state with distance set to exit if it exceeds a threshold and LoS set to exit if it is lost.
 /// In effect, this makes the NPC visually track the other NPC 
 /// </summary>
-public class FollowGraphFactory : GenericAbstractGraphFactory<FollowGraphConfiguration>
+public class FollowGraphFactory : GenericAbstractGraphFactory<FollowGraphConfiguration, FollowStateExitConnection>
 {
     public FollowGraphFactory(FollowGraphConfiguration configuration, string graphId = null) : base(configuration, graphId)
     {
     }
 
-    protected override void ConstructGraphInternal(StateGraph graph)
+    protected override void ConstructGraphInternal(StateGraph graph, GraphFactoryConnectionEnd startPoint)
     {
         FollowStateNode followState = new(new FollowStateConfiguration()
         {
@@ -57,19 +64,15 @@ public class FollowGraphFactory : GenericAbstractGraphFactory<FollowGraphConfigu
             
             LoSObstacleLayerMask = LayerMask.GetMask("Default")
         });
-        graph.AddNode(followState);
         
-        AddConnectionThroughSay(graph, new StartNode(), StartNode.OUT_PORT_NAME, 
-            followState, StateNode.IN_PORT_NAME, config.EntryMessage, 
-            config.EntryMessageDuration, config.EntryWaitDuration
-        );
+        graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, followState, StateNode.IN_PORT_NAME);
         
-        AddConnectionThroughSay(graph, followState, nameof(FollowStateOutcome.Completed),
-            new ExitNode(), ExitNode.IN_PORT_NAME, config.ExitMessage,
-            config.ExitMessageDuration, config.ExitWaitDuration
-        );
+        AddExitConnection(FollowStateExitConnection.FollowCompleted,
+            followState, nameof(FollowStateOutcome.Completed), config.ExitMessage);
         
-        graph.ConnectStateFlow(followState, FollowStateOutcome.RoleDoorFailed, new ExitNode());
-        graph.ConnectStateFlow(followState, FollowStateOutcome.MovementManagerError, new ExitNode());
+        AddExitConnection(FollowStateExitConnection.FollowErrorRoleDoorFailed,
+            followState, nameof(FollowStateOutcome.RoleDoorFailed), "I can't follow that.");
+        AddExitConnection(FollowStateExitConnection.FollowErrorGeneric,
+            followState, nameof(FollowStateOutcome.MovementManagerError), "I can't follow that.");
     }
 }

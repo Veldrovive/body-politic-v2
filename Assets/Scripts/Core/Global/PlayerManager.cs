@@ -351,24 +351,33 @@ public class PlayerManager : SaveableGOConsumer
     /// <summary> Sets the currently focused NPC and fires the OnFocusChanged event. </summary>
     public void SetFocus(NpcContext npcToFocus) // [cite: 1068]
     {
-         // Logic remains the same
-        if (npcToFocus == currentFocusedNpc || npcToFocus == null) return;
-        if (!controllableNpcs.Contains(npcToFocus))
+        if (npcToFocus == null)
         {
-             Debug.LogWarning($"Attempted to focus on NPC '{npcToFocus.gameObject.name}' which is not in the controllable list.", this);
-             return;
+            // We no longer have any focusable NPCs
+            currentFocusedNpc = null;
+            EndItemPlaceMode();
+            Debug.LogWarning($"TODO: Implement level failure");
         }
+        else
+        {
+            if (npcToFocus == currentFocusedNpc) return;
+            if (!controllableNpcs.Contains(npcToFocus))
+            {
+                Debug.LogWarning($"Attempted to focus on NPC '{npcToFocus.gameObject.name}' which is not in the controllable list.", this);
+                return;
+            }
 
-        NpcContext previousFocusedNpc = currentFocusedNpc;
-        currentFocusedNpc = npcToFocus;
-        // Debug.Log($"Player focus changed to: {currentFocusedNpc.gameObject.name}", this);
+            NpcContext previousFocusedNpc = currentFocusedNpc;
+            currentFocusedNpc = npcToFocus;
+            // Debug.Log($"Player focus changed to: {currentFocusedNpc.gameObject.name}", this);
         
-        EndItemPlaceMode();
+            EndItemPlaceMode();
 
-        // Update visibility of nearby triggers based on the new NPC's context
-        // UpdateActiveTriggersVisibility();
+            // Update visibility of nearby triggers based on the new NPC's context
+            // UpdateActiveTriggersVisibility();
 
-        OnFocusChanged?.Invoke(previousFocusedNpc, currentFocusedNpc);
+            OnFocusChanged?.Invoke(previousFocusedNpc, currentFocusedNpc);
+        }
     }
 
 
@@ -393,7 +402,6 @@ public class PlayerManager : SaveableGOConsumer
     {
         if (npc == null || controllableNpcs.Contains(npc)) return;
         controllableNpcs.Add(npc);
-        // Debug.Log($"Added NPC '{npc.gameObject.name}' to controllable list.", this);
 
         OnControlledNpcsChanged?.Invoke(controllableNpcs);
     }
@@ -405,6 +413,12 @@ public class PlayerManager : SaveableGOConsumer
         if (currentFocusedNpc == npc)
         {
             CycleCurrentFocusedNpc();
+        }
+
+        if (currentFocusedNpc == npc)
+        {
+            // The player only had one NPC in the controllable list, so we clear the focus
+            SetFocus(null);
         }
         controllableNpcs.Remove(npc);
         Debug.Log($"Removed NPC '{npc.gameObject.name}' from controllable list.", this);

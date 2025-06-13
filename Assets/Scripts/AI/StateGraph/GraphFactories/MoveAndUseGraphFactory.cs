@@ -13,29 +13,34 @@ public class MoveAndUseGraphConfiguration : AbstractGraphFactoryConfig
     public ActionCamSource ActionCamConfig = null;
 }
 
-public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGraphConfiguration>
+public enum MoveAndUseGraphExitConnection
+{
+    InteractionErrorGeneric,
+    InteractionErrorProximityCheckFailed,
+    InteractionErrorRoleCheckFailed,
+    InteractionCompleted,
+    
+    MoveErrorDoorRoleFailed,
+    MoveError
+}
+
+public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGraphConfiguration, MoveAndUseGraphExitConnection>
 {
     public MoveAndUseGraphFactory(MoveAndUseGraphConfiguration configuration, string graphId = null) : base(
         configuration, graphId)
     {
     }
     
-    protected override void ConstructGraphInternal(StateGraph graph)
+    protected override void ConstructGraphInternal(StateGraph graph, GraphFactoryConnectionEnd startPoint)
     {
-        if (!graph.IsEmpty())
-        {
-            Debug.LogWarning($"Constructing StateGraph using factory with a non-empty state graph input. May cause duplicate start nodes.");
-        }
-
         InteractionStateNode interactionStateNode = new(new InteractionStateConfiguration(config.TargetInteractable.gameObject, config.TargetInteractionDefinition));
-        graph.AddNode(interactionStateNode);
         // InteractionState failures
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.Error),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "Something went wrong.", 3f);
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.ProximityCheckFailed),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "I can't reach that.", 3f);
-        AddConnectionThroughSay(graph, interactionStateNode, nameof(InteractionStateOutcome.RoleCheckFailed),
-            new ExitNode(), ExitNode.IN_PORT_NAME, "I can't do that.", 3f);
+        AddExitConnection(MoveAndUseGraphExitConnection.InteractionErrorGeneric,
+            interactionStateNode, nameof(InteractionStateOutcome.Error), "Something went wrong.");
+        AddExitConnection(MoveAndUseGraphExitConnection.InteractionErrorProximityCheckFailed,
+            interactionStateNode, nameof(InteractionStateOutcome.ProximityCheckFailed), "I can't reach that.");
+        AddExitConnection(MoveAndUseGraphExitConnection.InteractionErrorRoleCheckFailed,
+            interactionStateNode, nameof(InteractionStateOutcome.RoleCheckFailed), "I can't do that.");
         
         if (config.MoveToTargetTransform == null)
         {
@@ -49,19 +54,18 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
                 ActionCameraEndStateNode cameraEndNode = new(new ActionCameraEndStateConfiguration(config.ActionCamConfig.SourceKey));
                 graph.AddNode(cameraEndNode);
                 
-                // graph.ConnectStateFlow(new StartNode(), interactionStateNode);
-                // graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
-                
-                graph.ConnectStateFlow(new StartNode(), cameraStartNode);
+                graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, cameraStartNode, StateNode.IN_PORT_NAME);
                 graph.ConnectStateFlow(cameraStartNode, ActionCameraStartStateOutcome.SourceAdded, interactionStateNode);
                 graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, cameraEndNode);
-                graph.ConnectStateFlow(cameraEndNode, ActionCameraEndStateOutcome.SourceRemoved, new ExitNode());
+                AddExitConnection(MoveAndUseGraphExitConnection.InteractionCompleted,
+                    cameraEndNode, nameof(InteractionStateOutcome.CompletedInteraction));
             }
             else
             {
                 // It's just the interaction
-                graph.ConnectStateFlow(new StartNode(), interactionStateNode);
-                graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+                graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, interactionStateNode, StateNode.IN_PORT_NAME);
+                AddExitConnection(MoveAndUseGraphExitConnection.InteractionCompleted,
+                    interactionStateNode, nameof(InteractionStateOutcome.CompletedInteraction));
             }
         }
         else
@@ -82,10 +86,10 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
                 SayRoleMissingListenerNode.SAY_ROLE_MISSING_PORT_NAME);
             
             // MoveToState failures
-            AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.DoorRoleFailed),
-                new ExitNode(), ExitNode.IN_PORT_NAME, "Looks like I can't open that door.", 3f);
-            AddConnectionThroughSay(graph, moveToStateNode, nameof(MoveToStateOutcome.Error),
-                new ExitNode(), ExitNode.IN_PORT_NAME, "I can't figure out where I'm going.", 3f);
+            AddExitConnection(MoveAndUseGraphExitConnection.MoveErrorDoorRoleFailed,
+                moveToStateNode, nameof(MoveToStateOutcome.DoorRoleFailed), "Looks like I can't open that door.");
+            AddExitConnection(MoveAndUseGraphExitConnection.MoveError,
+                moveToStateNode, nameof(MoveToStateOutcome.Error), "I can't figure out where I'm going.");
         
             // Connect the main flow
             if (config.ActionCamConfig != null)
@@ -96,18 +100,20 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
                 ActionCameraEndStateNode cameraEndNode = new(new ActionCameraEndStateConfiguration(config.ActionCamConfig.SourceKey));
                 graph.AddNode(cameraEndNode);
                 
-                graph.ConnectStateFlow(new StartNode(), cameraStartNode);
+                graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, cameraStartNode, StateNode.IN_PORT_NAME);
                 graph.ConnectStateFlow(cameraStartNode, ActionCameraStartStateOutcome.SourceAdded, moveToStateNode);
                 graph.ConnectStateFlow(moveToStateNode, MoveToStateOutcome.Arrived, interactionStateNode);
                 graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, cameraEndNode);
-                graph.ConnectStateFlow(cameraEndNode, ActionCameraEndStateOutcome.SourceRemoved, new ExitNode());
+                AddExitConnection(MoveAndUseGraphExitConnection.InteractionCompleted,
+                    cameraEndNode, nameof(InteractionStateOutcome.CompletedInteraction));
             }
             else
             {
                 // "Start -> MoveTo -> Interact -> Exit"
-                graph.ConnectStateFlow(new StartNode(), moveToStateNode);
+                graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, moveToStateNode, StateNode.IN_PORT_NAME);
                 graph.ConnectStateFlow(moveToStateNode, MoveToStateOutcome.Arrived, interactionStateNode);
-                graph.ConnectStateFlow(interactionStateNode, InteractionStateOutcome.CompletedInteraction, new ExitNode());
+                AddExitConnection(MoveAndUseGraphExitConnection.InteractionCompleted,
+                    interactionStateNode, nameof(InteractionStateOutcome.CompletedInteraction));
             }
         }
     }

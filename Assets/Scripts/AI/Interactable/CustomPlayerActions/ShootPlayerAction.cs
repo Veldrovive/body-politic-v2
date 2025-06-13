@@ -4,6 +4,10 @@ using UnityEngine;
 public class ShootPlayerAction : AbstractCustomPlayerAction
 {
     [SerializeField] private InteractionDefinitionSO shootDefinition;
+    [SerializeField] private NpcRoleSO requiredRoleForShootInteraction;
+    [SerializeField] private float proximityMargin = 2f;
+    [SerializeField] private float chaseDuration = 20f;
+    [SerializeField] private float chaseDurationWithoutLoS = 10f;
 
     private void Awake()
     {
@@ -31,14 +35,15 @@ public class ShootPlayerAction : AbstractCustomPlayerAction
 
     public override AbstractGraphFactory GenerateGraph(PlayerActionContext context)
     {
-        MoveAndUseGraphFactory graphFactory = new MoveAndUseGraphFactory(new MoveAndUseGraphConfiguration()
+        ShootGraphFactory factory = new(new ShootGraphConfiguration()
         {
-            MoveToTargetTransform = context.InitiatorNpc.transform,
-            RequireExactPosition = true,
-            RequireFinalAlignment = true,
-            TargetInteractable = context.InteractedObject,
-            TargetInteractionDefinition = shootDefinition,
+            RequiredRoleForShootInteraction = requiredRoleForShootInteraction,
+            ShootInteractionDefinition = shootDefinition,
+            DistanceMargin = proximityMargin,
+            MaxChaseDuration = chaseDuration,
+            MaxChaseDurationWithoutLoS = chaseDurationWithoutLoS,
+            TargetInteractable = context.InteractedObject as InteractableNpc
         });
-        return graphFactory;
+        return factory;
     }
 }

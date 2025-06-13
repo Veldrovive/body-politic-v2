@@ -23,6 +23,13 @@ public class LookTowardGraphConfiguration : AbstractGraphFactoryConfig
     public float ExitWaitDuration = 0f; // Wait before exiting the graph
 }
 
+public enum LookTowardGraphExitConnection
+{
+    LookCompleted,
+    LookErrorGeneric,
+    LookErrorRoleDoorFailed
+}
+
 /// <summary>
 /// The curious reaction is a follow state that causes an NPC to look at another NPC until it passes out of view
 /// or a duration is exceeded.
@@ -30,13 +37,13 @@ public class LookTowardGraphConfiguration : AbstractGraphFactoryConfig
 /// We can construct the follow state with distance set to exit if it exceeds a threshold and LoS set to exit if it is lost.
 /// In effect, this makes the NPC visually track the other NPC 
 /// </summary>
-public class LookTowardGraphFactory : GenericAbstractGraphFactory<LookTowardGraphConfiguration>
+public class LookTowardGraphFactory : GenericAbstractGraphFactory<LookTowardGraphConfiguration, LookTowardGraphExitConnection>
 {
     public LookTowardGraphFactory(LookTowardGraphConfiguration configuration, string graphId = null) : base(configuration, graphId)
     {
     }
 
-    protected override void ConstructGraphInternal(StateGraph graph)
+    protected override void ConstructGraphInternal(StateGraph graph, GraphFactoryConnectionEnd startPoint)
     {
         FollowStateNode followState = new(new FollowStateConfiguration()
         {
@@ -55,19 +62,13 @@ public class LookTowardGraphFactory : GenericAbstractGraphFactory<LookTowardGrap
             
             LoSObstacleLayerMask = LayerMask.GetMask("Default")
         });
-        graph.AddNode(followState);
+        graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, followState, StateNode.IN_PORT_NAME);
         
-        AddConnectionThroughSay(graph, new StartNode(), StartNode.OUT_PORT_NAME, 
-            followState, StateNode.IN_PORT_NAME, config.EntryMessage, 
-            config.EntryMessageDuration, config.EntryWaitDuration
-        );
-        
-        AddConnectionThroughSay(graph, followState, nameof(FollowStateOutcome.Completed),
-            new ExitNode(), ExitNode.IN_PORT_NAME, config.ExitMessage,
-            config.ExitMessageDuration, config.ExitWaitDuration
-        );
-        
-        graph.ConnectStateFlow(followState, FollowStateOutcome.RoleDoorFailed, new ExitNode());
-        graph.ConnectStateFlow(followState, FollowStateOutcome.MovementManagerError, new ExitNode());
+        AddExitConnection(LookTowardGraphExitConnection.LookCompleted,
+            followState, nameof(FollowStateOutcome.Completed), config.ExitMessage);
+        AddExitConnection(LookTowardGraphExitConnection.LookErrorRoleDoorFailed,
+            followState, nameof(FollowStateOutcome.RoleDoorFailed), "I can't look at that.");
+        AddExitConnection(LookTowardGraphExitConnection.LookErrorGeneric,
+            followState, nameof(FollowStateOutcome.MovementManagerError), "Something went wrong while looking.");
     }
 }

@@ -64,7 +64,7 @@ public class NpcSoundHandler : GameEventListenerBase<SoundData, SoundEventSO>
             if (reactionFactory != null)
             {
                 // Check we if we already executing this reaction
-                if (npcContext.StateGraphController.CurrentStateGraph.id != reactionFactory.AbstractConfig.GraphId)
+                if (npcContext.StateGraphController.CurrentStateGraph?.id != reactionFactory.AbstractConfig.GraphId)
                 {
                     npcContext.StateGraphController.TryInterrupt(reactionFactory, false, false, interruptPriority);
                     // We don't care if the interrupt fails as sounds are one-time things and not critical to the NPC's state.

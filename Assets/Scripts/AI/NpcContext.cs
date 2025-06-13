@@ -8,6 +8,7 @@ using UnityEngine.AI;
 /// </summary>
 public class NpcContextSaveableData : SaveableData
 {
+    public bool IsDead { get; set; } = false;
     public Dictionary<string, object> ArbitraryAccessData { get; set; }
 }
 
@@ -22,6 +23,7 @@ public class NpcContextSaveableData : SaveableData
 [RequireComponent(typeof(NpcAnimationManager))]
 [RequireComponent(typeof(NpcDetectorReactor))]
 [RequireComponent(typeof(InteractableNpc))]
+[RequireComponent(typeof(InteractableNpcDefaultHandler))]
 [RequireComponent(typeof(NpcSoundHandler))]
 public class NpcContext : SaveableGOConsumer
 {
@@ -35,7 +37,7 @@ public class NpcContext : SaveableGOConsumer
     public NavMeshAgent NavMeshAgent { get; private set; }
     public NpcDetectorReactor DetectorReactor { get; private set; }
     public InteractableNpc InteractableNpc { get; private set; }
-    
+    public InteractableNpcDefaultHandler InteractableNpcDefaultHandler { get; private set; }
     public NpcSoundHandler SoundHandler { get; private set; }
     
     private Dictionary<string, object> arbitraryAccessData { get; set; }
@@ -43,6 +45,11 @@ public class NpcContext : SaveableGOConsumer
     private static string NPC_LAYER_NAME = "NPC";
 
     public Transform InfectPoint;
+    
+    private bool isDead = false;
+    public bool IsDead => isDead;
+    
+    public event Action<NpcContext> OnDeath;
 
     #region Saveable Data
 
@@ -50,6 +57,7 @@ public class NpcContext : SaveableGOConsumer
     {
         return new NpcContextSaveableData()
         {
+            IsDead = isDead,
             ArbitraryAccessData = arbitraryAccessData
         };
     }
@@ -61,6 +69,10 @@ public class NpcContext : SaveableGOConsumer
             if (data is NpcContextSaveableData npcData)
             {
                 arbitraryAccessData = npcData.ArbitraryAccessData ?? new Dictionary<string, object>();
+                if (npcData.IsDead)
+                {
+                    TriggerDeath();
+                }
             }
             else
             {
@@ -89,6 +101,7 @@ public class NpcContext : SaveableGOConsumer
         NavMeshAgent = GetComponent<NavMeshAgent>();
         DetectorReactor = GetComponent<NpcDetectorReactor>();
         InteractableNpc = GetComponent<InteractableNpc>();
+        InteractableNpcDefaultHandler = GetComponent<InteractableNpcDefaultHandler>();
         SoundHandler = GetComponent<NpcSoundHandler>();
         
         
@@ -138,12 +151,18 @@ public class NpcContext : SaveableGOConsumer
 
     public void TriggerDeath()
     {
+        isDead = true;
         AnimationManager.Play("Death");
 
         StateGraphController.enabled = false;
         MovementManager.enabled = false;
         DetectorReactor.enabled = false;
+        SuspicionTracker.enabled = false;
         InteractableNpc.enabled = false;
+        InteractableNpcDefaultHandler.enabled = false;
+        SoundHandler.enabled = false;
+        
+        OnDeath?.Invoke(this);
     }
     
     public void SetArbitraryAccessData(string key, object value)

@@ -95,7 +95,16 @@ public class StateGraph : MonoBehaviour
 
     public bool IsEmpty()
     {
-        return m_nodes.Count == 0;
+        // We are empty if we have no start node
+        if (m_nodes.Count == 0)
+        {
+            return true;
+        }
+        else
+        {
+            // Check if the only node is a start node
+            return m_nodes.Count == 1 && m_nodes[0] is StartNode;
+        }
     }
     
     public StateGraphNode GetNodeById(string nodeId)
@@ -362,7 +371,7 @@ public class StateGraph : MonoBehaviour
     {
         if (m_nodes.Any(n => n.id == node.id))
         {
-            Debug.LogWarning($"Node with ID {node.id} already exists in graph {displayName}. Skipping.");
+            // Debug.LogWarning($"Node with ID {node.id} already exists in graph {displayName}. Skipping.");
             return;
         }
         if (node.id == null) // Basic check for uninitialized nodes
@@ -380,7 +389,7 @@ public class StateGraph : MonoBehaviour
         // This is crucial for Connect methods to find ports.
         node.RefreshPorts();
     }
-
+    
     public bool ConnectStateFlow(StartNode startNode, StateNode inputNode)
     {
         // Since startNodes are interchangeable, we just add the start node if it doesn't exist
@@ -388,6 +397,11 @@ public class StateGraph : MonoBehaviour
         {
             m_nodes.Add(startNode);
             startNode.RefreshPorts();
+        }
+
+        if (!m_nodes.Contains(inputNode))
+        {
+            AddNode(inputNode);
         }
         
         // Ensure both nodes are actually in the graph
@@ -415,6 +429,11 @@ public class StateGraph : MonoBehaviour
         {
             m_nodes.Add(exitNode);
             exitNode.RefreshPorts();
+        }
+
+        if (!m_nodes.Contains(outputNode))
+        {
+            AddNode(outputNode);
         }
         
         // Ensure both nodes are actually in the graph
@@ -444,6 +463,11 @@ public class StateGraph : MonoBehaviour
             restartNode.RefreshPorts();
         }
         
+        if (!m_nodes.Contains(outputNode))
+        {
+            AddNode(outputNode);
+        }
+        
         // Ensure both nodes are actually in the graph
         if (!m_nodes.Contains(outputNode) || !m_nodes.Contains(restartNode))
         {
@@ -465,6 +489,16 @@ public class StateGraph : MonoBehaviour
     public bool ConnectStateFlow<TOutcomeEnum>(StateNode outputNode, TOutcomeEnum outcomeEnum, StateNode inputNode)
         where TOutcomeEnum : Enum 
     {
+        if (!m_nodes.Contains(inputNode))
+        {
+            AddNode(inputNode);
+        }
+        
+        if (!m_nodes.Contains(outputNode))
+        {
+            AddNode(outputNode);
+        }
+        
         // Ensure both nodes are actually in the graph
         if (!m_nodes.Contains(outputNode) || !m_nodes.Contains(inputNode))
         {
@@ -483,22 +517,31 @@ public class StateGraph : MonoBehaviour
         return ConnectStateFlow(outputNodeId, outputPortInfo, inputNodeId, inputPortInfo);
     }
 
-    public bool ConnectStateFlow(StateGraphNode raiserNode, string raiserPortName, EventListenerNode listenerNode,
-        string listenerPortName)
+    public bool ConnectStateFlow(StateGraphNode outputNode, string outputPortName, StateGraphNode inputNode,
+        string inputPortName)
     {
-        if (!m_nodes.Contains(raiserNode) || !m_nodes.Contains(listenerNode))
+        if (!m_nodes.Contains(inputNode))
         {
-            Debug.LogError($"One or both nodes are not part of the graph {displayName}. RaiserNode: {raiserNode.id}, ListenerNode: {listenerNode.id}");
+            AddNode(inputNode);
+        }
+        if (!m_nodes.Contains(outputNode))
+        {
+            AddNode(outputNode);
+        }
+        
+        if (!m_nodes.Contains(outputNode) || !m_nodes.Contains(inputNode))
+        {
+            Debug.LogError($"One or both nodes are not part of the graph {displayName}. RaiserNode: {outputNode.id}, ListenerNode: {inputNode.id}");
             return false;
         }
         
-        string raiserNodeId = raiserNode.id;
-        NodePortInfo raiserPortInfo = new NodePortInfo(raiserPortName, PortType.EventOut);
-        string listenerNodeId = listenerNode.id;
-        NodePortInfo listenerPortInfo = new NodePortInfo(listenerPortName, PortType.EventIn);
+        string outputNodeId = outputNode.id;
+        NodePortInfo outputPortInfo = new NodePortInfo(outputPortName, PortType.StateTransitionOut);
+        string inputNodeId = inputNode.id;
+        NodePortInfo inputPortInfo = new NodePortInfo(inputPortName, PortType.StateTransitionIn);
         
         // Then call the generic connector for any ports
-        return ConnectStateFlow(raiserNodeId, raiserPortInfo, listenerNodeId, listenerPortInfo);
+        return ConnectStateFlow(outputNodeId, outputPortInfo, inputNodeId, inputPortInfo);
     }
     
     public bool ConnectStateFlow(string outputNodeId, NodePortInfo outputPortInfo, string inputNodeId, NodePortInfo inputPortInfo)
@@ -551,6 +594,14 @@ public class StateGraph : MonoBehaviour
     public bool ConnectEvent(StateGraphNode raiserNode, string raiserPortName, EventListenerNode listenerNode,
         string listenerPortName)
     {
+        if (!m_nodes.Contains(raiserNode))
+        {
+            AddNode(raiserNode);
+        }
+        if (!m_nodes.Contains(listenerNode))
+        {
+            AddNode(listenerNode);
+        }
         // We can do this by making the NodePortInfos for the raiser and listener ports and then calling the generic ConnectStateFlow
         NodePortInfo raiserPortInfo = new NodePortInfo(raiserPortName, PortType.EventOut);
         NodePortInfo listenerPortInfo = new NodePortInfo(listenerPortName, PortType.EventIn);

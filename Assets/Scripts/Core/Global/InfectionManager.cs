@@ -99,6 +99,11 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         // Filter out Npcs that are not enabled
         allNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy || !npc.gameObject.activeSelf);
         infectedNpcs.RemoveAll(npc => npc == null || !npc.gameObject.activeInHierarchy);
+        foreach (var npc in allNpcs)
+        {
+            npc.OnDeath -= HandleNpcDeath;
+            npc.OnDeath += HandleNpcDeath;
+        }
         
         if (gameEvent == null)
         {
@@ -172,6 +177,9 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
             return;
         }
         
+        npc.OnDeath -= HandleNpcDeath;
+        npc.OnDeath += HandleNpcDeath;
+        
         if (!allNpcs.Contains(npc))
         {
             allNpcs.Add(npc);
@@ -206,5 +214,17 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
         }
 
         UpdatePlayerIdentity();
+    }
+    
+    private void HandleNpcDeath(NpcContext npc)
+    {
+        // Remove the NPC from the infected list if they die.
+        Debug.Log($"NPC {npc.name} has died and will be removed from the infected list.", this);
+        if (infectedNpcs.Contains(npc))
+        {
+            playerManager?.RemoveControllableNpc(npc);
+            infectedNpcs.Remove(npc);
+            UpdatePlayerIdentity();
+        }
     }
 }

@@ -12,35 +12,20 @@ public class MoveGraphConfiguration : AbstractGraphFactoryConfig
     public string PreStartMessage = "";
 }
 
-public class MoveGraphFactory : GenericAbstractGraphFactory<MoveGraphConfiguration>
+public enum MoveGraphExitConnection
+{
+    MoveErrorDoorRoleFailed,
+    MoveError,
+    MoveCompleted
+}
+
+public class MoveGraphFactory : GenericAbstractGraphFactory<MoveGraphConfiguration, MoveGraphExitConnection>
 {
     public MoveGraphFactory(MoveGraphConfiguration configuration, string graphId = null) : base(configuration, graphId)
     {
     }
-    private void AddSayState(StateGraph graph, MoveToStateNode moveToStateNode, string message, float duration, MoveToStateOutcome outcome)
-    {
-        if (string.IsNullOrEmpty(message))
-        {
-            // We always exit after the say state
-            graph.ConnectStateFlow(moveToStateNode, outcome, new ExitNode());
-        }
-        else
-        {
-            SayStateNode sayStateNode = new(new SayStateConfiguration()
-            {
-                m_logLevel = LogLevel.Info,
-                m_textDuration = duration,
-                m_textToSay = message
-            });
-            graph.AddNode(sayStateNode);
-            graph.ConnectStateFlow(moveToStateNode, outcome, sayStateNode);
-        
-            // We always exit after the say state
-            graph.ConnectStateFlow(sayStateNode, SayStateOutcome.Timeout, new ExitNode());
-        }
-    }
 
-    protected override void ConstructGraphInternal(StateGraph graph)
+    protected override void ConstructGraphInternal(StateGraph graph, GraphFactoryConnectionEnd startPoint)
     {
         MoveToStateNode moveToStateNode = new(config.moveToStateConfig);
         graph.AddNode(moveToStateNode);
@@ -60,19 +45,22 @@ public class MoveGraphFactory : GenericAbstractGraphFactory<MoveGraphConfigurati
                 m_textToSay = config.PreStartMessage
             });
             graph.AddNode(sayStateNode);
-            graph.ConnectStateFlow(new StartNode(), sayStateNode);
+            graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, sayStateNode, StateNode.IN_PORT_NAME);
             
             graph.ConnectStateFlow(sayStateNode, SayStateOutcome.Timeout, moveToStateNode);
         }
         else
         {
-            graph.ConnectStateFlow(new StartNode(), moveToStateNode);
+            graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, moveToStateNode, StateNode.IN_PORT_NAME);
         }
         
         
         // Connect up the move outcomes
-        AddSayState(graph, moveToStateNode, config.ArrivedMessage, config.SayBubbleDuration, MoveToStateOutcome.Arrived);
-        AddSayState(graph, moveToStateNode, config.TargetDestinationInvalidMessage, config.SayBubbleDuration, MoveToStateOutcome.Error);
-        AddSayState(graph, moveToStateNode, config.DoorRoleFailedMessage, config.SayBubbleDuration, MoveToStateOutcome.DoorRoleFailed);
+        AddExitConnection(MoveGraphExitConnection.MoveCompleted,
+            moveToStateNode, nameof(MoveToStateOutcome.Arrived), config.ArrivedMessage);
+        AddExitConnection(MoveGraphExitConnection.MoveErrorDoorRoleFailed,
+            moveToStateNode, nameof(MoveToStateOutcome.DoorRoleFailed), config.DoorRoleFailedMessage);
+        AddExitConnection(MoveGraphExitConnection.MoveError,
+            moveToStateNode, nameof(MoveToStateOutcome.Error), config.MovementExecutionFailedMessage);
     }
 }

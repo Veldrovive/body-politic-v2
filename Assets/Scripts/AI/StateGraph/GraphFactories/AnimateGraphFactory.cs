@@ -13,19 +13,23 @@ public class AnimateGraphConfiguration : AbstractGraphFactoryConfig
     }
 }
 
-public class AnimateGraphFactory : GenericAbstractGraphFactory<AnimateGraphConfiguration>
+public enum AnimateGraphExitConnection
+{
+    AnimationCompleted,
+}
+
+public class AnimateGraphFactory : GenericAbstractGraphFactory<AnimateGraphConfiguration, AnimateGraphExitConnection>
 {
     public AnimateGraphFactory(AnimateGraphConfiguration configuration, string graphId = null) : base(configuration, graphId)
     {
     }
 
-    protected override void ConstructGraphInternal(StateGraph graph)
+    protected override void ConstructGraphInternal(StateGraph graph, GraphFactoryConnectionEnd startPoint)
     {
         // "Start -> AnimateState -> Exit"
         AnimateStateNode animateStateNode = new(config.animateStateConfig);
-        graph.AddNode(animateStateNode);
         
-        graph.ConnectStateFlow(new StartNode(), animateStateNode);
-        graph.ConnectStateFlow(animateStateNode, AnimateStateOutcome.Timeout, new ExitNode());
+        graph.ConnectStateFlow(startPoint.GraphNode, startPoint.PortName, animateStateNode, StateNode.IN_PORT_NAME);
+        AddExitConnection(AnimateGraphExitConnection.AnimationCompleted, animateStateNode, nameof(AnimateStateOutcome.Timeout));
     }
 }

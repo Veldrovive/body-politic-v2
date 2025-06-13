@@ -51,6 +51,7 @@ public class InteractionDefinitionSO : IdentifiableSO, IActionDefinition
     [Tooltip("Maximum distance the initiator can be from the target to start the interaction.")]
     [SerializeField]
     private float requiredProximity = 5f;
+    public float RequiredProximity => requiredProximity;
 
     // [Tooltip("Whether the action should only be visible in the inventory menu.")]
     // [SerializeField] private bool onlyAvailableInInventory = false;
