@@ -126,7 +126,7 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
         }
         bubbleTextLabel.text = floaterConfig.bubbleDefinition.ToSay;
         
-        floaterConfig.StartTime = Time.time;
+        floaterConfig.StartTime = SaveableDataManager.Instance.time;
 
         floaterRoot.style.opacity = 0f;  // Start with the bubble invisible
 
@@ -135,7 +135,7 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
 
     protected override void OnUpdateFloater(VisualElement floaterRoot, SpeechBubbleFloatingUIConfig floaterConfig)
     {
-        float timeSinceStart = Time.time - floaterConfig.StartTime;
+        float timeSinceStart = SaveableDataManager.Instance.time - floaterConfig.StartTime;
         float timeTillEnd = floaterConfig.bubbleDefinition.Duration - timeSinceStart;
 
         if (timeTillEnd > floaterConfig.bubbleDefinition.Duration)

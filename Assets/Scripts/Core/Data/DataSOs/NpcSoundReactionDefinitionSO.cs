@@ -205,7 +205,7 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
         {
             // Then we include the current time in the graph ID to ensure that it is unique
             // Non-unique graph IDs will cause the SoundHandler to not interrupt the current graph
-            factory.SetGraphId($"{reaction.ReactionType.ToString()}-{Time.time}");
+            factory.SetGraphId($"{reaction.ReactionType.ToString()}-{SaveableDataManager.Instance.time}");
         }
         else
         {

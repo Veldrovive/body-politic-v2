@@ -175,7 +175,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
         // We just reset the values and Update takes care of the rest
         initialPlanningHasSucceeded = false;
         failed = false;
-        startTime = Time.time;
+        startTime = SaveableDataManager.Instance.time;
         lastPlanAttemptTime = float.MinValue;
         
         // We don't want to link up events yet as we could mistakenly get signals from the movement manager due to
@@ -198,12 +198,12 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
         if (!initialPlanningHasSucceeded)
         {
             // Check if we should try to plan
-            if (Time.time - lastPlanAttemptTime < retryInterval)
+            if (SaveableDataManager.Instance.time - lastPlanAttemptTime < retryInterval)
             {
                 // We have not waited long enough to try again
                 return;
             }
-            lastPlanAttemptTime = Time.time;
+            lastPlanAttemptTime = SaveableDataManager.Instance.time;
             
             // We do a manual check to see if the target is valid here. If we are targetting a transform and that
             // transform is null, we fail the state.
@@ -236,7 +236,7 @@ public class MoveToState : GenericAbstractState<MoveToStateOutcome, MoveToStateC
             else
             {
                 // Check if we have timed out
-                if (Time.time - startTime > navigationTimeout)
+                if (SaveableDataManager.Instance.time - startTime > navigationTimeout)
                 {
                     // We have timed out, so we fail the state
                     TriggerExit(MoveToStateOutcome.Error);

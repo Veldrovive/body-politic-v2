@@ -40,6 +40,9 @@ public class NpcDetectorReactionDefinitionSO : ScriptableObject
     
     [Header("Shoot Reaction")]
     [SerializeField] private ShootGraphConfiguration shootConfiguration;
+    
+    [Header("Panic Reaction")]
+    [SerializeField] private PanicGraphConfiguration panicConfiguration;
 
     /// <summary>
     /// Finds the reaction definition that has the maximum minimum suspicion that is less than or equal to the given suspicion.
@@ -81,6 +84,7 @@ public class NpcDetectorReactionDefinitionSO : ScriptableObject
             DetectionReactionType.Curious => GetCuriousReactionFactory(reactingNpc, targetNpc),
             DetectionReactionType.Follow => GetFollowReactionFactory(reactingNpc, targetNpc),
             DetectionReactionType.Shoot => GetShootReactionFactory(reactingNpc, targetNpc),
+            DetectionReactionType.Panic => GetPanicReactionFactory(reactingNpc, targetNpc),
             _ => throw new ArgumentOutOfRangeException(nameof(reaction.ReactionType), $"Unhandled reaction type: {reaction.ReactionType}")
         };
         
@@ -159,6 +163,13 @@ public class NpcDetectorReactionDefinitionSO : ScriptableObject
     {
         shootConfiguration.TargetInteractable = targetNpc.InteractableNpc;
         ShootGraphFactory factory = new(shootConfiguration);
+        return factory;
+    }
+
+    private PanicGraphFactory GetPanicReactionFactory(NpcContext reactingNpc, NpcContext targetNpc)
+    {
+        panicConfiguration.PanicZone = reactingNpc.PanicZone;
+        PanicGraphFactory factory = new(panicConfiguration);
         return factory;
     }
 

@@ -52,6 +52,10 @@ public class NpcContext : SaveableGOConsumer
     [SerializeField] private MovementSpeed speed = MovementSpeed.Walk;
     public MovementSpeed Speed => speed;
 
+    [Tooltip("Used to decide where the NPC will flee to when panicking.")]
+    [SerializeField] private Zone panicZone = null;
+    public Zone PanicZone => panicZone;
+
     public event Action<NpcContext> OnDeath;
 
     #region Saveable Data

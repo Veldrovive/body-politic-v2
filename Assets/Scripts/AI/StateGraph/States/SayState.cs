@@ -97,12 +97,12 @@ public class SayState : GenericAbstractState<SayStateOutcome, SayStateConfigurat
             return;
         }
         
-        startTime = Time.time;
+        startTime = SaveableDataManager.Instance.time;
     }
 
     private void Update()
     {
-        if (startTime >= 0 && Time.time - startTime >= m_waitDuration)
+        if (startTime >= 0 && SaveableDataManager.Instance.time - startTime >= m_waitDuration)
         {
             // Wait duration is over, trigger exit
             TriggerExit(SayStateOutcome.Timeout);

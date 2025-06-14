@@ -198,6 +198,11 @@ public class InfectionManager : SaveableGOConsumer, IGameEventListener<Infection
 
     private void OnInfection(NpcContext infectedNpc)
     {
+        if (infectedNpcs.Contains(infectedNpc))
+        {
+            // No need to infect again if already infected.
+            return;
+        }
         playerManager?.AddControllableNpc(infectedNpc);
         if (focusOnInfection)
         {

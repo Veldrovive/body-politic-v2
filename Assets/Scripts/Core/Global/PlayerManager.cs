@@ -52,7 +52,7 @@ public class PlayerManager : SaveableGOConsumer
     [SerializeField] private KeyCode overwriteQueueModifier = KeyCode.LeftShift;
     
     [Header("Configuration")]
-    [SerializeField] MovementSpeed defaultMovementSpeed;
+    [SerializeField] MovementSpeed defaultMovementSpeed = MovementSpeed.NpcSpeed;
 
 
     // --- Events ---

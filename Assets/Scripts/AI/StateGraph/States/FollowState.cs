@@ -135,7 +135,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
 
     private void OnEnable()
     {
-        _startTime = Time.time;
+        _startTime = SaveableDataManager.Instance.time;
         if (_config == null)
         {
             // If we have no target that we are done.
@@ -435,7 +435,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
     /// <exception cref="NotImplementedException"></exception>
     private FollowStateOutcome? HandleShouldExit()
     {
-        if (_config.MaxDuration > 0f && Time.time - _startTime > _config.MaxDuration)
+        if (_config.MaxDuration > 0f && SaveableDataManager.Instance.time - _startTime > _config.MaxDuration)
         {
             // TriggerExit(FollowStateOutcome.Timeout);
             // isExited = true;
@@ -443,7 +443,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             return FollowStateOutcome.Timeout;
         }
         
-        if (_config.MaxDurationWithoutLoS > 0f && !hasLoS && Time.time - _lastLoSSuccessTime > _config.MaxDurationWithoutLoS)
+        if (_config.MaxDurationWithoutLoS > 0f && !hasLoS && SaveableDataManager.Instance.time - _lastLoSSuccessTime > _config.MaxDurationWithoutLoS)
         {
             // TriggerExit(FollowStateOutcome.Timeout);
             // isExited = true;
@@ -583,7 +583,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
         bool newHasLoS = GetHasLoS();
         if (newHasLoS)
         {
-            _lastLoSSuccessTime = Time.time;
+            _lastLoSSuccessTime = SaveableDataManager.Instance.time;
         }
 
         if (newIsWithinDistance != isWithinDistance || !initialized)
@@ -655,7 +655,7 @@ public class FollowState : GenericAbstractState<FollowStateOutcome, FollowStateC
             HandleMovedOutsideDistance();
         }
 
-        _lastLoSSuccessTime = Time.time;
+        _lastLoSSuccessTime = SaveableDataManager.Instance.time;
         if (GetHasLoS())
         {
             HandleLoSGained();

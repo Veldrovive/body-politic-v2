@@ -34,12 +34,12 @@ public class WaitState : GenericAbstractState<WaitStateOutcome, WaitStateConfigu
 
     private void OnEnable()
     {
-        startTime = Time.time;
+        startTime = SaveableDataManager.Instance.time;
     }
 
     private void Update()
     {
-        if (Time.time - startTime >= m_duration)
+        if (SaveableDataManager.Instance.time - startTime >= m_duration)
         {
             // Transition to the next state
             TriggerExit(WaitStateOutcome.Timeout);

@@ -77,6 +77,7 @@ public class MoveAndUseGraphFactory : GenericAbstractGraphFactory<MoveAndUseGrap
                 RequireExactPosition = config.RequireExactPosition,
                 RequireFinalAlignment = config.RequireFinalAlignment,
                 AcceptanceRadius = 1.0f,
+                DesiredSpeed = MovementSpeed.NpcSpeed
             });
             graph.AddNode(moveToStateNode);
             

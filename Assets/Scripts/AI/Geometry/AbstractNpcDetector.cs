@@ -14,7 +14,7 @@ public class DetectedNpcData
     public DetectedNpcData(NpcContext npcContext)
     {
         NpcContext = npcContext;
-        EnterTime = Time.time; // Record the time of entry
+        EnterTime = SaveableDataManager.Instance.time; // Record the time of entry
     }
 }
 

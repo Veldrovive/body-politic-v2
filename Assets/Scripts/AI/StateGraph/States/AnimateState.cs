@@ -70,7 +70,7 @@ public class AnimateState : GenericAbstractState<AnimateStateOutcome, AnimateSta
 
     private void OnEnable()
     {
-        startTime = Time.time;
+        startTime = SaveableDataManager.Instance.time;
         if (!string.IsNullOrEmpty(animationName))
         {
             npcContext.AnimationManager.Play(animationName);
@@ -80,7 +80,7 @@ public class AnimateState : GenericAbstractState<AnimateStateOutcome, AnimateSta
 
     private void Update()
     {
-        if (Time.time - startTime >= duration)
+        if (SaveableDataManager.Instance.time - startTime >= duration)
         {
             // Transition to the next state
             if (!string.IsNullOrEmpty(animationName) && endAnimationOnExit)

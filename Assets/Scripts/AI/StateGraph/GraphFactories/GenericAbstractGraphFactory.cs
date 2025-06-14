@@ -100,6 +100,68 @@ public abstract class GenericAbstractGraphFactory<TConfig, TExitConnectionEnum> 
     {
         AddExitConnection(exitId, new GraphFactoryConnectionEnd(exitNode, portName), defaultExitSay);
     }
+
+    /// <summary>
+    ///  Helper method for simultaneously connecting multiple outcomes of a state node to other state nodes.
+    /// </summary>
+    protected void ConnectStateFlows<TOutcomeEnum>(StateGraph graph, StateNode lastNode, Dictionary<TOutcomeEnum, StateNode> outcomeFlows)
+        where TOutcomeEnum : Enum
+    {
+        // Check to ensure that the outcome enum is correct for this state node
+        if (lastNode?.OutcomeEnumType != typeof(TOutcomeEnum))
+        {
+            throw new System.Exception($"StateNode {lastNode?.id} has an outcome enum type of {lastNode?.OutcomeEnumType}, but the provided stateFlows has an outcome enum type of {typeof(TOutcomeEnum)}.");
+        }
+        
+        foreach (var outcomeFlow in outcomeFlows)
+        {
+            TOutcomeEnum outcome = outcomeFlow.Key;  // Equals the portName when converted to string
+            StateNode nextNode = outcomeFlow.Value;
+
+            graph.ConnectStateFlow(lastNode, outcome, nextNode);
+        }
+    }
+
+    /// <summary>
+    /// Helper method for simultaneously connecting multiple outcomes of a state node to exit connections.
+    /// </summary>
+    protected void ConnectExitFlows<TOutcomeEnum>(StateNode lastNode,
+        Dictionary<TOutcomeEnum, (TExitConnectionEnum exitConnection, string exitSay)> exitFlows)
+        where TOutcomeEnum : Enum
+    {
+        // Check to ensure that the outcome enum is correct for this state node
+        if (lastNode?.OutcomeEnumType != typeof(TOutcomeEnum))
+        {
+            throw new System.Exception($"StateNode {lastNode?.id} has an outcome enum type of {lastNode?.OutcomeEnumType}, but the provided exitFlows has an outcome enum type of {typeof(TOutcomeEnum)}.");
+        }
+        
+        foreach (var exitFlow in exitFlows)
+        {
+            TOutcomeEnum outcome = exitFlow.Key;  // Equals the portName when converted to string
+            string portName = nameof(outcome);
+            (TExitConnectionEnum exitConnection, string exitSay) = exitFlow.Value;
+            AddExitConnection(
+                exitConnection,
+                lastNode, portName, exitSay
+            );
+        }
+    }
+
+    /// <summary>
+    /// Helper for connecting the interrupt outcome of a state node to the next state node.
+    /// </summary>
+    protected void ConnectStateInterrupt(StateGraph graph, StateNode lastNode, StateNode nextNode)
+    {
+        graph.ConnectStateFlow(lastNode, StateNode.INTERRUPT_PORT_NAME, nextNode, StateNode.IN_PORT_NAME);
+    }
+
+    /// <summary>
+    /// Helper for connecting the load-in outcome of a state node to the next state node.
+    /// </summary>
+    protected void ConnectStateLoadIn(StateGraph graph, StateNode lastNode, StateNode nextNode)
+    {
+        graph.ConnectStateFlow(lastNode, StateNode.LOAD_IN_PORT_NAME, nextNode, StateNode.IN_PORT_NAME);
+    }
     
     [CanBeNull]
     protected GraphFactoryConnectionEnd UseExitConnection(TExitConnectionEnum exitId)
@@ -156,13 +218,14 @@ public abstract class GenericAbstractGraphFactory<TConfig, TExitConnectionEnum> 
         base.ConstructGraph(graph, startPoint, fillExits);
         // We expect that at the end of the graph construction, all of the exit connections have been added.
         // We should check if there are any values of TExitConnectionEnum that are not in the openExitConnections.
-        foreach (TExitConnectionEnum exitId in Enum.GetValues(typeof(TExitConnectionEnum)))
-        {
-            if (!openExitConnections.Contains(exitId))
-            {
-                throw new System.Exception($"Exit connection {exitId} was not added to the graph. Please ensure that all exit connections are added during graph construction.");
-            }
-        }
+        // foreach (TExitConnectionEnum exitId in Enum.GetValues(typeof(TExitConnectionEnum)))
+        // {
+        //     if (!openExitConnections.Contains(exitId))
+        //     {
+        //         throw new System.Exception($"Exit connection {exitId} was not added to the graph. Please ensure that all exit connections are added during graph construction.");
+        //     }
+        // }
+        // Actually, I decided against that. There are some cases where exits conditionally exist based on the graph configuration.
         
         if (fillExits)
         {

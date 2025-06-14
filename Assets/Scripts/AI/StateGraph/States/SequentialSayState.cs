@@ -78,12 +78,12 @@ public class SequentialSayState : GenericAbstractState<SequentialSayStateOutcome
             return;
         }
         
-        startTime = Time.time;
+        startTime = SaveableDataManager.Instance.time;
     }
 
     private void Update()
     {
-        if (startTime >= 0 && Time.time - startTime >= waitDuration)
+        if (startTime >= 0 && SaveableDataManager.Instance.time - startTime >= waitDuration)
         {
             // Wait duration is over, trigger exit
             SetStateData(SEQUENCE_POSITION_DATA_KEY, currentIndex + 1);

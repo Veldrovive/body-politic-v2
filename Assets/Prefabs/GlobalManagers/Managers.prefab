@@ -268,7 +268,7 @@ MonoBehaviour:
   quickSaveKey: 286
   quickLoadKey: 290
   overwriteQueueModifier: 304
-  defaultMovementSpeed: 2
+  defaultMovementSpeed: 4
 --- !u!114 &8989966879260291349
 MonoBehaviour:
   m_ObjectHideFlags: 0

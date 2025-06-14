@@ -47,12 +47,12 @@ public class ActionCamSource
     
     public void ResetStartTime()
     {
-        startTime = Time.time;
+        startTime = SaveableDataManager.Instance.time;
     }
         
     public bool IsExpired()
     {
-        return MaxDuration > 0 && Time.time - startTime > MaxDuration;
+        return MaxDuration > 0 && SaveableDataManager.Instance.time - startTime > MaxDuration;
     }
 }
 

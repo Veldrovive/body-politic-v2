@@ -83,7 +83,7 @@ public class NpcDetectorReactor : LoSNpcDetector
         // If we have gotten to this point, then we should trigger a reaction
         var (reactionFactory, priority) = GetGraphFactory(mostSuspiciousNpcContext, maxSuspicion);
         reactionFactory.SetGraphId(
-            $"{reactionFactory.GetType()}-{Time.time}"
+            $"{reactionFactory.GetType()}-{SaveableDataManager.Instance.time}"
         );
         
         // We can now try to get the controller to start executing this reaction. However, it may reject it depending

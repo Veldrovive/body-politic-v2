@@ -61,6 +61,7 @@ public class SaveDataMeta
 {
     public DateTime SaveTime;      // The time at which the save was made.
     public SceneId ActiveSceneId;  // The scene in which the save was made.
+    public float GameTime;      // The game time at which the save was made.
 }
 
 /// <summary>
@@ -122,6 +123,9 @@ public class SaveableDataManager : MonoBehaviour
 
     [SerializeField]
     private List<HoldablePrefabMapping> holdablePrefabMappings = new List<HoldablePrefabMapping>();
+
+    private float startTime = 0;
+    public float time => startTime + Time.timeSinceLevelLoad;
 
     private Dictionary<string, ProducerGOContext> producers = new Dictionary<string, ProducerGOContext>();
     // TODO: Is this necessary? These are set at runtime and we can look them up using a resource query at awake
@@ -249,6 +253,19 @@ public class SaveableDataManager : MonoBehaviour
 
         // Debug.Log($"Instantiated holdable of type {holdableType} at {position}. Producer registered with ID {producer.Config.ProducerId}.", this);
         return instance;
+    }
+    
+    /// <summary>
+    /// Similar to InstantiateHoldable, but this is used to create a new instance of a SaveableSO that will be
+    /// re-constructed from scratch on load.
+    /// </summary>
+    /// <typeparam name="TSaveableSO"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public TSaveableSO CreateInstance<TSaveableSO>()
+        where TSaveableSO : SaveableSO
+    {
+        throw new NotImplementedException();
     }
     
     #region Save
@@ -500,6 +517,12 @@ public class SaveableDataManager : MonoBehaviour
         jsonSettings.Converters.Add(new TransformConverter(producerIdToGO, gameObjectToProducerId));
         
         SaveData saveData = JsonConvert.DeserializeObject<SaveData>(saveDataJSON, jsonSettings);
+        if (saveData == null)
+        {
+            Debug.LogError("Failed to deserialize save data. Aborting load.");
+            return null;
+        }
+        startTime = saveData.meta.GameTime;  // Set the start time to the game time at which the save was made.
         
         // Santity check that we are in the right level
         if (SceneLoadManager.Instance.GetCurrentScenedId() != saveData.meta.ActiveSceneId)
@@ -581,6 +604,7 @@ public class SaveableDataManager : MonoBehaviour
 
     public void BlankLoad()
     {
+        startTime = 0;
         // Used to start the level with no save data.
         // To do this, we only need to call the Load methods of each producer and saveable SO with blankLoad true.
         // Step 1: Iterate over all producers and call LoadSaveData with blankLoad true.

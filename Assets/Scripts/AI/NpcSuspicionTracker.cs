@@ -57,7 +57,7 @@ public class NpcSuspicionTracker : SaveableGOConsumer
         public readonly int Level;
         public readonly float EndTime;
         // Calculate remaining time safely, ensuring it doesn't display negative
-        public readonly float RemainingTime => Mathf.Max(0f, EndTime - Time.time);
+        public readonly float RemainingTime => Mathf.Max(0f, EndTime - SaveableDataManager.Instance.time);
 
         public SuspicionSourceDebugInfo(string name, int level, float endTime)
         {
@@ -109,7 +109,7 @@ public class NpcSuspicionTracker : SaveableGOConsumer
             // Populate from save data
             foreach (var source in trackerData.SuspicionSources)
             {
-                if (source != null && !string.IsNullOrEmpty(source.SourceName) && source.Level > 0 && source.EndTime > Time.time)
+                if (source != null && !string.IsNullOrEmpty(source.SourceName) && source.Level > 0 && source.EndTime > SaveableDataManager.Instance.time)
                 {
                     activeSources[source.SourceName] = source;
                 }
@@ -156,7 +156,7 @@ public class NpcSuspicionTracker : SaveableGOConsumer
 
         // Clear the removal list at the start of the frame
         sourcesToRemove.Clear();
-        float currentTime = Time.time;
+        float currentTime = SaveableDataManager.Instance.time;
         bool sourcesExpired = false;
 
         // Check each active source for expiration
@@ -220,7 +220,7 @@ public class NpcSuspicionTracker : SaveableGOConsumer
         }
 
 
-        float endTime = Time.time + Mathf.Max(0f, duration); // Ensure endTime is not in the past
+        float endTime = SaveableDataManager.Instance.time + Mathf.Max(0f, duration); // Ensure endTime is not in the past
         var newState = new SuspicionSourceState(sourceName, level, endTime);
 
         // Add or overwrite the entry in the dictionary

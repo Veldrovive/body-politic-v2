@@ -236,7 +236,7 @@ public class Zone : AbstractNpcDetector
         {
             // Identity = npcContext.Identity, // No longer need to store identity separately
             IsCurrentlyUnauthorized = isInitiallyUnauthorized,
-            TimeCheckStarted = Time.time,
+            TimeCheckStarted = SaveableDataManager.Instance.time,
             CurrentSuspicionTierIndex = -1
         };
 
@@ -296,7 +296,7 @@ public class Zone : AbstractNpcDetector
         if (isNowUnauthorized != state.IsCurrentlyUnauthorized)
         {
             state.IsCurrentlyUnauthorized = isNowUnauthorized;
-            state.TimeCheckStarted = Time.time;
+            state.TimeCheckStarted = SaveableDataManager.Instance.time;
             state.CurrentSuspicionTierIndex = -1;
 
              // If they just became authorized, explicitly remove suspicion source from this zone
@@ -314,7 +314,7 @@ public class Zone : AbstractNpcDetector
         // Need definition and tiers to apply suspicion
         if (zoneDefinition == null || sortedSuspicionTiers.Count == 0) return;
 
-        float currentTime = Time.time;
+        float currentTime = SaveableDataManager.Instance.time;
 
         // Iterate through tracked NPCs
         foreach (var kvp in suspicionTrackedNpcs) // KeyValuePair<NpcContext, ZoneNpcSuspicionState>
