@@ -251,15 +251,15 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
             keepOnScreen: keepOnScreen
         );
         
-        string floaterId = CreateFloater(config);
-        if (floaterId == null)
+        var floaterData = CreateFloater(config);
+        if (floaterData == null)
         {
             // Failed to create floater, log an error
             Debug.LogError("Failed to create Speech Bubble floater.", this);
             return false;
         }
         
-        currentFloaterData = floaterDatas[floaterId];
+        currentFloaterData = floaterData;
         activeMenuTriggerGO = newActiveMenuTriggerGO;
 
         return true;
@@ -294,7 +294,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
             .Select(hit => hit.collider.transform.parent.gameObject)
             // Filter out any hits where the collider has no parent.
             .Where(parent => parent != null)
-            .Where(triggerGO => triggerGO.transform.parent != PlayerManager.Instance.CurrentFocusedNpc.gameObject.transform)
+            .Where(triggerGO => triggerGO.transform.parent != PlayerManager.Instance.CurrentFocusedNpc?.gameObject.transform)
             // Ensure the list contains only unique triggers, in case multiple child colliders
             // of the same trigger were hit.
             .Distinct()

@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json;
 
+#region Runtime Instantiation
+
 /// <summary>
 /// Used to generate prefabs dynamically at runtime
 /// </summary>
@@ -17,6 +19,17 @@ public class HoldablePrefabMapping {
     public HoldableType holdableType;
     public GameObject Prefab;
 }
+
+/// <summary>
+/// Used to generate SaveableSOs dynamically at runtime.
+/// </summary>
+public enum InstantiableSOType {
+    None,           // Was not a dynamically generated SO (i.e., it's a project asset).
+    Vector3Variable
+}
+
+#endregion
+
 
 public class ProducerGOContext
 {
@@ -36,9 +49,11 @@ public class ProducerGODataContext
     public bool IsDestroyed = false;  // If true, this producer was destroyed and should not be instantiated on load.
 }
 
-public class ProducerSaveableDataContext
+public class SOGeneratorDataContext
 {
-    public ProducerGOSaveableData Data;  // Holds the producer id as well as generic saveable data.
+    public string SOId;
+    public string SOName;
+    public InstantiableSOType SOType = InstantiableSOType.None;
 }
 
 public class SaveableSODataContext
@@ -46,16 +61,16 @@ public class SaveableSODataContext
     public SaveableData Data;
     public string SOName;
     public string SOId;
+    public InstantiableSOType SOType;
 }
 
-// public class SaveData {
-//     public DateTime SaveTime;      // The time at which the save was made.
-//     public SceneId ActiveSceneId;  // The scene in which the save was made.
-//
-//     // Saved Data:
-//     public Dictionary<string, ProducerSaveableDataContext> ProducerData = new Dictionary<string, ProducerSaveableDataContext>();
-//     public Dictionary<string, SaveableSODataContext> SaveableSOData = new Dictionary<string, SaveableSODataContext>();
-// }
+public class SaveableSOContext
+{
+    public string SOId;
+    public string SOName;
+    public SaveableSO Instance;
+    public InstantiableSOType SOType = InstantiableSOType.None;
+}
 
 public class SaveDataMeta
 {
@@ -72,6 +87,14 @@ public class SaveDataMeta
 public class SaveDataGOGenerator
 {
     public List<ProducerGODataContext> ProducersGODefs = new List<ProducerGODataContext>();
+}
+
+/// <summary>
+/// Holds the portion of save data necessary to instantiate the SaveableSO, but not its internal data.
+/// </summary>
+public class SaveDataSOGenerator
+{
+    public List<SOGeneratorDataContext> SOGeneratorDefs = new List<SOGeneratorDataContext>();
 }
 
 /// <summary>
@@ -99,6 +122,7 @@ public class SaveData
 {
     public SaveDataMeta meta = new SaveDataMeta(); // Metadata about the save, such as time and active scene.
     public string SaveDataGOGenerator;   // Serialized data for creating the game object producers.
+    public string SaveDataSOGenerator;  // Serialized data for creating the saveable scriptable objects.
     public string SaveDataGOProducer;     // Serialized data for the game object producers.
     public string SaveDataSOSaveable;    // Serialized data for the saveable scriptable objects.
 }
@@ -107,6 +131,7 @@ public class DeserializedSaveData
 {
     public SaveDataMeta meta;
     public SaveDataGOGenerator SaveDataGOGenerator;   // Deserialized data for creating the game object producers.
+    public SaveDataSOGenerator SaveDataSOGenerator;   // Deserialized data for creating the saveable scriptable objects.
     public SaveDataGOProducer SaveDataGOProducer;     // Deserialized data for the game object producers.
     public SaveDataSOSaveable SaveDataSOSaveable;     // Deserialized data for the saveable scriptable objects.
 }
@@ -123,6 +148,8 @@ public class SaveableDataManager : MonoBehaviour
 
     [SerializeField]
     private List<HoldablePrefabMapping> holdablePrefabMappings = new List<HoldablePrefabMapping>();
+    
+    private Dictionary<InstantiableSOType, System.Type> soTypeToSystemType = new Dictionary<InstantiableSOType, System.Type>();
 
     private float startTime = 0;
     public float time => startTime + Time.timeSinceLevelLoad;
@@ -130,7 +157,7 @@ public class SaveableDataManager : MonoBehaviour
     private Dictionary<string, ProducerGOContext> producers = new Dictionary<string, ProducerGOContext>();
     // TODO: Is this necessary? These are set at runtime and we can look them up using a resource query at awake
     // like we do with IdentifiableSOs. In face they are a subset of IdentifiableSOs so we could use the same loop.
-    private Dictionary<string, SaveableSO> saveableSOs = new Dictionary<string, SaveableSO>();
+    private Dictionary<string, SaveableSOContext> saveableSOs = new Dictionary<string, SaveableSOContext>();
     
     // Used for serialization of IdentifiableSOs.
     private Dictionary<IdentifiableSO, string> identifiableSoToId = new Dictionary<IdentifiableSO, string>();
@@ -144,6 +171,7 @@ public class SaveableDataManager : MonoBehaviour
     private void Awake() {
         if (Instance == null) {
             Instance = this;
+            ConstructSOTypeDatabase();
             ConstructIdentifiableSODatabase();
         } else {
             // This shouldn't really happen, but the correct behavior is to overwrite the old instance.
@@ -160,6 +188,15 @@ public class SaveableDataManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Populates the dictionary that maps an enum type to a concrete C# System.Type.
+    /// This is where you define all your instantiable SOs.
+    /// </summary>
+    private void ConstructSOTypeDatabase()
+    {
+        soTypeToSystemType[InstantiableSOType.Vector3Variable] = typeof(Vector3VariableSO);
+    }
+    
     public GameObject GetProducerObject(string producerId) {
         if (producers.TryGetValue(producerId, out ProducerGOContext context)) {
             if (context.IsDestroyed) {
@@ -262,10 +299,37 @@ public class SaveableDataManager : MonoBehaviour
     /// <typeparam name="TSaveableSO"></typeparam>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public TSaveableSO CreateInstance<TSaveableSO>()
-        where TSaveableSO : SaveableSO
+    public TSaveableSO CreateInstance<TSaveableSO>(InstantiableSOType soType) where TSaveableSO : SaveableSO
     {
-        throw new NotImplementedException();
+        if (!soTypeToSystemType.TryGetValue(soType, out System.Type systemType))
+        {
+            Debug.LogError($"No C# Type mapping found for InstantiableSOType {soType}. Did you add it to ConstructSOTypeDatabase?");
+            return null;
+        }
+        TSaveableSO instance = (TSaveableSO)ScriptableObject.CreateInstance(systemType);
+    
+        // Assign a new unique ID and name
+        string newId = Guid.NewGuid().ToString();
+        // The name no longer comes from a template, so we use the C# type name.
+        instance.name = $"{systemType.Name}_Instance_{newId}";
+        instance.SetID(newId);
+
+        // Register the new instance with its context
+        var context = new SaveableSOContext
+        {
+            SOId = newId,
+            SOName = instance.name,
+            Instance = instance,
+            SOType = soType // Mark as dynamically created
+        };
+        saveableSOs[newId] = context;
+        identifiableSOs[newId] = instance;
+        identifiableSoToId[instance] = newId;
+    
+        // Initialize its default state
+        instance.LoadSaveData(null, true);
+
+        return instance;
     }
     
     #region Save
@@ -288,6 +352,7 @@ public class SaveableDataManager : MonoBehaviour
         SaveDataGOGenerator goSaveData = new();
         SaveDataGOProducer producerSaveData = new();
         SaveDataSOSaveable saveableSOData = new();
+        SaveDataSOGenerator soGeneratorData = new();
         
 
         foreach (var producerContext in producers.Values)
@@ -314,19 +379,30 @@ public class SaveableDataManager : MonoBehaviour
             producerSaveData.ProducerData.Add(saveData);
         }
 
-        foreach (var saveableSO in saveableSOs.Values) {
-            SaveableData saveableData = saveableSO.GetSaveData();
-            if (saveableData != null) {
+        foreach (var soContext in saveableSOs.Values) {
+            // 1. Add definition to the SOGenerator
+            soGeneratorData.SOGeneratorDefs.Add(new SOGeneratorDataContext()
+            {
+                SOId = soContext.SOId,
+                SOName = soContext.SOName,
+                SOType = soContext.SOType,
+            });
+
+            // 2. Add state to the SOSaveable
+            SaveableData stateData = soContext.Instance.GetSaveData();
+            if (stateData != null) {
                 saveableSOData.SaveableSOData.Add(new SaveableSODataContext()
                 {
-                    Data = saveableData,
-                    SOName = saveableSO.name,
-                    SOId = saveableSO.ID
+                    Data = stateData,
+                    SOName = soContext.SOName,
+                    SOId = soContext.SOId,
+                    SOType = soContext.SOType
                 });
             }
         }
 
         data.SaveDataGOGenerator = JsonConvert.SerializeObject(goSaveData, jsonSettings);
+        data.SaveDataSOGenerator = JsonConvert.SerializeObject(soGeneratorData, jsonSettings);
         data.SaveDataGOProducer = JsonConvert.SerializeObject(producerSaveData, jsonSettings);
         data.SaveDataSOSaveable = JsonConvert.SerializeObject(saveableSOData, jsonSettings);
 
@@ -343,6 +419,7 @@ public class SaveableDataManager : MonoBehaviour
             string goSaveDataPath = System.IO.Path.Combine(folderPath, "SaveDataGOGenerator.json");
             string producerSaveDataPath = System.IO.Path.Combine(folderPath, "SaveDataGOProducer.json");
             string saveableSODataPath = System.IO.Path.Combine(folderPath, "SaveDataSOSaveable.json");
+            string soGeneratorDataPath = System.IO.Path.Combine(folderPath, "SaveDataSOGenerator.json");
             
             if (!System.IO.Directory.Exists(folderPath))
             {
@@ -353,6 +430,7 @@ public class SaveableDataManager : MonoBehaviour
             System.IO.File.WriteAllText(goSaveDataPath, data.SaveDataGOGenerator);
             System.IO.File.WriteAllText(producerSaveDataPath, data.SaveDataGOProducer);
             System.IO.File.WriteAllText(saveableSODataPath, data.SaveDataSOSaveable);
+            System.IO.File.WriteAllText(soGeneratorDataPath, data.SaveDataSOGenerator);
             Debug.Log($"Test save data written to {folderPath}");
         }
         
@@ -435,6 +513,40 @@ public class SaveableDataManager : MonoBehaviour
         }
     }
 
+    private void RecreateScriptableObjects(SaveDataSOGenerator soDefinitions)
+    {
+        if (soDefinitions == null) return;
+
+        foreach (var soDef in soDefinitions.SOGeneratorDefs)
+        {
+            // If it's a pre-existing asset or already registered, skip.
+            if (soDef.SOType == InstantiableSOType.None || saveableSOs.ContainsKey(soDef.SOId))
+            {
+                continue;
+            }
+
+            if (!soTypeToSystemType.TryGetValue(soDef.SOType, out System.Type systemType))
+            {
+                Debug.LogError($"Cannot recreate SO {soDef.SOId}. No C# Type mapping found for InstantiableSOType {soDef.SOType}.");
+                continue;
+            }
+            var instance = (SaveableSO)ScriptableObject.CreateInstance(systemType);
+            instance.name = soDef.SOName;
+            instance.SetID(soDef.SOId);
+
+            var context = new SaveableSOContext
+            {
+                SOId = instance.ID,
+                SOName = instance.name,
+                Instance = instance,
+                SOType = soDef.SOType
+            };
+            saveableSOs[instance.ID] = context;
+            identifiableSOs[instance.ID] = instance;
+            identifiableSoToId[instance] = instance.ID;
+        }
+    }
+    
     private void LoadGameObjectData(SaveDataGOProducer producerData)
     {
         // Assumes all game object have been instantiated by this point. If one is missing, we warn, but do not fail.
@@ -466,14 +578,14 @@ public class SaveableDataManager : MonoBehaviour
     {
         foreach (SaveableSODataContext soData in saveableSOData.SaveableSOData)
         {
-            if (!saveableSOs.TryGetValue(soData.SOId, out SaveableSO saveableSO))
+            // CHANGE: Use the context dictionary to find the instance
+            if (!saveableSOs.TryGetValue(soData.SOId, out SaveableSOContext context))
             {
                 Debug.LogWarning($"SaveableSO with ID {soData.SOId} not found. Cannot load data for {soData.SOName}.");
                 continue;
             }
 
-            saveableSO.LoadSaveData(soData.Data, false);
-            // Debug.Log($"Loaded data for SaveableSO {soData.SOName} with ID {soData.SOId}.");
+            context.Instance.LoadSaveData(soData.Data, false);
         }
     }
 
@@ -542,7 +654,16 @@ public class SaveableDataManager : MonoBehaviour
         RecreateGameObjects(goDefinitions);
         // This automatically added the created game objects to the relevant dictionaries so no further action is needed here.
         
-        // Section 2: Loading Game Object Data
+        // Section 2: Recreating Scriptable Objects
+        SaveDataSOGenerator soDefinitions = JsonConvert.DeserializeObject<SaveDataSOGenerator>(saveData.SaveDataSOGenerator, jsonSettings);
+        if (soDefinitions == null)
+        {
+            Debug.LogError("Failed to deserialize SaveDataSOGenerator. Aborting load.");
+            return null;
+        }
+        RecreateScriptableObjects(soDefinitions);
+        
+        // Section 3: Loading Game Object Data
         SaveDataGOProducer producerData = JsonConvert.DeserializeObject<SaveDataGOProducer>(saveData.SaveDataGOProducer, jsonSettings);
         if (producerData == null)
         {
@@ -551,7 +672,7 @@ public class SaveableDataManager : MonoBehaviour
         }
         LoadGameObjectData(producerData);
         
-        // Section 3: Loading Saveable Scriptable Object Data
+        // Section 4: Loading Saveable Scriptable Object Data
         SaveDataSOSaveable saveableSOData = JsonConvert.DeserializeObject<SaveDataSOSaveable>(saveData.SaveDataSOSaveable, jsonSettings);
         if (saveableSOData == null)
         {
@@ -560,7 +681,7 @@ public class SaveableDataManager : MonoBehaviour
         }
         LoadSaveableSOData(saveableSOData);
         
-        // Section 4: Destroying any objects that were marked as destroyed in the save data.
+        // Section 5: Destroying any objects that were marked as destroyed in the save data.
         DestroyDestroyedObjects(goDefinitions);
         
         // If we get here, everything was loaded successfully.
@@ -622,9 +743,14 @@ public class SaveableDataManager : MonoBehaviour
         }
         
         // Step 2: Iterate over all saveable SOs and call LoadSaveData with blankLoad true.
-        foreach (var saveableSO in saveableSOs.Values)
+        foreach (var saveableSOContext in saveableSOs.Values)
         {
-            saveableSO.LoadSaveData(null, true);
+            if (saveableSOContext.Instance == null)
+            {
+                Debug.LogWarning($"SaveableSO {saveableSOContext.SOId} is null. Skipping blank load.");
+                continue;
+            }
+            saveableSOContext.Instance.LoadSaveData(null, true);
         }
     }
     
@@ -652,9 +778,16 @@ public class SaveableDataManager : MonoBehaviour
             
             if (so is SaveableSO saveableSO)
             {
-                saveableSOs[saveableSO.ID] = saveableSO;
-                // Debug.Log($"SaveableSO {saveableSO.name} with ID {saveableSO.ID} added to the database.");
-                
+                // Create a context for pre-existing assets from Resources
+                var context = new SaveableSOContext
+                {
+                    SOId = saveableSO.ID,
+                    SOName = saveableSO.name,
+                    Instance = saveableSO,
+                    SOType = InstantiableSOType.None // Mark as a non-instantiable asset
+                };
+                saveableSOs[saveableSO.ID] = context;
+        
                 saveableSOsList.Add(saveableSO);
             }
         }

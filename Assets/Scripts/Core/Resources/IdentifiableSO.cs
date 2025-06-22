@@ -11,6 +11,14 @@ public abstract class IdentifiableSO : ScriptableObject
     private string identifierId;
     public string ID => identifierId;
 
+    public void SetID(string id)
+    {
+        // This method is used to set the ID programmatically.
+        // It should only be called when the asset is created or duplicated.
+        // It will not change the ID in the inspector, as it's hidden.
+        identifierId = id;
+    }
+
     // OnValidate is the perfect place for this. It's called when the asset is
     // created, imported, or changed in the inspector.
     protected virtual void OnValidate()

@@ -34,6 +34,9 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
     [SerializeField] [Tooltip("The time it takes to transition out a bubble.")]
     private float transitionOutTime = 0.2f;
     
+    [SerializeField] [Tooltip("Anchor point for the bubble.")]
+    private FloatingUIAnchor anchor = FloatingUIAnchor.BottomRight;
+    
     [SerializeField] [Tooltip("Screen space offset for the bubble.")]
     private Vector2 screenSpaceOffset = new Vector2(0, 0);
 
@@ -60,7 +63,7 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
             PositionType = FloatingUIPositionType.Transform,
             TargetTransform = trackedTransform,
             
-            Anchor = FloatingUIAnchor.BottomRight,
+            Anchor = anchor,
             ScreenSpaceOffset = screenSpaceOffset,
             
             OnRemovalComplete = onFinishCallback,
@@ -70,8 +73,8 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
             bubbleDefinition = def
         };
 
-        string floaterId = CreateFloater(config);
-        if (floaterId == null)
+        var floaterData = CreateFloater(config);
+        if (floaterData == null)
         {
             // Failed to create floater, log an error
             Debug.LogError("Failed to create Speech Bubble floater.", this);
@@ -79,8 +82,7 @@ public class SpeechBubbleFloatingUIManager : AbstractFloatingUIManager<SpeechBub
         }
         
         // Otherwise, store the floater data
-        currentFloaterData = floaterDatas[floaterId];
-
+        currentFloaterData = floaterData;
         return currentFloaterData.Id;
     }
 

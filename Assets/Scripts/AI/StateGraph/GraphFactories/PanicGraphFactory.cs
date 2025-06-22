@@ -15,6 +15,8 @@ public enum PanicGraphExitConnection
 {
     PanicEnded,
     FailedToPanic,  // Used when there is no point in the zone that can be reached
+    DoorRoleFailed, // Used when the NPC cannot reach the point due to a door role failure
+    Error,         // Used when the NPC cannot reach the point due to an error
 }
 
 public class PanicGraphFactory : GenericAbstractGraphFactory<PanicGraphConfiguration, PanicGraphExitConnection>
@@ -47,7 +49,7 @@ public class PanicGraphFactory : GenericAbstractGraphFactory<PanicGraphConfigura
 
         // We need to create a Vector3VariableSO to store the panic point between states
         // Vector3VariableSO panicPoint = ScriptableObject.CreateInstance<Vector3VariableSO>();
-        Vector3VariableSO panicPoint = SaveableDataManager.Instance.CreateInstance<Vector3VariableSO>();
+        Vector3VariableSO panicPoint = SaveableDataManager.Instance.CreateInstance<Vector3VariableSO>(InstantiableSOType.Vector3Variable);
         
         // Construct: Get point in panic zone node
         GetZonePointGateStateConfiguration getZonePointConfig = new GetZonePointGateStateConfiguration
@@ -86,6 +88,12 @@ public class PanicGraphFactory : GenericAbstractGraphFactory<PanicGraphConfigura
 
         #region Node Connections
 
+        // Connect start to the first say node
+        graph.ConnectStateFlow(
+            startPoint.GraphNode, startPoint.PortName,
+            startSay, StateNode.IN_PORT_NAME
+        );
+        
         // Say state Timeout, Interrupt, and LoadIn all lead to the GetZonePoint node
         ConnectStateFlows<SayStateOutcome>(graph, startSay, new() {
             { SayStateOutcome.Timeout, getZonePointNode }
@@ -112,11 +120,11 @@ public class PanicGraphFactory : GenericAbstractGraphFactory<PanicGraphConfigura
         });
         ConnectStateInterrupt(graph, moveToNode, moveToNode);
         ConnectStateLoadIn(graph, moveToNode, moveToNode);
-        AddExitConnection(PanicGraphExitConnection.FailedToPanic,
+        AddExitConnection(PanicGraphExitConnection.Error,
             new(moveToNode, nameof(MoveToStateOutcome.Error)),
             "Oh Zimborp! I can't get there!"
         );
-        AddExitConnection(PanicGraphExitConnection.FailedToPanic,
+        AddExitConnection(PanicGraphExitConnection.DoorRoleFailed,
             new(moveToNode, nameof(MoveToStateOutcome.DoorRoleFailed)),
             "Oh Zimborp! I can't get through!"
         );

@@ -21,10 +21,27 @@ MonoBehaviour:
     ReactionType: 2
   - MinSuspicion: 5
     Priority: 2
-    ReactionType: 2
+    ReactionType: 5
   shootConfiguration:
     RequiredRoleForShootInteraction: {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
     ShootInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
     DistanceMargin: 2
     MaxChaseDuration: 20
     MaxChaseDurationWithoutLoS: 10
+  panicConfiguration:
+    EntrySayConfig:
+      StateName: 
+      StateId: a1dd21a3-ff41-487d-be3d-11051597840e
+      m_textToSay: Shit, I gotta go!
+      m_textDuration: 3
+      m_waitDuration: 1.5
+      m_textToLog: 
+      m_logLevel: 0
+    PanicDuration: 20
+    PanicSayConfig:
+    - Text: Oh this is bad
+      TextDuration: 3
+      WaitDuration: 4
+    - Text: Are they gone?
+      TextDuration: 3
+      WaitDuration: 4

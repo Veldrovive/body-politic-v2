@@ -1,5 +1,3 @@
-// Update Type: Full File
-// File: NpcSuspicionTracker.cs
 using UnityEngine;
 using System.Collections.Generic;
 using System;
@@ -25,6 +23,7 @@ public class NpcSuspicionTrackerSaveableData : SaveableData
 /// Manages suspicion levels for an NPC based on various timed sources.
 /// Calculates the current suspicion level as the maximum level from all active sources.
 /// </summary>
+[RequireComponent(typeof(Outline))]
 public class NpcSuspicionTracker : SaveableGOConsumer
 {
     // --- Internal State Class ---
@@ -45,6 +44,15 @@ public class NpcSuspicionTracker : SaveableGOConsumer
             EndTime = endTime;
         }
     }
+
+    [Serializable]
+    private struct OutlineThreshold
+    {
+        public int MinSuspicionLevel;
+        public Color OutlineColor;
+        public float OutlineWidth;
+    }
+    [SerializeField] private List<OutlineThreshold> outlineThresholds;
 
     // --- Struct for Editor Debugging ---
 
@@ -74,6 +82,8 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     // Buffer list to avoid modifying dictionary during iteration in Update
     private List<string> sourcesToRemove = new List<string>();
     
+    private Outline outline;
+    
     // --- Saveable Data Handling ---
     /// <summary>
     /// Gets the save data for this object.
@@ -94,6 +104,8 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     /// <param name="data">The save data to set.</param>
     public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
+        outline = GetComponent<Outline>();
+        
         if (!blankLoad)
         {
             if (data is not NpcSuspicionTrackerSaveableData trackerData)
@@ -190,6 +202,59 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     }
 
     // --- Public Methods ---
+
+    public void HandleSuspicionChanged(int newMaxSuspicion)
+    {
+        int oldMaxSuspicion = currentMaxSuspicion;
+        currentMaxSuspicion = newMaxSuspicion;
+        // Debug.Log($"Suspicion level changed on {gameObject.name} from {oldMaxSuspicion} to {currentMaxSuspicion}");
+
+        // Fire events
+        try // Wrap event invocation in try-catch as subscribers could throw exceptions
+        {
+            OnSuspicionChanged?.Invoke(currentMaxSuspicion);
+            if (currentMaxSuspicion > oldMaxSuspicion)
+            {
+                OnSuspicionIncreased?.Invoke(currentMaxSuspicion);
+            }
+            else // Must have decreased
+            {
+                OnSuspicionDecreased?.Invoke(currentMaxSuspicion);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Exception occurred in OnSuspicion event handler: {ex.Message}", this);
+        }
+        
+        // Update the outline
+        // Step 1: Find the outline threshold with the highest level that is less than or equal to the current suspicion level
+        OutlineThreshold? matchingThreshold = null;
+        foreach (var threshold in outlineThresholds)
+        {
+            if (currentMaxSuspicion >= threshold.MinSuspicionLevel)
+            {
+                if (matchingThreshold == null || threshold.MinSuspicionLevel > matchingThreshold.Value.MinSuspicionLevel)
+                {
+                    matchingThreshold = threshold;
+                }
+            }
+        }
+        // Step 2: If a matching threshold was found, update the outline properties
+        if (matchingThreshold.HasValue)
+        {
+            outline.OutlineColor = matchingThreshold.Value.OutlineColor;
+            outline.OutlineWidth = matchingThreshold.Value.OutlineWidth;
+            outline.enabled = true; // Ensure the outline is enabled
+        }
+        else
+        {
+            outline.enabled = false; // Disable outline if no thresholds match
+        }
+        
+
+        this.SetName($"Suspicion: {currentMaxSuspicion}"); // Update the GameObject name for debugging
+    }
 
     /// <summary>
     /// Adds or updates a suspicion source. If a source with the same name already exists,
@@ -290,29 +355,7 @@ public class NpcSuspicionTracker : SaveableGOConsumer
         // Check if the max level actually changed
         if (newMaxSuspicion != currentMaxSuspicion)
         {
-            int oldMaxSuspicion = currentMaxSuspicion;
-            currentMaxSuspicion = newMaxSuspicion;
-            // Debug.Log($"Suspicion level changed on {gameObject.name} from {oldMaxSuspicion} to {currentMaxSuspicion}");
-
-            // Fire events
-            try // Wrap event invocation in try-catch as subscribers could throw exceptions
-            {
-                OnSuspicionChanged?.Invoke(currentMaxSuspicion);
-                if (currentMaxSuspicion > oldMaxSuspicion)
-                {
-                    OnSuspicionIncreased?.Invoke(currentMaxSuspicion);
-                }
-                else // Must have decreased
-                {
-                    OnSuspicionDecreased?.Invoke(currentMaxSuspicion);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Exception occurred in OnSuspicion event handler: {ex.Message}", this);
-            }
-
-            this.SetName($"Suspicion: {currentMaxSuspicion}"); // Update the GameObject name for debugging
+            HandleSuspicionChanged(newMaxSuspicion);
         }
     }
 }

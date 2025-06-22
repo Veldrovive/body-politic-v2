@@ -18,7 +18,7 @@ public class MoveToStateConfiguration : AbstractStateConfiguration
     public TransformReference TargetTransform = new();
     public Vector3Reference TargetPosition = new();
 
-    public MovementSpeed DesiredSpeed = MovementSpeed.Walk;
+    public MovementSpeed DesiredSpeed = MovementSpeed.NpcSpeed;  // Default to using the NPC's default speed.
 
     // High level planning configuration
     public bool RequireExactPosition = true;  // Will not try to find nearby better locations by default. Assumes the target position is possible to reach.

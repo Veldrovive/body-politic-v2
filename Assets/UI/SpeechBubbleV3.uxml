@@ -1,0 +1,5 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="MainContainer" style="flex-grow: 1; padding-top: 0; align-items: center; position: relative; padding-right: 0; padding-bottom: 0; padding-left: 0; max-width: none;">
+        <ui:Label text="Label" name="SpeechText" style="-unity-text-align: upper-center; width: auto; font-size: 20px; border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; background-color: rgba(0, 0, 0, 0.76); color: rgb(255, 255, 255); padding-top: 6px; padding-bottom: 6px; background-image: none; padding-right: 10px; padding-left: 10px; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Silkscreen/slkscr.ttf?fileID=12800000&amp;guid=7646b223b33774a92a50cedb83b857e7&amp;type=3#slkscr&quot;); white-space: normal;" />
+    </ui:VisualElement>
+</ui:UXML>

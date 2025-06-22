@@ -28,3 +28,20 @@ MonoBehaviour:
     DistanceMargin: 2
     MaxChaseDuration: 20
     MaxChaseDurationWithoutLoS: 10
+  panicConfiguration:
+    EntrySayConfig:
+      StateName: 
+      StateId: a1dd21a3-ff41-487d-be3d-11051597840e
+      m_textToSay: I can't handle this!
+      m_textDuration: 3
+      m_waitDuration: 1.5
+      m_textToLog: 
+      m_logLevel: 0
+    PanicDuration: 20
+    PanicSayConfig:
+    - Text: Oh this is bad
+      TextDuration: 3
+      WaitDuration: 4
+    - Text: Are they gone?
+      TextDuration: 3
+      WaitDuration: 4

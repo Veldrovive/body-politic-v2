@@ -36,6 +36,8 @@ public class StateGraphView : GraphView
     {
         TypeNameHandling = TypeNameHandling.Objects
     };
+    
+    private Vector2 curMousePosition;
 
     public StateGraphView(SerializedObject serializedObject, StateGraphEditorWindow window)
     {
@@ -79,6 +81,12 @@ public class StateGraphView : GraphView
         graphViewChanged += HandleGraphViewChanged;
         serializeGraphElements += HandleCutCopyOperation;
         unserializeAndPaste += HandlePasteOperation;
+        
+        RegisterCallback<MouseMoveEvent>(evt =>
+        {
+            Vector3 mousePos = evt.mousePosition;
+            curMousePosition = mousePos;
+        });
     }
 
     public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -360,11 +368,34 @@ public class StateGraphView : GraphView
             node.NewGUID();
         }
         
-        // Offset the positions of the pasted nodes to avoid overlap
+        // // Offset the positions of the pasted nodes to avoid overlap
+        // foreach (StateGraphNode node in nodesToPaste)
+        // {
+        //     node.SetPosition(new Rect(node.position.x + 20, node.position.y + 20, node.position.width, node.position.height));
+        //     
+        //     // Add the node to the graph
+        //     Add(node);
+        // }
+        
+        // Place at mouse position with relative offset preserved. Top left of bounding box of all pasted nodes is at the current mouse position.
+        Vector2 mousePosition = contentViewContainer.WorldToLocal(curMousePosition); 
+        // Find the top left corner of the bounding box of all pasted nodes
+        float minX = float.MaxValue;
+        float minY = float.MaxValue;
         foreach (StateGraphNode node in nodesToPaste)
         {
-            node.SetPosition(new Rect(node.position.x + 20, node.position.y + 20, node.position.width, node.position.height));
-            
+            if (node.position.x < minX) { minX = node.position.x; }
+            if (node.position.y < minY) { minY = node.position.y; }
+        }
+        // Place each node at the mouse position, offset by the top left corner of the bounding box
+        foreach (StateGraphNode node in nodesToPaste)
+        {
+            node.SetPosition(new Rect(
+                mousePosition.x + (node.position.x - minX),
+                mousePosition.y + (node.position.y - minY),
+                node.position.width,
+                node.position.height
+            ));
             // Add the node to the graph
             Add(node);
         }

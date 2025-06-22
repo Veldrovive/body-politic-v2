@@ -79,7 +79,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     [SerializeField] protected UIDocument uiDocument;
     [SerializeField] protected Camera viewCamera;
     
-    protected class FloaterData
+    public class FloaterData
     {
         public bool IsInitialized = false;  // Indicates if the floater has been initialized and geometry is ready
         public bool IsDestroyed = false;
@@ -169,7 +169,7 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
     /// <param name="floaterConfig"></param>
     /// <returns>Unique id for this floater. Used to remove it.</returns>
     [CanBeNull]
-    public virtual string CreateFloater(TConfig floaterConfig)
+    public virtual FloaterData CreateFloater(TConfig floaterConfig)
     {
         if (floaterConfig.FloaterTemplate == null)
         {
@@ -225,7 +225,8 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
                 OnInitialGeometryReady(floaterData);
             }
         });
-        return floaterData.Id;
+        
+        return floaterData;
     }
     
     public virtual void RemoveFloater(string floaterId)

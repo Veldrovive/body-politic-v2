@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 4776853135727818125}
   - component: {fileID: 5412603953881350774}
   - component: {fileID: 1802905592461804675}
+  - component: {fileID: 7404719884324654939}
   - component: {fileID: 3065160016559865694}
   - component: {fileID: 177197453923943728}
   - component: {fileID: 576656727529733126}
@@ -168,6 +169,7 @@ MonoBehaviour:
     LoadOrder: 0
   InfectPoint: {fileID: 2810805423157551732}
   speed: 1
+  panicZone: {fileID: 0}
   defaultFootStepSounds:
   - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
   - {fileID: 8300000, guid: 5c9bdbce37b06a24fa6ea793bcfd1907, type: 3}
@@ -234,16 +236,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   reactionDefinition: {fileID: 11400000, guid: 8dbacabcee1f649138aaaa6a9fb6f90a, type: 2}
-  reactionDefinitions:
-  - MinSuspicion: 1
-    Priority: 2
-    ReactionType: 2
-  shootConfiguration:
-    RequiredRoleForShootInteraction: {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
-    ShootInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
-    DistanceMargin: 2
-    MaxChaseDuration: 20
-    MaxChaseDurationWithoutLoS: 10
 --- !u!114 &4776853135727818125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +284,34 @@ MonoBehaviour:
   saveableConfig:
     ConsumerId: 4e2498e4-99de-4b86-b116-b1f627ba9b0c
     LoadOrder: 0
+  outlineThresholds:
+  - MinSuspicionLevel: 1
+    OutlineColor: {r: 0, g: 1, b: 0.08090758, a: 1}
+    OutlineWidth: 2
+  - MinSuspicionLevel: 5
+    OutlineColor: {r: 1, g: 0.92572093, b: 0, a: 1}
+    OutlineWidth: 3
+  - MinSuspicionLevel: 10
+    OutlineColor: {r: 1, g: 0.008203061, b: 0, a: 1}
+    OutlineWidth: 5
+--- !u!114 &7404719884324654939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945626931996106311}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 4
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!114 &3065160016559865694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,12 +345,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 3065160016559865694}
   viewCamera: {fileID: 0}
-  speechBubbleTemplate: {fileID: 9197481963319205126, guid: 6189b17a17a344f5daf0ff403dbd0f33, type: 3}
+  speechBubbleTemplate: {fileID: 9197481963319205126, guid: 8417efb7efa0f46fbac78eb9cc6486dd, type: 3}
   trackedTransform: {fileID: 5667167069351560069}
   transitionInTime: 0.4
   transitionOutTime: 0.2
-  screenSpaceOffset: {x: 0, y: 0}
-  maxWidth: 40
+  anchor: 5
+  screenSpaceOffset: {x: 0, y: -20}
+  maxWidth: 30
 --- !u!114 &576656727529733126
 MonoBehaviour:
   m_ObjectHideFlags: 0

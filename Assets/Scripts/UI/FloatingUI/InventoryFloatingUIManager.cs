@@ -140,15 +140,15 @@ public class InventoryFloatingUIManager : AbstractFloatingUIManager<InteractionM
             keepOnScreen: true
         );
 
-        string floaterId = CreateFloater(config);
-        if (floaterId == null)
+        var floaterData = CreateFloater(config);
+        if (floaterData == null)
         {
             // Failed to create floater, log an error
             Debug.LogError("Failed to create Speech Bubble floater.", this);
             return false;
         }
         
-        currentFloaterData = floaterDatas[floaterId];
+        currentFloaterData = floaterData;
         activeMenuHoldableGO = holdable;
 
         return true;
