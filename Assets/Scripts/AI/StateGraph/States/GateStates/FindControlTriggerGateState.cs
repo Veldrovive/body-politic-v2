@@ -8,7 +8,7 @@ public class FindControlTriggerGateStateConfiguration : AbstractStateConfigurati
 {
     public override Type AssociatedStateType => typeof(FindControlTriggerGateState);
     
-    public Collider FeasibleZone;
+    public GameObject FeasibleAreaGO;
     public string LayerName = "PlayerControlTrigger";
     public InteractableType TargetType;
     public GameObjectVariableSO InteractableVariable;
@@ -29,11 +29,12 @@ public enum InteractableType
 
 public class FindControlTriggerGateState : GenericAbstractState<FindControlTriggerGateStateOutcome, FindControlTriggerGateStateConfiguration>
 {
-    
-    [SerializeField] private Collider feasibleZone;
+    [SerializeField] private GameObject feasibleAreaGO;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private InteractableType targetType;
     [SerializeField] private GameObjectVariableSO interactableVariable;
+
+    private Collider feasibleZone;
 
     public override void ConfigureState(FindControlTriggerGateStateConfiguration config)
     {
@@ -53,7 +54,7 @@ public class FindControlTriggerGateState : GenericAbstractState<FindControlTrigg
             Debug.LogWarning($"Layer '{config.LayerName}' not found. Please ensure the layer exists in the Tag Manager.");
         }
         
-        feasibleZone = config.FeasibleZone;
+        feasibleAreaGO = config.FeasibleAreaGO;
         targetType = config.TargetType;
         interactableVariable = config.InteractableVariable;
     }
@@ -66,6 +67,13 @@ public class FindControlTriggerGateState : GenericAbstractState<FindControlTrigg
 
     private void OnEnable()
     {
+        if (feasibleAreaGO == null)
+        {
+            Debug.LogError("FindControlTriggerGateState: FeasibleAreaGO is null");
+            TriggerExit(FindControlTriggerGateStateOutcome.TriggerNotFound);
+            return;
+        }
+        feasibleZone = feasibleAreaGO?.GetComponent<Collider>();
         if (feasibleZone == null)
         {
             Debug.LogWarning($"Zone for find control trigger state on {gameObject.name} is null.");

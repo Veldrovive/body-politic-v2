@@ -119,7 +119,7 @@ public class HoldItemGateState : GenericAbstractState<HoldItemGateStateOutcome, 
             if (inventoryItem?.gameObject == itemToHold)
             {
                 // We found it. We now need to put it into the hand
-                Holdable heldItem = npcContext.Inventory.TryRetrieveItem(inventoryItem);
+                Holdable heldItem = npcContext.Inventory.TryRetrieveItem(inventoryItem, storeHeldFirst: true);
                 if (heldItem != null)
                 {
                     // The item is now in the hand

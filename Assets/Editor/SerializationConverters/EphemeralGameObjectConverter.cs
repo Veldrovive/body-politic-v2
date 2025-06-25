@@ -65,21 +65,38 @@ public class EphemeralGameObjectConverter : JsonConverter
             writer.WriteNull();
             return;
         }
-
+        
         var go = (GameObject)value;
+        if (go == null)
+        {
+            writer.WriteNull();
+            return;
+        }
 
-        writer.WriteStartObject();
+        try
+        {
+            var instanceId = go.GetInstanceID();
+            var name = go.name;
 
-        writer.WritePropertyName("ReferenceType");
-        writer.WriteValue("EphemeralGameObject");
+            writer.WriteStartObject();
 
-        writer.WritePropertyName("InstanceID");
-        writer.WriteValue(go.GetInstanceID()); // The essential piece of data for deserialization.
+            writer.WritePropertyName("ReferenceType");
+            writer.WriteValue("EphemeralGameObject");
 
-        writer.WritePropertyName("GameObjectName");
-        writer.WriteValue(go.name); // For debugging.
+            writer.WritePropertyName("InstanceID");
+            writer.WriteValue(instanceId); // The essential piece of data for deserialization.
 
-        writer.WriteEndObject();
+            writer.WritePropertyName("GameObjectName");
+            writer.WriteValue(name); // For debugging.
+
+            writer.WriteEndObject();
+        }
+        catch (NullReferenceException e)
+        {
+            // For some reason the null check above doesn't always work
+            Debug.LogWarning("EphemeralGameObjectConverter: null check passed but null reference exception happened"); 
+            writer.WriteNull();
+        }
     }
 }
 #endif

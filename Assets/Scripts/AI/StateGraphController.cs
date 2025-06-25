@@ -532,24 +532,8 @@ public class StateGraphController : SaveableGOConsumer
             // The current state was successfully interrupted.
             // currentExecutionContext.CurrentState is now null.
 
-            if (interruptContext != null)
-            {
-                // An ExecutionContext to resume the interrupted graph was created.
-                // We need to store it appropriately.
-                if (interruptContext.Graph == routineStateGraph)
-                {
-                    savedRoutineContext = interruptContext;
-                }
-                // Actually, otherwise we should do nothing since we want to "Proceed" and never save. We only save
-                // for the routineStateGraph because if we don't it would cause strange behavior.
-                // else
-                // {
-                //     executionDequeue.AddFirst(interruptContext);
-                // }
-            }
-            // If interruptContext is null, the interrupted graph was either not savable,
-            // or had no valid interrupt transition. If it was ephemeral and not savable,
-            // TryInterruptCurrentState would have destroyed it.
+            // We don't save the interrupt context because we explicitly do not want to return to this graph.
+            // If we proceeded on the routine state graph, the effect of this is that we start over from the start node
 
             // Signal that a new graph should be picked from the queue or routine.
             currentExecutionContext = null;
