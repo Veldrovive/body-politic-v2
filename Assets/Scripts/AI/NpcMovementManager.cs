@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
+using Action = System.Action;
 
 /// <summary>
 /// Defines the frame of reference for a target offset.
@@ -20,6 +22,7 @@ public enum TargetOffsetFrame
     TargetLocal
 }
 
+[BlackboardEnum]
 public enum MovementSpeed
 {
     Stroll,
@@ -676,7 +679,7 @@ public class NpcMovementManager : SaveableGOConsumer
                 }
                 else // No path or path is invalid after link
                 {
-                    Debug.LogWarning("NpcMovementManager: Path is invalid or does not exist after OffMeshLink completion. Attempting to re-plan.", this);
+                    // Debug.LogWarning("NpcMovementManager: Path is invalid or does not exist after OffMeshLink completion. Attempting to re-plan.", this);
                     Vector3? targetPos = GetTargetPosition(currentMovementRequest);
                     if (targetPos.HasValue && navMeshAgent.SetDestination(targetPos.Value))
                     {
@@ -1011,8 +1014,8 @@ public class NpcMovementManager : SaveableGOConsumer
     {
         if (currentMovementRequest == null)
         {
-            // This is weird and points to a bug.
-            Debug.LogWarning("NpcMovementManager: No current movement request to interrupt.", this);
+            // This was probably due to a safety interrupt to ensure that nothing was running. It wasn't so we're fine.
+            return;
         }
         
         EndRequestWithError(MovementFailureReason.Interrupted);

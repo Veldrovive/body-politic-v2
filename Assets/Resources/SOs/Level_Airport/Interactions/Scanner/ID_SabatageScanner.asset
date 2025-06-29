@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f90280dcf54ce6a4754b42d71b0f36, type: 3}
   m_Name: ID_SabatageScanner
   m_EditorClassIdentifier: 
+  identifierId: 915622d09374649e5b8e2caf5c5b7a9a
   uiTitle: Sabatage scanner
   uiDescription: I could trick the guards into thinking people were scanned with
     this.
@@ -23,11 +24,39 @@ MonoBehaviour:
   requiredProximity: 1.5
   interactionAvailableFroms: 00000000
   interactionDuration: 3.233
+  witnessSuspicionLevel: 0
   initiatorAnimationTrigger: PushButton
   targetAnimationTrigger: 
   endAnimationOnFinish: 0
   endAnimationOnInterrupt: 0
-  witnessSuspicionLevel: 0
+  initiatorSoundOnStart:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
+  targetSoundOnStart:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
+  initiatorSoundOnFinish:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
+  targetSoundOnFinish:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
   humanReadableFailureReasons:
   - HumanReadableReason: This thrall doesn't know how to operate the panel.
     Reason: 0
@@ -56,4 +85,7 @@ MonoBehaviour:
   - HumanReadableReason: I couldn't get their attention.
     Reason: 8
     Priority: 6
+  - HumanReadableReason: They're dead.
+    Reason: 9
+    Priority: 7
   debugPrompt: 

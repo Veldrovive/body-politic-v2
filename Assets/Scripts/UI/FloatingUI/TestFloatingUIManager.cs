@@ -85,8 +85,8 @@ public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUICon
             KeepOnScreen = this.keepOnScreen,
             
             // --- Events (Optional) ---
-            OnCreationComplete = () => Debug.Log("Default floater has been created!"),
-            OnRemovalComplete = () => Debug.Log("Default floater has been removed.")
+            // OnCreationComplete = () => Debug.Log("Default floater has been created!"),
+            // OnRemovalComplete = () => Debug.Log("Default floater has been removed.")
         };
 
         // Create the floater using the base class method.
@@ -113,7 +113,7 @@ public class TestFloatingUIManager : AbstractFloatingUIManager<TestFloatingUICon
     /// </summary>
     protected override bool OnSetupFloater(VisualElement floaterRoot, TestFloatingUIConfig floaterConfig)
     {
-        Debug.Log("OnSetupFloater called.");
+        // Debug.Log("OnSetupFloater called.");
         var titleLabel = floaterRoot.Q<Label>("title-label");
         if (titleLabel != null)
         {

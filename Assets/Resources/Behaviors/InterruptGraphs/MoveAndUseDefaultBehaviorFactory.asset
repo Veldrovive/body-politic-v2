@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2244f248a39e4882b56893337517f665, type: 3}
+  m_Name: MoveAndUseDefaultBehaviorFactory
+  m_EditorClassIdentifier: 
+  graph: {fileID: 2170183885070172226, guid: 60d4ee38eb5c145f594999f932fe4411, type: 2}
+  displayName: Move and Use
+  displayDescription: Moves to the specified position and uses an item.
+  genericErrorMessage: Something went wrong.
+  doorRoleFailedMessage: This door won't open for me.
+  interactionRoleFailedMessage: I'm not authorized for this.
+  proximityFailedMessage: Looks like I need to be closer.

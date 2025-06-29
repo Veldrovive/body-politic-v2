@@ -23,11 +23,39 @@ MonoBehaviour:
   requiredProximity: 1.5
   interactionAvailableFroms: 00000000
   interactionDuration: 3.233
+  witnessSuspicionLevel: 0
   initiatorAnimationTrigger: PushButton
   targetAnimationTrigger: 
   endAnimationOnFinish: 0
   endAnimationOnInterrupt: 1
-  witnessSuspicionLevel: 0
+  initiatorSoundOnStart:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
+  targetSoundOnStart:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
+  initiatorSoundOnFinish:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
+  targetSoundOnFinish:
+    Enabled: 0
+    Clip: {fileID: 0}
+    SType: 1
+    Suspiciousness: 0
+    Loudness: 0
+    CausesReactions: 0
   humanReadableFailureReasons:
   - HumanReadableReason: It looks like this thrall doesn't have the ability to do
       that.
@@ -57,4 +85,7 @@ MonoBehaviour:
   - HumanReadableReason: I couldn't get their attention.
     Reason: 8
     Priority: 6
+  - HumanReadableReason: They're dead.
+    Reason: 9
+    Priority: 7
   debugPrompt: 

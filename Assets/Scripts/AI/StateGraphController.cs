@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Sisus.ComponentNames;
+using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Serialization;
 

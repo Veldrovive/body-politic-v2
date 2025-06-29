@@ -20,13 +20,6 @@ public enum FindControlTriggerGateStateOutcome
     TriggerNotFound
 }
 
-public enum InteractableType
-{
-    Interactable,
-    Holdable,
-    Consumable
-}
-
 public class FindControlTriggerGateState : GenericAbstractState<FindControlTriggerGateStateOutcome, FindControlTriggerGateStateConfiguration>
 {
     [SerializeField] private GameObject feasibleAreaGO;

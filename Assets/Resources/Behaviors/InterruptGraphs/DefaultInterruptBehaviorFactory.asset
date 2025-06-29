@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ae2da3bf7ac48779e5fee95da11b6fc, type: 3}
+  m_Name: DefaultInterruptBehaviorFactory
+  m_EditorClassIdentifier: 
+  MoveToBehaviorFactory: {fileID: 11400000, guid: 3b11f2d71012b4f649fe0d89c009ce9d, type: 2}
+  MoveAndUseBehaviorFactory: {fileID: 11400000, guid: 90f5d4c09095242d48a975b04ccd88b5, type: 2}

@@ -39,6 +39,7 @@ public class PlayerControlTrigger : MonoBehaviour
     
     [Tooltip("The Custom Action Scriptable Object defining the sequence.")]
     [SerializeField] private AbstractCustomPlayerAction customAction;
+    [SerializeField] private InterruptBehaviorFactory<MoveAndUseBehaviorParameters> customBehaviorFactory;
 
     // --- Standard Action Parameters (If Use Custom Action is false) ---
     [Header("Standard Action Parameters")]
@@ -234,6 +235,26 @@ public class PlayerControlTrigger : MonoBehaviour
             }, StateGraphGUID);
             return graphFactory;
         }
+    }
+
+    public InterruptBehaviorDefinition GetBehaviorInterruptDefinition(GameObject initiatorGO)
+    {
+        var parameters = new MoveAndUseBehaviorParameters()
+        {
+            initiatorGO = initiatorGO,
+            standPoint = moveToTargetTransform,
+            interactionDefinition = targetInteractionDefinition,
+            Interactable = targetInteractableObject?.gameObject,
+            desiredSpeed = MovementSpeed.NpcSpeed,
+            ExactPosition = requireExactPosition,
+            FinalAlignment = requireFinalAlignment,
+        };
+        
+        InterruptBehaviorFactory<MoveAndUseBehaviorParameters> factory = useCustomAction ?
+            customBehaviorFactory :
+            GlobalData.Instance.defaultAggInterruptBehaviorFactory.MoveAndUseBehaviorFactory;
+
+        return factory.GetInterruptDefinition(parameters);
     }
     
     void AutoSetInteractable()

@@ -30,6 +30,7 @@ public class NpcContext : SaveableGOConsumer
     public NPCIdentity Identity { get; private set; }
     public NpcInventory Inventory { get; private set; }
     public StateGraphController StateGraphController { get; private set; }
+    public BehaviorController BehaviorController { get; private set; }
     public NpcMovementManager MovementManager { get; private set; }
     public NpcSuspicionTracker SuspicionTracker { get; private set; }
     public SpeechBubbleFloatingUIManager SpeechBubbleManager { get; private set; }
@@ -101,6 +102,7 @@ public class NpcContext : SaveableGOConsumer
         Identity = GetComponent<NPCIdentity>();
         Inventory = GetComponent<NpcInventory>();
         StateGraphController = GetComponent<StateGraphController>();
+        BehaviorController = GetComponent<BehaviorController>();
         MovementManager = GetComponent<NpcMovementManager>();
         SuspicionTracker = GetComponent<NpcSuspicionTracker>();
         SpeechBubbleManager = GetComponent<SpeechBubbleFloatingUIManager>();

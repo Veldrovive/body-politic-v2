@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bb3135f56f144868048b35eeaf9c15, type: 3}
   m_Name: R_Mechanic
   m_EditorClassIdentifier: 
+  identifierId: 1cfd57c9f0c5940c5b60ea6803c63825
   RoleName: Mechanic
   RoleDescription: 
   RoleWeight: 1
   RoleType: 1
+  Sticky: 0

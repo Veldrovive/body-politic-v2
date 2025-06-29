@@ -268,7 +268,11 @@ public class InteractionDefinitionSO : IdentifiableSO, IActionDefinition
                 if (defaultFailureMessages.TryGetValue(reason, out var defaultReason))
                 {
                     humanReadableFailureReasons.Add(defaultReason);
-                    Debug.LogWarning($"Added missing human-readable failure reason for {reason}: {defaultReason.HumanReadableReason}");
+                    Debug.LogWarning($"Added missing human-readable failure reason to {name} for {reason}: {defaultReason.HumanReadableReason}", this);
+                    // Ensure that the SO is saved after modification
+#if UNITY_EDITOR
+                    UnityEditor.EditorUtility.SetDirty(this);
+#endif
                 }
                 else
                 {

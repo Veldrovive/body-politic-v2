@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json;
+using Unity.Behavior;
 
 #region Runtime Instantiation
 
@@ -163,6 +164,10 @@ public class SaveableDataManager : MonoBehaviour
     private Dictionary<IdentifiableSO, string> identifiableSoToId = new Dictionary<IdentifiableSO, string>();
     private Dictionary<string, IdentifiableSO> identifiableSOs = new Dictionary<string, IdentifiableSO>();
     
+    // Used for serialization of Behavior Graphs.
+    private Dictionary<string, BehaviorGraph> behaviorGraphs = new Dictionary<string, BehaviorGraph>();
+    private Dictionary<BehaviorGraph, string> behaviorGraphToKey = new Dictionary<BehaviorGraph, string>();
+    
     // Used for the serialization of GameObjects that have SaveableGOProducers.
     private Dictionary<GameObject, string> gameObjectToProducerId = new Dictionary<GameObject, string>();
     private Dictionary<string, GameObject> producerIdToGO = new Dictionary<string, GameObject>();
@@ -173,6 +178,7 @@ public class SaveableDataManager : MonoBehaviour
             Instance = this;
             ConstructSOTypeDatabase();
             ConstructIdentifiableSODatabase();
+            ConstructBehaviorGraphDatabase();
         } else {
             // This shouldn't really happen, but the correct behavior is to overwrite the old instance.
             Debug.LogWarning($"There is already an instance of SaveableDataManager in the scene. Overwriting the old instance.");
@@ -331,6 +337,140 @@ public class SaveableDataManager : MonoBehaviour
 
         return instance;
     }
+
+    #region Getters
+
+    public string GetIdentifiablSOId(IdentifiableSO identifiableSO)
+    {
+        if (identifiableSoToId.TryGetValue(identifiableSO, out string id))
+        {
+            return id;
+        }
+        Debug.LogError($"IdentifiableSO {identifiableSO.name} not found in the registry. Cannot get ID.");
+        return null;
+    }
+    
+    public IdentifiableSO GetIdentifiableSOFromId(string id)
+    {
+        if (identifiableSOs.TryGetValue(id, out IdentifiableSO identifiableSO))
+        {
+            return identifiableSO;
+        }
+        Debug.LogError($"IdentifiableSO with ID {id} not found in the registry. Cannot get IdentifiableSO.");
+        return null;
+    }
+
+    public string GetBehaviorGraphKey(BehaviorGraph behaviorGraph)
+    {
+        if (behaviorGraphToKey.TryGetValue(behaviorGraph, out string key))
+        {
+            return key;
+        }
+        Debug.LogError($"BehaviorGraph {behaviorGraph.name} not found in the registry. Cannot get key.");
+        return null;
+    }
+    
+    public BehaviorGraph GetBehaviorGraphFromKey(string key)
+    {
+        if (behaviorGraphs.TryGetValue(key, out BehaviorGraph behaviorGraph))
+        {
+            return behaviorGraph;
+        }
+        Debug.LogError($"BehaviorGraph with key {key} not found in the registry. Cannot get BehaviorGraph.");
+        return null;
+    }
+    
+    public string GetGameObjectKey(GameObject go)
+    {
+        if (go.TryGetComponent<SaveableGOProducer>(out var producer))
+        {
+            // Then this can be directly serialized with a reference to the id.
+            return producer.Config.ProducerId;
+        }
+        else if (go.TryGetComponent<SaveableGOPointer>(out var pointer))
+        {
+            // Then this game object has a pointer to a SaveableGOProducer that we will serialize by.
+            SaveableGOProducer parentProducer = pointer.ParentProducer;
+            if (parentProducer == null)
+            {
+                Debug.LogError($"GameObject {go.name} has a SaveableGOPointer, but no parent SaveableGOProducer found. Cannot get ID.");
+                return null;
+            }
+            
+            // We can serialize the GameObject with reference to the parent producer.
+            string trueProducerId = parentProducer.Config.ProducerId;
+            string trueConsumerId = pointer.SaveableConfig.ConsumerId;
+            return $"{trueProducerId}_{trueConsumerId}";  // Return a composite key for the pointer.
+        }
+        else
+        {
+            Debug.LogError($"Tried to serialize GameObject {go.name} that does not have a SaveableGOProducer or SaveableGOPointer component. Cannot get ID.");
+            return null;
+        }
+    }
+    
+    public GameObject GetGameObjectFromKey(string key)
+    {
+        if (string.IsNullOrEmpty(key))
+        {
+            return null;
+        }
+        
+        // First, we need to check is a '_' is present in the producerId.
+        if (key.Contains('_'))
+        {
+            // This is a SaveableGOPointer. We can recover the producerId and consumerId from the key.
+            string[] parts = key.Split('_');
+            if (parts.Length != 2)
+            {
+                Debug.LogError($"Invalid key format for SaveableGOPointer: {key}. Expected format is 'ProducerId_ConsumerId'.");
+                return null;
+            }
+            string producerId = parts[0];
+            string consumerId = parts[1];
+
+            if (!producerIdToGO.TryGetValue(producerId, out GameObject parentGo))
+            {
+                // If the producerId is not found, we cannot resolve the GameObject.
+                Debug.LogWarning($"Producer with ID {producerId} not found in the registry. Cannot resolve GameObject for SaveableGOPointer with consumer ID {consumerId}.");
+                return null;
+            }
+            
+            // Otherwise we are looking for a specific consumer on the producer.
+            SaveableGOProducer producerComponent = parentGo.GetComponent<SaveableGOProducer>();
+            if (producerComponent == null)
+            {
+                // The producerGO had the component removed? This is an error and means that the level probably had a breaking change.
+                Debug.LogWarning($"GameObject '{parentGo.name}' with ProducerId '{producerId}' does not have a SaveableGOProducer component. Returning null GameObject.");
+                return null;
+            }
+
+            GameObject consumerGO = producerComponent.GetConsumerObject(consumerId);
+            if (consumerGO == null)
+            {
+                // The consumerGO had the component removed? This is an error and means that the level probably had a breaking change.
+                Debug.LogWarning($"GameObject '{parentGo.name}' with ProducerId '{producerId}' does not have a SaveableGOConsumer with ConsumerId '{consumerId}'. Returning null GameObject.");
+                return null;
+            }
+            
+            return consumerGO;
+        }
+        else
+        {
+            // Then we only need to look up the producerId directly.
+            if (producerIdToGO.TryGetValue(key, out GameObject producerGO))
+            {
+                return producerGO;
+            }
+            else
+            {
+                Debug.LogWarning($"Producer with ID {key} not found in the registry. Cannot resolve GameObject.");
+                return null;
+            }
+        }
+    }
+
+    #endregion
     
     #region Save
 
@@ -343,6 +483,7 @@ public class SaveableDataManager : MonoBehaviour
         jsonSettings.Converters.Add(new IdentifiableSOConverter(identifiableSOs, identifiableSoToId));
         jsonSettings.Converters.Add(new SaveableGOConverter(producerIdToGO, gameObjectToProducerId));
         jsonSettings.Converters.Add(new TransformConverter(producerIdToGO, gameObjectToProducerId));
+        jsonSettings.Converters.Add(new BehaviorGraphConverter(behaviorGraphs, behaviorGraphToKey));
         
         SaveData data = new();
 
@@ -627,6 +768,7 @@ public class SaveableDataManager : MonoBehaviour
         jsonSettings.Converters.Add(new IdentifiableSOConverter(identifiableSOs, identifiableSoToId));
         jsonSettings.Converters.Add(new SaveableGOConverter(producerIdToGO, gameObjectToProducerId));
         jsonSettings.Converters.Add(new TransformConverter(producerIdToGO, gameObjectToProducerId));
+        jsonSettings.Converters.Add(new BehaviorGraphConverter(behaviorGraphs, behaviorGraphToKey));
         
         SaveData saveData = JsonConvert.DeserializeObject<SaveData>(saveDataJSON, jsonSettings);
         if (saveData == null)
@@ -761,6 +903,7 @@ public class SaveableDataManager : MonoBehaviour
         saveableSOsList.Clear();
         foreach (IdentifiableSO so in Resources.LoadAll<IdentifiableSO>(""))
         {
+            // Each of these is an SO that can appear in other serialized data.
             if (so == null || string.IsNullOrEmpty(so.ID))
             {
                 Debug.LogWarning($"IdentifiableSO {so?.name} has no ID. Skipping.");
@@ -778,7 +921,7 @@ public class SaveableDataManager : MonoBehaviour
             
             if (so is SaveableSO saveableSO)
             {
-                // Create a context for pre-existing assets from Resources
+                // Not only can this be serialized, it also has data that we need to save and load.
                 var context = new SaveableSOContext
                 {
                     SOId = saveableSO.ID,
@@ -790,6 +933,21 @@ public class SaveableDataManager : MonoBehaviour
         
                 saveableSOsList.Add(saveableSO);
             }
+        }
+    }
+
+    private void ConstructBehaviorGraphDatabase()
+    {
+        foreach (BehaviorGraph g in Resources.LoadAll<BehaviorGraph>(""))
+        {
+            
+            // Each of these can appear on a NPC and be correctly serialized and loaded.
+            string key = g.name;
+            if (!behaviorGraphs.TryAdd(key, g))
+            {
+                Debug.LogWarning($"Duplicate BehaviorGraph found with name {key}. Skipping {g.name}.");
+            }
+            behaviorGraphToKey[g] = key;
         }
     }
 }

@@ -69,11 +69,11 @@ public class SceneLoadManager : MonoBehaviour
         SceneId currentSceneId = GetCurrentScenedId();
         if (currentSceneId == SceneId.MainMenu)
         {
-            Debug.Log("Current scene is Main Menu. No action needed.");
+            // Debug.Log("Current scene is Main Menu. No action needed.");
         }
         else
         {
-            Debug.Log($"Current scene is {currentSceneId}. Performing blank load.");
+            // Debug.Log($"Current scene is {currentSceneId}. Performing blank load.");
             SaveableDataManager.Instance.BlankLoad();
         }
     }

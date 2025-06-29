@@ -186,6 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerIdentity: {fileID: 11400000, guid: c5f214389aac7473f8304ce6b401d3fb, type: 2}
+  defaultAggInterruptBehaviorFactory: {fileID: 11400000, guid: bf926044d0aae4f4198ae0827757393f, type: 2}
   InfectionEvent: {fileID: 11400000, guid: b2d0179eea23a4d389a3d13be4f6f1f3, type: 2}
   SoundEvent: {fileID: 11400000, guid: 7d0544ca3d89e485c96c5955407f130f, type: 2}
 --- !u!114 &8917888051748937010

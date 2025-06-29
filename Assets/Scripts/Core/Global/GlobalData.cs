@@ -1,10 +1,15 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [DefaultExecutionOrder(-100)]
 public class GlobalData : MonoBehaviour
 {
     [Tooltip("The SO used to store the player roles.")]
     [SerializeField] public PlayerIdentitySO PlayerIdentity;
+    
+    [FormerlySerializedAs("defaultInterruptBehaviorFactory")]
+    [Tooltip("The SO that defines default interrupt behavior.")]
+    [SerializeField] public AggInterruptBehaviorFactory defaultAggInterruptBehaviorFactory;
     
     [Header("Default Events")]
     // TODO: XXX Uncomment when interrupts brought back
