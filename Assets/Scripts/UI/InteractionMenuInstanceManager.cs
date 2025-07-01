@@ -226,7 +226,7 @@ public class InteractionMenuInstanceManager
         // Check if anything has changed between currentButtonsData and newButtonsData.
         if (currentButtonsData.Count != newButtonsData.Count || !currentButtonsData.SequenceEqual(newButtonsData))
         {
-            Debug.Log("Updating interaction buttons in the UI.");
+            // Debug.Log("Updating interaction buttons in the UI.");
             
             actionsContainer.Clear();
             actionsContainer.RegisterCallback<MouseEnterEvent>(OnActionButtonHover);

@@ -1029,12 +1029,15 @@ public class NpcMovementManager : SaveableGOConsumer
             // Whoops, we are abandoning the state in the middle of a traversal
             AbandonOffMeshLink();
         }
-        
-        // Ensure that everything is stopped and all variables are reset
-        navMeshAgent.isStopped = true;
-        navMeshAgent.updateRotation = true; // give rotation power back to the agent.
-        navMeshAgent.updatePosition = true;
-        navMeshAgent.ResetPath();
+
+        if (navMeshAgent.isActiveAndEnabled)
+        {
+            // Ensure that everything is stopped and all variables are reset
+            navMeshAgent.isStopped = true;
+            navMeshAgent.updateRotation = true; // give rotation power back to the agent.
+            navMeshAgent.updatePosition = true;
+            navMeshAgent.ResetPath();
+        }
         currentMovementRequest = null;
         lastTargetPosition = null;
         lastRemainingDistance = 0f;

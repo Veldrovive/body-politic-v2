@@ -43,7 +43,7 @@ public partial class MoveToTransformAction : SaveableAction
 
     protected override Status OnLoad()
     {
-        Debug.Log("Starting MoveToTransformAction for " + Self.Value.name);
+        // Debug.Log("Starting MoveToTransformAction for " + Self.Value.name);
         if (!Self.Value.TryGetComponent(out npcContext))
         {
             Debug.LogError("MoveToTransformAction: Self does not have a NpcContext component.");
@@ -114,6 +114,8 @@ public partial class MoveToTransformAction : SaveableAction
             }
             else
             {
+                npcContext.MovementManager.OnRequestCompleted -= HandleRequestCompleted;
+                npcContext.MovementManager.OnRequestFailed -= HandleRequestFailed;
                 // Check if we have timed out
                 if (elapsedTime > navigationTimeout)
                 {
@@ -238,7 +240,14 @@ public partial class MoveToTransformAction : SaveableAction
         lastPlanAttemptTime = float.MinValue;
         elapsedTime = 0;
         
-        Debug.Log("Stopping MoveToTransformAction for " + Self.Value.name);
+        // Remove the event listeners to avoid memory leaks
+        if (npcContext.MovementManager != null)
+        {
+            npcContext.MovementManager.OnRequestCompleted -= HandleRequestCompleted;
+            npcContext.MovementManager.OnRequestFailed -= HandleRequestFailed;
+        }
+        
+        // Debug.Log("Stopping MoveToTransformAction for " + Self.Value.name);
         npcContext.MovementManager.InterruptCurrentRequest();
     }
 }

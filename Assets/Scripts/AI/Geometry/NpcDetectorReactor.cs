@@ -21,17 +21,17 @@ public class NpcDetectorReactor : LoSNpcDetector
 {
     [SerializeField] private NpcDetectorReactionDefinitionSO reactionDefinition;
 
-    private class ReactionStateGraphContext
+    private class ReactionStateBehaviorContext
     {
-        public string GraphId;
+        public string AgentId;
         public float CausalSuspicion;  // The suspicion level that caused this reaction
     }
-    private ReactionStateGraphContext currentReactionStateGraphContext = null;
+    private ReactionStateBehaviorContext _currentReactionStateBehaviorContext = null;
 
-    private bool IsStillQueued(ReactionStateGraphContext context)
+    private bool IsStillQueued(ReactionStateBehaviorContext context)
     {
-        // Checks if this graph is still queued in the StateGraphController
-        return ownNpcContext.StateGraphController.HasGraphInQueue(context.GraphId);
+        // Checks if this graph is still queued in the Controller
+        return ownNpcContext.BehaviorController.HasBehaviorInQueue(context.AgentId);
     }
     
     private (float maxSuspicion, NpcContext mostSuspiciousNpcContext) GetMaxSuspicion()
@@ -49,14 +49,14 @@ public class NpcDetectorReactor : LoSNpcDetector
         return (maxSuspicion, mostSuspiciousNpcContext);
     }
 
-    private (AbstractGraphFactory factory, int priority) GetGraphFactory(NpcContext targetNpc, float suspicion)
+    private InterruptBehaviorDefinition GetBehaviorFactory(NpcContext targetNpc, float suspicion)
     {
         if (reactionDefinition == null)
         {
-            return (null, -1);
+            return null;
         }
 
-        return reactionDefinition.GetReactionFactory(ownNpcContext, targetNpc, suspicion);
+        return reactionDefinition.GetBehaviorFactory(ownNpcContext, targetNpc, suspicion);
     }
 
     protected override void Update()
@@ -64,16 +64,16 @@ public class NpcDetectorReactor : LoSNpcDetector
         base.Update();
         
         // Check if the current reaction state has exited
-        if (currentReactionStateGraphContext != null && !IsStillQueued(currentReactionStateGraphContext))
+        if (_currentReactionStateBehaviorContext != null && !IsStillQueued(_currentReactionStateBehaviorContext))
         {
             // The current reaction state has exited, so we reset it
-            currentReactionStateGraphContext = null;
+            _currentReactionStateBehaviorContext = null;
         }
         
         var (maxSuspicion, mostSuspiciousNpcContext) = GetMaxSuspicion();
         if (
             Mathf.Approximately(maxSuspicion, 0) ||
-            (currentReactionStateGraphContext != null && maxSuspicion <= currentReactionStateGraphContext.CausalSuspicion)
+            (_currentReactionStateBehaviorContext != null && maxSuspicion <= _currentReactionStateBehaviorContext.CausalSuspicion)
         )
         {
             // Then the suspicion level has not risen enough to trigger a new reaction,
@@ -81,23 +81,16 @@ public class NpcDetectorReactor : LoSNpcDetector
         }
         
         // If we have gotten to this point, then we should trigger a reaction
-        var (reactionFactory, priority) = GetGraphFactory(mostSuspiciousNpcContext, maxSuspicion);
-        reactionFactory.SetGraphId(
-            $"{reactionFactory.GetType()}-{SaveableDataManager.Instance.time}"
-        );
-        
-        // We can now try to get the controller to start executing this reaction. However, it may reject it depending
-        // on the priority. If it accepts it, we write the new reaction state context.
-        bool reactionStarted = ownNpcContext.StateGraphController.TryInterrupt(
-            reactionFactory, false, false, priority
-        );
+        var behaviorFactory = GetBehaviorFactory(mostSuspiciousNpcContext, maxSuspicion);
+        behaviorFactory.Id = $"{ownNpcContext.name}_{mostSuspiciousNpcContext.name}_{maxSuspicion}";
+        bool reactionStarted = ownNpcContext.BehaviorController.TryInterrupt(behaviorFactory);
         
         if (reactionStarted)
         {
             // We have successfully started a reaction, so we write the new reaction state context
-            currentReactionStateGraphContext = new ReactionStateGraphContext()
+            _currentReactionStateBehaviorContext = new ReactionStateBehaviorContext()
             {
-                GraphId = reactionFactory.AbstractConfig.GraphId,
+                AgentId = behaviorFactory.Id,
                 CausalSuspicion = maxSuspicion,
             };
         }

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8171dd5d7faad437a9b087959af907db, type: 3}
+  m_Name: V_IsDeshipping
+  m_EditorClassIdentifier: 
+  identifierId: d911898eebc63425fb78606fabf667d8
+  ActiveSceneIds: 
+  value: 0
+  _resetOnPlay: 1

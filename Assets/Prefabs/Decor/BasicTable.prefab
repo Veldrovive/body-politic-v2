@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3821003844640283311}
   - component: {fileID: 1866163897534265051}
+  - component: {fileID: 2515989393784307448}
   m_Layer: 0
   m_Name: StandAnchor (8)
   m_TagString: Untagged
@@ -52,6 +53,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &2515989393784307448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135855108927788604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &512115645043825586
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,6 +79,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1330377428254702254}
   - component: {fileID: 3505297553106468960}
+  - component: {fileID: 3231385791818840322}
   m_Layer: 0
   m_Name: StandAnchor (3)
   m_TagString: Untagged
@@ -104,6 +122,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &3231385791818840322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512115645043825586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &1945881106535770438
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +152,7 @@ GameObject:
   - component: {fileID: 4146783382945499640}
   - component: {fileID: 4026616612902780048}
   - component: {fileID: 7006191695004434863}
+  - component: {fileID: 2765153326300043138}
   m_Layer: 0
   m_Name: BasicTable
   m_TagString: Untagged
@@ -3148,6 +3183,21 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &2765153326300043138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945881106535770438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    ProducerId: 
+    LoadOrder: 0
 --- !u!1 &2438300002306231251
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,6 +3208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6348202545478109621}
   - component: {fileID: 2346527214517292867}
+  - component: {fileID: 6933060675942509391}
   m_Layer: 0
   m_Name: StandAnchor (2)
   m_TagString: Untagged
@@ -3200,6 +3251,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &6933060675942509391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2438300002306231251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &3204470258789763881
 GameObject:
   m_ObjectHideFlags: 0
@@ -3263,6 +3330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3507100784434692957}
   - component: {fileID: 4631846223889867732}
+  - component: {fileID: 6694160800865282711}
   m_Layer: 0
   m_Name: StandAnchor (7)
   m_TagString: Untagged
@@ -3305,6 +3373,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &6694160800865282711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4292082390619674187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &4982828361197432735
 GameObject:
   m_ObjectHideFlags: 0
@@ -3315,6 +3399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7792642474260394025}
   - component: {fileID: 8809418919091309013}
+  - component: {fileID: 1779435172366025878}
   m_Layer: 0
   m_Name: StandAnchor (6)
   m_TagString: Untagged
@@ -3357,6 +3442,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &1779435172366025878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4982828361197432735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &5184652575158404618
 GameObject:
   m_ObjectHideFlags: 0
@@ -3367,6 +3468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3113636388141172210}
   - component: {fileID: 6422069416879386256}
+  - component: {fileID: 4708791329568064127}
   m_Layer: 0
   m_Name: StandAnchor (1)
   m_TagString: Untagged
@@ -3409,6 +3511,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &4708791329568064127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5184652575158404618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &5533172687813536739
 GameObject:
   m_ObjectHideFlags: 0
@@ -3419,6 +3537,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8692515871677285882}
   - component: {fileID: 6717058418866219709}
+  - component: {fileID: 6317845603831803469}
   m_Layer: 0
   m_Name: StandAnchor (5)
   m_TagString: Untagged
@@ -3461,6 +3580,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &6317845603831803469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5533172687813536739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0
 --- !u!1 &6160008963017652682
 GameObject:
   m_ObjectHideFlags: 0
@@ -3471,6 +3606,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4842550604144318423}
   - component: {fileID: 2760761753295254214}
+  - component: {fileID: 3377629569511496627}
   m_Layer: 0
   m_Name: StandAnchor (4)
   m_TagString: Untagged
@@ -3513,3 +3649,19 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.4
+--- !u!114 &3377629569511496627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6160008963017652682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 2765153326300043138}
+  saveableConfig:
+    ConsumerId: 1332b102-06fa-43dc-9906-e7bf7a6cdfef
+    LoadOrder: 0

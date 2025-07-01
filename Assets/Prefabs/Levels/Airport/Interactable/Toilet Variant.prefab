@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3434760030676572017}
   - component: {fileID: 4515961490704916338}
+  - component: {fileID: 5780229787963634688}
   m_Layer: 0
   m_Name: SitMoveToPoint
   m_TagString: Untagged
@@ -52,6 +53,22 @@ MonoBehaviour:
   alwaysShowLabel: 0
   showAxes: 1
   axisLength: 0.5
+--- !u!114 &5780229787963634688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2586205780047343946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02d3979a16946aaa05ea9724b29dc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedSaveableProducer: {fileID: 1375283595716028580}
+  saveableConfig:
+    ConsumerId: fe182fdd-e930-4894-931b-6561e61bf0af
+    LoadOrder: 0
 --- !u!1 &4990296280391227712
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,10 +527,10 @@ MonoBehaviour:
   useCustomAction: 0
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
-  customAvailableFroms: 00000000
-  customAction: {fileID: 0}
-  targetInteractableObject: {fileID: 4732811922983418733}
   targetInteractionDefinition: {fileID: 11400000, guid: 59732e0ba9acc4d18b561d1b7030b09d, type: 2}
+  customAction: {fileID: 0}
+  customBehaviorFactory: {fileID: 0}
+  targetInteractableObject: {fileID: 4732811922983418733}
   moveToTargetTransform: {fileID: 38689355573022055}
   requireExactPosition: 1
   requireFinalAlignment: 1
@@ -533,10 +550,10 @@ MonoBehaviour:
   useCustomAction: 0
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
-  customAvailableFroms: 00000000
-  customAction: {fileID: 0}
-  targetInteractableObject: {fileID: 4732811922983418733}
   targetInteractionDefinition: {fileID: 11400000, guid: 66d0168f2fa5c478d9d49fad264e3f1e, type: 2}
+  customAction: {fileID: 0}
+  customBehaviorFactory: {fileID: 0}
+  targetInteractableObject: {fileID: 4732811922983418733}
   moveToTargetTransform: {fileID: 38689355573022055}
   requireExactPosition: 1
   requireFinalAlignment: 1

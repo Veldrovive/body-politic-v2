@@ -22,6 +22,8 @@ class FixingContext
 [DefaultExecutionOrder(-50)]
 public class FixableManager : MonoBehaviour
 {
+    [SerializeField] private MoveAndUseBehaviorFactory moveAndUseBehaviorFactory;
+    
     [Tooltip("The SO used to denote that this NPC will receive fix requests.")]
     [SerializeField] private NpcRoleSO fixerRole;
     
@@ -136,7 +138,14 @@ public class FixableManager : MonoBehaviour
             // like get distracted by a coin or got infected the fix action would be removed entirely and we would
             // find a new fixer. This is strange behavior. What we should probably do instead is make the fix graph
             // saveable and check for existence in the queue instead of the current state graph.
-            while (fixer.StateGraphController.CurrentStateGraph?.id == fixingContext.StepGUID)
+            // while (fixer.StateGraphController.CurrentStateGraph?.id == fixingContext.StepGUID)
+            // {
+            //     if (isFixed) break;
+            //     
+            //     // The fixer is still executing the step. We should wait for them to finish.
+            //     yield return new WaitForSeconds(0.1f);  // No need to spam the check
+            // }
+            while (fixer.BehaviorController.HasBehaviorInQueue(fixingContext.StepGUID))
             {
                 if (isFixed) break;
                 
@@ -177,15 +186,9 @@ public class FixableManager : MonoBehaviour
         // If the fixer is still pursuing the fixable, we should tell them that they can stop
         if (!string.IsNullOrEmpty(fixingContext.StepGUID))
         {
-            // if (fixer.ModeController.ExecutingStep(fixingContext.StepGUID))
-            if (fixer.StateGraphController.CurrentStateGraph.id == fixingContext.StepGUID)
+            if (fixer.BehaviorController.HasBehaviorInQueue(fixingContext.StepGUID))
             {
-                bool interrupted = fixer.StateGraphController.TryProceed();
-                if (!interrupted)
-                {
-                    Debug.LogWarning($"Failed to interrupt fixer {fixer.name} while cleaning up fixing for {fixable.name}. This should not happen.");
-                    // Nothing else to be done though, so we can just leave it.
-                }
+                fixer.BehaviorController.RemoveBehaviorById(fixingContext.StepGUID);
             }
         }
         
@@ -203,42 +206,38 @@ public class FixableManager : MonoBehaviour
     /// <returns>The GUID of the added step</returns>
     private string TryInterruptFixer(NpcContext fixer, Fixable fixable)
     {
-        if (fixer.StateGraphController.IdleOnExit)
+        if (moveAndUseBehaviorFactory == null)
         {
-            // This actually wasn't a valid option as they are currently player controlled
+            Debug.LogError("FixableManager: MoveAndUseBehaviorFactory is not set. Cannot interrupt fixer.", this);
             return null;
         }
         
-        // // We need to create a new step for the fixer to follow
-        // StepDefinition step = new StepDefinition()
-        // {
-        //     new MoveToStateConfiguration(fixable.PathfindTransform),
-        //     new InteractionStateConfiguration_v1(fixable.GetInteractable(), fixable.FixInteractionDefinition)
-        // };
-        // InterruptRequestData request = new InterruptRequestData(step);
-        // if (!fixer.RoutineController.TryInterrupt(request))
-        // {
-        //     // The fixer rejected the interrupt. We should not use them.
-        //     return null;
-        // }
         string graphId = System.Guid.NewGuid().ToString();
-        MoveAndUseGraphFactory factory = new MoveAndUseGraphFactory(new MoveAndUseGraphConfiguration()
+        var parameters = new MoveAndUseBehaviorParameters
         {
-            GraphId = graphId,
-            MoveToTargetTransform = fixable.PathfindTransform,
-            RequireExactPosition = true,
-            RequireFinalAlignment = true,
-            TargetInteractable = fixable.GetInteractable(),
-            TargetInteractionDefinition = fixable.FixInteractionDefinition,
-            
-            ActionCamConfig = new ActionCamSource(graphId, 0, fixer.transform, ActionCameraMode.ThirdPerson, actionCameraDuration)
-        });
-        if (!fixer.StateGraphController.TryInterrupt(factory, false, false))
+            AgentId = graphId,
+            SaveContext = true, // Allows returning to the fix behavior after an interruption
+
+            desiredSpeed = MovementSpeed.NpcSpeed,
+            ExactPosition = true,
+            FinalAlignment = true,
+
+            initiatorGO = fixer.gameObject,
+            Interactable = fixable.GetInteractable().gameObject,
+            standPoint = fixable.PathfindTransform,
+
+            interactionDefinition = fixable.FixInteractionDefinition,
+        };
+        
+        InterruptBehaviorDefinition interruptDefinition = moveAndUseBehaviorFactory.GetInterruptDefinition(
+            parameters
+        );
+        if (!fixer.BehaviorController.TryInterrupt(interruptDefinition))
         {
             // The fixer rejected the interrupt. We should not use them.
             return null;
         }
-        return factory.AbstractConfig.GraphId;
+        return graphId;
     }
 
     public List<NpcContext> GetFixers()
@@ -246,7 +245,7 @@ public class FixableManager : MonoBehaviour
         // Gets all of the NPCs that have the fixer role and are doing their routine (not in an interrupt or player controlled)
         // and are not already in use by another fixable object
         return InfectionManager.Instance?.GetNpcsWithAnyRoles(new []{fixerRole})
-            .Where(x => x != null && x.StateGraphController.IsInRoutine)
+            .Where(x => x != null && x.BehaviorController.IsInRoutine)
             .Where(x => !inUseFixers.Contains(x))
             .ToList();
     }

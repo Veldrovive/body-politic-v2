@@ -10,6 +10,8 @@ using UnityEngine;
 [RequireComponent(typeof(NpcContext))]
 public class InteractableNpc : Interactable
 {
+    [SerializeField] private AnimateBehaviorFactory animateBehaviorFactory;
+    
     private NpcContext npcContext;
 
     private class NpcInteractionInstance
@@ -34,7 +36,7 @@ public class InteractableNpc : Interactable
     /// <summary>
     /// Called by an initiator (e.g., InteractionState) to attempt starting an interaction.
     /// Modifies the base's TryInitiateInteraction to account for the fact that NPC interactions always interrupt
-    /// the StateGraphController to play the animation correctly
+    /// the BehaviorController to play the animation correctly
     /// </summary>
     /// <param name="chosenDefinition"></param>
     /// <param name="initiator"></param>
@@ -69,43 +71,55 @@ public class InteractableNpc : Interactable
         // to establish whether we can interrupt the current state with the given priority.
         // Since it is the last check, we can just attempt the interrupt. If it succeeds we can move forward. If it fails
         // we add a FailureReason to the status and return it which informs the initiator that the interaction failed.
-        string graphId = Guid.NewGuid().ToString();
-        AnimateGraphFactory factory = new(new AnimateGraphConfiguration()
+        if (animateBehaviorFactory == null)
         {
-            animateStateConfig = new(
-                chosenDefinition.TargetAnimationTrigger,
-                chosenDefinition.InteractionDuration,
-                chosenDefinition.EndAnimationOnFinish,
-                chosenDefinition.EndAnimationOnInterrupt
-            ),
-            GraphId = graphId
+            Debug.LogError("No animateBehaviorFactory component found on this GameObject.", this);
+            statusResult.AddFailureReason(chosenDefinition.GetHumanReadableFailureReason(InteractionFailureReason.NpcInterruptFailed));
+            return statusResult;
+        }
+        
+        string graphId = Guid.NewGuid().ToString();
+        InterruptBehaviorDefinition behaviorDefinition = animateBehaviorFactory.GetInterruptDefinition(new()
+        {
+            AnimationTrigger = chosenDefinition.TargetAnimationTrigger,
+            Duration = chosenDefinition.InteractionDuration,
+            EndAnimationOnFinish = chosenDefinition.EndAnimationOnFinish,
+            
+            AgentId = graphId
         });
-        if (!npcContext.StateGraphController.TryInterrupt(factory, false, false, priority))
+        
+        if (behaviorDefinition == null)
+        {
+            // The behavior definition could not be created, so we cannot start the interaction
+            statusResult.AddFailureReason(chosenDefinition.GetHumanReadableFailureReason(InteractionFailureReason.NpcInterruptFailed));
+            return statusResult;
+        }
+        
+        if (!npcContext.BehaviorController.TryInterrupt(behaviorDefinition))
         {
             // The interrupt failed. We should add a failure reason to the status so that the initiator can handle the failure
             statusResult.AddFailureReason(chosenDefinition.GetHumanReadableFailureReason(InteractionFailureReason.NpcInterruptFailed));
             return statusResult;
         }
-
-        _currentNpcInteractionInstance = new()
+        
+        _currentNpcInteractionInstance = new NpcInteractionInstance()
         {
             chosenDefinition = chosenDefinition,
             initiator = initiator,
             priority = priority,
             interruptGraphId = graphId
         };
-        
         // Otherwise, we have now started the animation. We raise the event to inform any listeners that an interaction
         // has started and return the status result that has CanInteract == true
         InteractionContext context = new InteractionContext(initiator, this, chosenDefinition);
-
         // Fire Events
         InteractionInstance targetInstance = FindInteractionInstance(chosenDefinition);
         try
         {
             targetInstance.OnInteractionStart?.Invoke(context);
         }
-        catch (System.Exception e) {
+        catch (System.Exception e)
+        {
             Debug.LogError($"Exception during OnInteractionStart event for {chosenDefinition.name} on {gameObject.name}: {e.Message}\n{e.StackTrace}", this);
         }
         
@@ -120,7 +134,7 @@ public class InteractableNpc : Interactable
             // We can use the RemoveStateGraphById utility to ensure that we entirely remove the state graph in case it
             // somehow got into the queue. Setting includeCurrent will force end the graph if it is currently running.
             // If the graph had already exited, this will do nothing
-            npcContext.StateGraphController.RemoveStateGraphById(_currentNpcInteractionInstance.interruptGraphId, includeCurrent: true);
+            npcContext.BehaviorController.RemoveBehaviorById(_currentNpcInteractionInstance.interruptGraphId, includeCurrent: true);
         }
     }
     

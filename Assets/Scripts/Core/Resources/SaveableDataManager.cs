@@ -10,6 +10,7 @@ using Unity.Behavior;
 /// <summary>
 /// Used to generate prefabs dynamically at runtime
 /// </summary>
+[BlackboardEnum]
 public enum HoldableType {
     None,               // Wasn't a dynamically generated prefab.
     GenericConsumable,  // A generic consumable item.
@@ -156,6 +157,8 @@ public class SaveableDataManager : MonoBehaviour
     public float time => startTime + Time.timeSinceLevelLoad;
 
     private Dictionary<string, ProducerGOContext> producers = new Dictionary<string, ProducerGOContext>();
+    private Dictionary<GameObject, HoldableType> holdablePrefabTypeMap = new Dictionary<GameObject, HoldableType>();
+    public Dictionary<GameObject, HoldableType> HoldablePrefabTypeMap => holdablePrefabTypeMap;
     // TODO: Is this necessary? These are set at runtime and we can look them up using a resource query at awake
     // like we do with IdentifiableSOs. In face they are a subset of IdentifiableSOs so we could use the same loop.
     private Dictionary<string, SaveableSOContext> saveableSOs = new Dictionary<string, SaveableSOContext>();
@@ -234,6 +237,7 @@ public class SaveableDataManager : MonoBehaviour
         };
 
         producers[producerId] = context;
+        holdablePrefabTypeMap[producer.gameObject] = holdableType;
         
         gameObjectToProducerId[producer.gameObject] = producerId;
         producerIdToGO[producerId] = producer.gameObject;
@@ -393,7 +397,7 @@ public class SaveableDataManager : MonoBehaviour
             SaveableGOProducer parentProducer = pointer.ParentProducer;
             if (parentProducer == null)
             {
-                Debug.LogError($"GameObject {go.name} has a SaveableGOPointer, but no parent SaveableGOProducer found. Cannot get ID.");
+                Debug.LogError($"GameObject {go.name} has a SaveableGOPointer, but no parent SaveableGOProducer found. Cannot get ID.", go);
                 return null;
             }
             
@@ -404,7 +408,7 @@ public class SaveableDataManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Tried to serialize GameObject {go.name} that does not have a SaveableGOProducer or SaveableGOPointer component. Cannot get ID.");
+            Debug.LogError($"Tried to serialize GameObject {go.name} that does not have a SaveableGOProducer or SaveableGOPointer component. Cannot get ID.", go);
             return null;
         }
     }

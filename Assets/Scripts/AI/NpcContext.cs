@@ -15,7 +15,8 @@ public class NpcContextSaveableData : SaveableData
 // Add required components for the new controllers
 [RequireComponent(typeof(NPCIdentity))] // [cite: 765]
 [RequireComponent(typeof(NpcInventory))]
-[RequireComponent(typeof(StateGraphController))]
+// [RequireComponent(typeof(StateGraphController))]
+[RequireComponent(typeof(BehaviorController))]
 [RequireComponent(typeof(NpcMovementManager))]
 [RequireComponent(typeof(NpcSuspicionTracker))]
 [RequireComponent(typeof(SpeechBubbleFloatingUIManager))]
@@ -29,7 +30,7 @@ public class NpcContext : SaveableGOConsumer
 {
     public NPCIdentity Identity { get; private set; }
     public NpcInventory Inventory { get; private set; }
-    public StateGraphController StateGraphController { get; private set; }
+    // public StateGraphController StateGraphController { get; private set; }
     public BehaviorController BehaviorController { get; private set; }
     public NpcMovementManager MovementManager { get; private set; }
     public NpcSuspicionTracker SuspicionTracker { get; private set; }
@@ -101,7 +102,7 @@ public class NpcContext : SaveableGOConsumer
         
         Identity = GetComponent<NPCIdentity>();
         Inventory = GetComponent<NpcInventory>();
-        StateGraphController = GetComponent<StateGraphController>();
+        // StateGraphController = GetComponent<StateGraphController>();
         BehaviorController = GetComponent<BehaviorController>();
         MovementManager = GetComponent<NpcMovementManager>();
         SuspicionTracker = GetComponent<NpcSuspicionTracker>();
@@ -163,7 +164,8 @@ public class NpcContext : SaveableGOConsumer
         isDead = true;
         AnimationManager.Play("Death");
 
-        StateGraphController.enabled = false;
+        // StateGraphController.enabled = false;
+        BehaviorController.enabled = false;
         MovementManager.enabled = false;
         DetectorReactor.enabled = false;
         SuspicionTracker.enabled = false;

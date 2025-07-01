@@ -57,8 +57,8 @@ GameObject:
   - component: {fileID: 3189426731784081209}
   - component: {fileID: 1384171195896954992}
   - component: {fileID: 4848299609032010763}
-  - component: {fileID: 6069972115561842295}
-  - component: {fileID: 1447074388558317057}
+  - component: {fileID: 8122019559225270866}
+  - component: {fileID: 5351447829615851495}
   m_Layer: 6
   m_Name: GenericNpc
   m_TagString: Untagged
@@ -84,6 +84,7 @@ Transform:
   - {fileID: 168724826404121939}
   - {fileID: 2810805423157551732}
   - {fileID: 3243171972740919452}
+  - {fileID: 6040926901684326810}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4126593065883827398
@@ -446,6 +447,7 @@ MonoBehaviour:
     OnInteractionStateExited:
       m_PersistentCalls:
         m_Calls: []
+  animateBehaviorFactory: {fileID: 0}
 --- !u!114 &4848299609032010763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,7 +469,7 @@ MonoBehaviour:
   shooterSuspicionThreshold: 5
   shooterSuspicionValue: 9
   shooterSuspicionDuration: 20
---- !u!114 &6069972115561842295
+--- !u!114 &8122019559225270866
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -476,16 +478,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1945626931996106311}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2206e520af054b42bc157344541fd585, type: 3}
+  m_Script: {fileID: 11500000, guid: d04cde290d0149cc86826508ba058ee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   linkedSaveableProducer: {fileID: 4126593065883827398}
   saveableConfig:
-    ConsumerId: 9f2fecc1-45a3-4e27-a616-13da687520fe
+    ConsumerId: 2356a8d1-a8ee-4724-80ea-72e7ce45edd7
     LoadOrder: 0
-  routineStateGraph: {fileID: 1447074388558317057}
+  routineBehavior: {fileID: 5351447829615851495}
   IdleOnExit: 0
---- !u!114 &1447074388558317057
+  interruptFinishedEvent: {fileID: 11400000, guid: 924c7585add19468498e382d08bc85d8, type: 2}
+  executionDequeue: []
+  pauseOnInterrupt: 0
+--- !u!114 &5351447829615851495
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -494,114 +499,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 1945626931996106311}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03b5fdf145a3a40268b705a133fd58ef, type: 3}
+  m_Script: {fileID: 11500000, guid: f9a6778a2c984e88917f18687ef4fead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: Routine State Graph
-  description: 
-  m_guid: c7733963-c18a-43bd-8a03-016b3922ede2
-  m_nodes:
-  - rid: 6648118317909016643
-  - rid: 6648118317909016645
-  - rid: 6648118405217386744
-  m_connections:
-  - inputPort:
-      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
-      portInfo:
-        Name: In
-        PortType: 1
-    outputPort:
-      nodeId: c8ad8d9b-a5fe-4a73-ba56-72ba6e55a68a
-      portInfo:
-        Name: Start
-        PortType: 0
-  - inputPort:
-      nodeId: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
-      portInfo:
-        Name: Restart
-        PortType: 1
-    outputPort:
-      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
-      portInfo:
-        Name: Timeout
-        PortType: 0
-  - inputPort:
-      nodeId: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
-      portInfo:
-        Name: Restart
-        PortType: 1
-    outputPort:
-      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
-      portInfo:
-        Name: LoadIn
-        PortType: 0
-  - inputPort:
-      nodeId: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
-      portInfo:
-        Name: Restart
-        PortType: 1
-    outputPort:
-      nodeId: 182f2008-7cbe-4427-aeee-3253282c5368
-      portInfo:
-        Name: Interrupted
-        PortType: 0
+  m_Graph: {fileID: 4079172158996526459, guid: 3bd0e0cd425584c38b25617e4617a456, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 8345543518459790082
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  DisplayName: Routine
+  DisplayDescription: 
+  AgentId: 6b52210d-0d25-4747-9174-decc60b8ec2c
+  Priority: -1
   references:
     version: 2
     RefIds:
-    - rid: 6648118317909016643
-      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+    - rid: 8345543518459790082
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
-        m_guid: c8ad8d9b-a5fe-4a73-ba56-72ba6e55a68a
-        m_position:
-          serializedVersion: 2
-          x: 191
-          y: 257
-          width: 74
-          height: 77
-        m_ports:
-        - Name: Start
-          PortType: 0
-        typeName: StartNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - rid: 6648118317909016645
-      type: {class: RestartNode, ns: , asm: Assembly-CSharp}
-      data:
-        m_guid: ac63f38a-c0e0-4c2f-8339-aea0ff72362e
-        m_position:
-          serializedVersion: 2
-          x: 690
-          y: 257
-          width: 87
-          height: 77
-        m_ports:
-        - Name: Restart
-          PortType: 1
-        typeName: RestartNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-    - rid: 6648118405217386744
-      type: {class: WaitStateNode, ns: , asm: Assembly-CSharp}
-      data:
-        m_guid: 182f2008-7cbe-4427-aeee-3253282c5368
-        m_position:
-          serializedVersion: 2
-          x: 377
-          y: 228
-          width: 223
-          height: 154
-        m_ports:
-        - Name: Interrupted
-          PortType: 0
-        - Name: LoadIn
-          PortType: 0
-        - Name: Timeout
-          PortType: 0
-        - Name: In
-          PortType: 1
-        typeName: WaitStateNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-        configuration:
-          StateName: 
-          StateId: 476bc60f-4a90-472f-9cc6-9168a1bc387d
-          m_duration: 1
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 1945626931996106311}
 --- !u!1 &2694660194626700838
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,7 +589,6 @@ GameObject:
   - component: {fileID: 7975063001280181541}
   - component: {fileID: 2508640099247890471}
   - component: {fileID: 8273193492733291491}
-  - component: {fileID: 7731745991292347066}
   m_Layer: 7
   m_Name: ControlTrigger
   m_TagString: Untagged
@@ -747,10 +666,10 @@ MonoBehaviour:
   useCustomAction: 0
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
-  customAvailableFroms: 00000000
-  customAction: {fileID: 0}
-  targetInteractableObject: {fileID: 1384171195896954992}
   targetInteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
+  customAction: {fileID: 0}
+  customBehaviorFactory: {fileID: 0}
+  targetInteractableObject: {fileID: 1384171195896954992}
   moveToTargetTransform: {fileID: 2810805423157551732}
   requireExactPosition: 1
   requireFinalAlignment: 1
@@ -770,32 +689,13 @@ MonoBehaviour:
   useCustomAction: 1
   StateGraphGUID: eb0c4d4a-0b03-4371-bab7-0c57309a5deb
   PreventDuplicates: 1
-  customAvailableFroms: 00000000
-  customAction: {fileID: 7731745991292347066}
+  targetInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
+  customAction: {fileID: 0}
+  customBehaviorFactory: {fileID: 11400000, guid: a3c9f7096ba6b4a01a4ed0efa7e673ba, type: 2}
   targetInteractableObject: {fileID: 1384171195896954992}
-  targetInteractionDefinition: {fileID: 0}
   moveToTargetTransform: {fileID: 0}
   requireExactPosition: 0
   requireFinalAlignment: 0
---- !u!114 &7731745991292347066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2725557642565333427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f918d548b004ceeae11b75dd586b460, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiTitle: 
-  uiDescription: 
-  shootDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
-  requiredRoleForShootInteraction: {fileID: 11400000, guid: 5759d0a8b6c0142978f16c4529eac2a2, type: 2}
-  proximityMargin: 2
-  chaseDuration: 20
-  chaseDurationWithoutLoS: 10
 --- !u!1 &3319651364951055184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,6 +993,53 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8239255351424488404
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6040926901684326810}
+  - component: {fileID: 530897626375387544}
+  m_Layer: 0
+  m_Name: NameContainer SaveableBehaviorGraphAgent b0427bba-cf0c-4235-989f-7b759589c0fb
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6040926901684326810
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8239255351424488404}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1934814640455056923}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &530897626375387544
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8239255351424488404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 190d9e9918d0aaf48a103a2bb6995059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameOverride: Routine Behavior Agent (Saveable Behavior Graph Agent)
+  tooltipOverride: 
+  target: {fileID: 5351447829615851495}
 --- !u!1 &8787253385747532442
 GameObject:
   m_ObjectHideFlags: 0

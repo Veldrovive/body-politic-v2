@@ -59,18 +59,34 @@ public class NpcSoundHandler : GameEventListenerBase<SoundData, SoundEventSO>
 
         if (data.CausesReactions && data.CreatorObject != gameObject)
         {
-            // Then we should also trigger a reaction
-            var (reactionFactory, interruptPriority) = soundReactionDefinition.GetReactionFactory(npcContext, data);
-            if (reactionFactory != null)
+            var reactionDefinition = soundReactionDefinition.GetBehaviorDefinition(npcContext, data);
+            if (reactionDefinition != null)
             {
-                // Check we if we already executing this reaction
-                if (npcContext.StateGraphController.CurrentStateGraph?.id != reactionFactory.AbstractConfig.GraphId)
+                // We have a reaction defined for this sound, so we should trigger it.
+                if (!npcContext.BehaviorController.HasBehaviorInQueue(reactionDefinition.Id))
                 {
-                    npcContext.StateGraphController.TryInterrupt(reactionFactory, false, false, interruptPriority);
+                    npcContext.BehaviorController.TryInterrupt(reactionDefinition);
                     // We don't care if the interrupt fails as sounds are one-time things and not critical to the NPC's state.
                 }
+                // If we were already executing this reaction, we do nothing.
             }
-            // else: There was no reaction defined for this sound, so we do nothing.
+            else
+            {
+                Debug.LogWarning($"NpcSoundHandler: No reaction defined for sound {data.Clip.name} in {gameObject.name}.", this);
+            }
+            
+            // // Then we should also trigger a reaction
+            // var (reactionFactory, interruptPriority) = soundReactionDefinition.GetReactionFactory(npcContext, data);
+            // if (reactionFactory != null)
+            // {
+            //     // Check we if we already executing this reaction
+            //     if (npcContext.StateGraphController.CurrentStateGraph?.id != reactionFactory.AbstractConfig.GraphId)
+            //     {
+            //         npcContext.StateGraphController.TryInterrupt(reactionFactory, false, false, interruptPriority);
+            //         // We don't care if the interrupt fails as sounds are one-time things and not critical to the NPC's state.
+            //     }
+            // }
+            // // else: There was no reaction defined for this sound, so we do nothing.
         }
     }
 

@@ -46,3 +46,5 @@ MonoBehaviour:
   LoSObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  curiousBehaviorFactory: {fileID: 11400000, guid: 0e54ede09c8894d2c8340eee9b952f8d, type: 2}
+  inspectBehaviorFactory: {fileID: 11400000, guid: 1270133deda7142eb96a3d00c206defc, type: 2}

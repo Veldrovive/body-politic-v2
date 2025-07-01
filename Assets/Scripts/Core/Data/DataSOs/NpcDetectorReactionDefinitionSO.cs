@@ -37,12 +37,18 @@ public class NpcDetectorReactionDefinitionSO : ScriptableObject
 {
     [SerializeField] [Tooltip("The detection reaction definitions.")]
     private List<DetectionReactionDefinition> reactionDefinitions;
+
+    [Header("Curious Reaction")]
+    [SerializeField] private CuriousBehaviorFactory curiousBehaviorFactory;
     
-    [Header("Shoot Reaction")]
-    [SerializeField] private ShootGraphConfiguration shootConfiguration;
+    [Header("Follow Reaction")]
+    [SerializeField] private FollowBehaviorFactory followBehaviorFactory;
     
+    [Header("Shoot Reaction")] 
+    [SerializeField] private ShootBehaviorFactory shootBehaviorFactory;
+
     [Header("Panic Reaction")]
-    [SerializeField] private PanicGraphConfiguration panicConfiguration;
+    [SerializeField] private PanicBehaviorFactory panicBehaviorFactory;
 
     /// <summary>
     /// Finds the reaction definition that has the maximum minimum suspicion that is less than or equal to the given suspicion.
@@ -65,113 +71,46 @@ public class NpcDetectorReactionDefinitionSO : ScriptableObject
         return highestReaction;
     }
 
-    public (AbstractGraphFactory reactionGraph, int priority) GetReactionFactory(
-        NpcContext reactingNpc,
-        NpcContext targetNpc,
-        float suspicion
-    )
+    public InterruptBehaviorDefinition GetBehaviorFactory(NpcContext reactingNpc, NpcContext targetNpc, float suspicion)
     {
         DetectionReactionDefinition reaction = GetReaction(suspicion);
         if (reaction == null)
         {
             // Then there was not an appropriate reaction defined for this suspicion
-            return (null, -1);
+            return null;
         }
 
-        AbstractGraphFactory factory = reaction.ReactionType switch
+        AbstractCustomActionBehaviorFactory behaviorFactory = reaction.ReactionType switch
         {
-            DetectionReactionType.Test => GetTestReactionFactory(reactingNpc, targetNpc),
-            DetectionReactionType.Curious => GetCuriousReactionFactory(reactingNpc, targetNpc),
-            DetectionReactionType.Follow => GetFollowReactionFactory(reactingNpc, targetNpc),
-            DetectionReactionType.Shoot => GetShootReactionFactory(reactingNpc, targetNpc),
-            DetectionReactionType.Panic => GetPanicReactionFactory(reactingNpc, targetNpc),
-            _ => throw new ArgumentOutOfRangeException(nameof(reaction.ReactionType), $"Unhandled reaction type: {reaction.ReactionType}")
+            DetectionReactionType.Test => null,
+            DetectionReactionType.Curious => curiousBehaviorFactory,
+            DetectionReactionType.Shoot => shootBehaviorFactory,
+            DetectionReactionType.Panic => panicBehaviorFactory,
+            DetectionReactionType.Follow => followBehaviorFactory,
+            DetectionReactionType.RatOut => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(reaction.ReactionType),
+                $"Unhandled reaction type: {reaction.ReactionType}")
         };
-        
-        if (factory == null)
+        if (behaviorFactory == null)
         {
-            // There was a problem creating the factory
-            return (null, -1);
+            throw new NotSupportedException($"Behavior factory for reaction type {reaction.ReactionType} is not supported.");
         }
         
-        return (factory, reaction.Priority);
-    }
-
-    #region Graph Factories
-    
-    private AbstractGraphFactory GetTestReactionFactory(NpcContext reactingNpc, NpcContext targetNpc)
-    {
-        Debug.Log($"Test reaction triggered on {reactingNpc.name} for {targetNpc.name}.");
-        MoveGraphFactory factory = new(new MoveGraphConfiguration()
+        CustomActionBehaviorParameters parameters = new CustomActionBehaviorParameters()
         {
-            moveToStateConfig = new MoveToStateConfiguration(targetNpc.transform)
-            {
-                RequireExactPosition = false,
-                AcceptanceRadius = 1f,
-            },
-            ArrivedMessage = "I guess it's fine...",
-            PreStartMessage = "Hey, what are you doing?!",
-        });
-        return factory;
-    }
-    
-    private AbstractGraphFactory GetCuriousReactionFactory(NpcContext reactingNpc, NpcContext targetNpc)
-    {
-        LookTowardGraphFactory factory = new(new LookTowardGraphConfiguration()
+            InitiatorGO = reactingNpc.gameObject,
+            TargetGO = targetNpc.gameObject,
+            TargetType = CustomActionTargetType.GameObject
+        };
+        InterruptBehaviorDefinition behaviorDefinition = behaviorFactory.GetInterruptDefinition(parameters);
+        if (behaviorDefinition == null)
         {
-            TargetingType = FollowStateTargetingType.Transform,
-            TargetTransform = new TransformReference(targetNpc.transform),
-
-            SightDistance = 10f,
-            MaxDuration = 10f,
-            MaxDurationWithoutLoS = 2f,
-
-            EntryMessage = "What was that?",
-            EntryMessageDuration = 2f,
-            EntryWaitDuration = 0f, // Immediately start looking while talking
-
-            ExitMessage = "Hmm.",
-            ExitMessageDuration = 1.5f,
-            ExitWaitDuration = 1.5f,
-        });
-        return factory;
+            // There was a problem creating the behavior definition
+            return null;
+        }
+        behaviorDefinition.Priority = reaction.Priority;
+        behaviorDefinition.Id = $"{reactingNpc.name}_{targetNpc.name}_{reaction.ReactionType}";
+        
+        return behaviorDefinition;
     }
-    
-    private AbstractGraphFactory GetFollowReactionFactory(NpcContext reactingNpc, NpcContext targetNpc)
-    {
-        FollowGraphFactory factory = new(new FollowGraphConfiguration()
-        {
-            TargetingType = FollowStateTargetingType.Transform,
-            TargetTransform = new TransformReference(targetNpc.transform),
-            FollowDistance = 5f,
-            MaxDuration = 15f,
-            MaxDurationWithoutLoS = 5f,
-            Speed = MovementSpeed.Walk,
-
-            EntryMessage = "Hmm...",
-            EntryMessageDuration = 2f,
-            EntryWaitDuration = 0f, // Immediately start following while talking
-
-            ExitMessage = "I guess its ok.",
-            ExitMessageDuration = 2f,
-            ExitWaitDuration = 2f, // Immediately exit the graph
-        });
-        return factory;
-    }
-    
-    private AbstractGraphFactory GetShootReactionFactory(NpcContext reactingNpc, NpcContext targetNpc)
-    {
-        shootConfiguration.TargetInteractable = targetNpc.InteractableNpc;
-        ShootGraphFactory factory = new(shootConfiguration);
-        return factory;
-    }
-
-    private PanicGraphFactory GetPanicReactionFactory(NpcContext reactingNpc, NpcContext targetNpc)
-    {
-        panicConfiguration.PanicZone = reactingNpc.PanicZone;
-        PanicGraphFactory factory = new(panicConfiguration);
-        return factory;
-    }
-
-    #endregion
 }

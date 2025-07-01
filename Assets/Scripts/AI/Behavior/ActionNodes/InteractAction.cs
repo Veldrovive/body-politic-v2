@@ -29,7 +29,7 @@ public partial class InteractAction : SaveableAction
 
     protected override Status OnLoad()
     {
-        Debug.Log("Starting InteractAction state on " + Self.Value.name);
+        // Debug.Log("Starting InteractAction state on " + Self.Value.name);
         if (!Self.Value.TryGetComponent(out npcContext))
         {
             Debug.LogError("InteractAction: Self does not have a NpcContext component.");
@@ -220,7 +220,7 @@ public partial class InteractAction : SaveableAction
     {
         base.OnEnd();
         
-        Debug.Log("Stopping InteractAction state on " + Self.Value.name);
+        // Debug.Log("Stopping InteractAction state on " + Self.Value.name);
         // If the interaction timer was still running when we were deactivated,
         // it implies an interruption occurred that wasn't handled by FailState/CompleteState already.
         if (interactionInProgress)

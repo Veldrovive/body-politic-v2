@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 [Serializable]
 public class MoveAndUseBehaviorParameters : BehaviorParameters
 {
-    [FormerlySerializedAs("initiator")] public GameObject initiatorGO;
+    public GameObject initiatorGO;
     public Transform standPoint;
     public InteractionDefinitionSO interactionDefinition;
     public GameObject Interactable;

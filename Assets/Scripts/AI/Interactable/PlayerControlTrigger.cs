@@ -32,22 +32,19 @@ public class PlayerControlTrigger : MonoBehaviour
     [Tooltip("If true, attempting to add this graph to the NPCs queue twice will result in failure.")]
     [SerializeField] private bool PreventDuplicates = false;
     
+    [Tooltip("The specific Interaction Definition SO (which must be configured on the Target Interactable Object) to execute as the standard action.")]
+    [SerializeField] private InteractionDefinitionSO targetInteractionDefinition;
+    
     // --- Custom Action ---
     [Header("Custom Action (If Use Custom Action is true)")]
-    [Tooltip("Where this action should be available from")]
-    [SerializeField] List<InteractionAvailableFrom> customAvailableFroms = new List<InteractionAvailableFrom>{InteractionAvailableFrom.World};
-    
     [Tooltip("The Custom Action Scriptable Object defining the sequence.")]
     [SerializeField] private AbstractCustomPlayerAction customAction;
-    [SerializeField] private InterruptBehaviorFactory<MoveAndUseBehaviorParameters> customBehaviorFactory;
+    [SerializeField] private AbstractCustomActionBehaviorFactory customBehaviorFactory;
 
     // --- Standard Action Parameters (If Use Custom Action is false) ---
     [Header("Standard Action Parameters")]
     [Tooltip("The Interactable component that will receive the interaction after the MoveTo state (if any). Defaults to Interactable on this GameObject if null.")]
     [SerializeField] private Interactable targetInteractableObject;
-
-    [Tooltip("The specific Interaction Definition SO (which must be configured on the Target Interactable Object) to execute as the standard action.")]
-    [SerializeField] private InteractionDefinitionSO targetInteractionDefinition;
 
     [Tooltip("Optional destination transform for the initial MoveTo state. If null, the system generating the states will likely move near the Target Interactable Object.")]
     [SerializeField] private Transform moveToTargetTransform; // Where to stand before interaction
@@ -85,11 +82,10 @@ public class PlayerControlTrigger : MonoBehaviour
     /// </summary>
     public AbstractCustomPlayerAction CustomAction => useCustomAction ? customAction : null;
 
-    public List<InteractionAvailableFrom> InteractionAvailableFroms =>
-        useCustomAction ? customAvailableFroms : targetInteractionDefinition.InteractionAvailableFroms;
+    public List<InteractionAvailableFrom> InteractionAvailableFroms => targetInteractionDefinition.InteractionAvailableFroms;
 
-    public string Title => useCustomAction ? customAction?.DisplayName : targetInteractionDefinition?.DisplayName;
-    public string Description => useCustomAction ? customAction?.Description : targetInteractionDefinition?.Description;
+    public string Title => targetInteractionDefinition?.DisplayName;
+    public string Description => targetInteractionDefinition?.Description;
     
     /// <summary>
     /// Checks the status of the action defined by this trigger for a given initiator.
@@ -102,91 +98,55 @@ public class PlayerControlTrigger : MonoBehaviour
         // Determine the effective interactable target. For custom actions, it might still
         // be relevant for the custom SO's GetStatus, so we use the assigned targetInteractableObject.
         // Ensure the targetInteractableObject is up-to-date (e.g., via Awake or manual assignment).
+        
+        Interactable effectiveTarget = targetInteractableObject; // Use the cached/assigned interactable
 
-        if (useCustomAction)
+        // If using a standard action, delegate the status check to the InteractionDefinitionSO.
+        // Ensure the interaction definition SO is assigned.
+        if (targetInteractionDefinition == null)
         {
-            // If using a custom action, delegate the status check to the CustomPlayerActionSO.
-            // Ensure the custom action SO is assigned.
-            if (customAction == null)
-            {
-                Debug.LogError($"PlayerControlTrigger on {gameObject.name}: Trying to GetStatus for a custom action, but no CustomPlayerActionSO is assigned.", this);
-                // Return a default failure status if the custom action is missing.
-                // return new InteractionStatus { CanInteract = false, IsVisible = false, FailureReasons = { InteractionFailureReason.InternalError } }; // Or a more specific reason
-                InteractionStatus failedStatus = new InteractionStatus();
-                failedStatus.IsVisible = true;
-                failedStatus.AddFailureReason(new HumanReadableFailureReason(
-                    InteractionFailureReason.InternalError,
-                    0,
-                    "Custom action is missing."
-                ));
-                return failedStatus;
-            }
-            // Pass the initiator. There is no target interactable in this case as custom actions define their own.
-            InteractionStatus status = customAction.GetStatus(initiator, customAction.GetTargetInteractable());
-            
-            // Check if this graph is already in the interaction queue of the initiator
-            NpcContext initiatorContext = initiator.GetComponent<NpcContext>();
-            if (initiatorContext != null && PreventDuplicates && initiatorContext.StateGraphController.HasGraphInQueue(StateGraphGUID))
-            {
-                // Then we should not allow this graph to be added again
-                status.AddFailureReason(new HumanReadableFailureReason(
-                    InteractionFailureReason.AlreadyExecuting,
-                    5,
-                    "I don't need to do that twice."
-                ));
-            }
-            return status;
+            Debug.LogError($"PlayerControlTrigger on {gameObject.name} ({gameObject.transform.parent.name}): Trying to GetStatus for a standard action, but no TargetInteractionDefinition is assigned.", this);
+            // Return a default failure status if the definition is missing.
+            InteractionStatus failedStatus = new InteractionStatus();
+            failedStatus.IsVisible = true;
+            failedStatus.AddFailureReason(new HumanReadableFailureReason(
+                InteractionFailureReason.InternalError,
+                0,
+                "Interaction definition is missing."
+            ));
+            return failedStatus;
         }
-        else
+        // Ensure the target interactable object is assigned for the standard action check.
+        if (effectiveTarget == null)
         {
-            Interactable effectiveTarget = targetInteractableObject; // Use the cached/assigned interactable
-
-            // If using a standard action, delegate the status check to the InteractionDefinitionSO.
-            // Ensure the interaction definition SO is assigned.
-            if (targetInteractionDefinition == null)
-            {
-                Debug.LogError($"PlayerControlTrigger on {gameObject.name}: Trying to GetStatus for a standard action, but no TargetInteractionDefinition is assigned.", this);
-                // Return a default failure status if the definition is missing.
-                InteractionStatus failedStatus = new InteractionStatus();
-                failedStatus.IsVisible = true;
-                failedStatus.AddFailureReason(new HumanReadableFailureReason(
-                    InteractionFailureReason.InternalError,
-                    0,
-                    "Interaction definition is missing."
-                ));
-                return failedStatus;
-            }
-            // Ensure the target interactable object is assigned for the standard action check.
-            if (effectiveTarget == null)
-            {
-                 Debug.LogError($"PlayerControlTrigger on {gameObject.name}: Trying to GetStatus for a standard action, but TargetInteractableObject is null.", this);
-                // Return a default failure status if the target is missing.
-                InteractionStatus failedStatus = new InteractionStatus();
-                failedStatus.IsVisible = true;
-                failedStatus.AddFailureReason(new HumanReadableFailureReason(
-                    InteractionFailureReason.InternalError,
-                    0,
-                    "Target interactable object is missing."
-                ));
-                return failedStatus;
-            }
-            // Perform the status check using the standard interaction definition and target.
-            InteractionStatus interactionStatus = targetInteractionDefinition.GetStatus(initiator, effectiveTarget);
-            
-            // Check if this graph is already in the interaction queue of the initiator
-            NpcContext initiatorContext = initiator.GetComponent<NpcContext>();
-            if (initiatorContext != null && PreventDuplicates && initiatorContext.StateGraphController.HasGraphInQueue(StateGraphGUID))
-            {
-                // Then we should not allow this graph to be added again
-                interactionStatus.AddFailureReason(new HumanReadableFailureReason(
-                    InteractionFailureReason.AlreadyExecuting,
-                    5,
-                    "I don't need to do that twice."
-                ));
-            }
-            // Return the status object.
-            return interactionStatus;
+             Debug.LogError($"PlayerControlTrigger on {gameObject.name}: Trying to GetStatus for a standard action, but TargetInteractableObject is null.", this);
+            // Return a default failure status if the target is missing.
+            InteractionStatus failedStatus = new InteractionStatus();
+            failedStatus.IsVisible = true;
+            failedStatus.AddFailureReason(new HumanReadableFailureReason(
+                InteractionFailureReason.InternalError,
+                0,
+                "Target interactable object is missing."
+            ));
+            return failedStatus;
         }
+        // Perform the status check using the standard interaction definition and target.
+        InteractionStatus interactionStatus = targetInteractionDefinition.GetStatus(initiator, effectiveTarget);
+        
+        // Check if this graph is already in the interaction queue of the initiator
+        NpcContext initiatorContext = initiator.GetComponent<NpcContext>();
+        if (initiatorContext != null && PreventDuplicates &&
+            initiatorContext.BehaviorController.HasBehaviorInQueue(StateGraphGUID))
+        {
+            // Then we should not allow this graph to be added again
+            interactionStatus.AddFailureReason(new HumanReadableFailureReason(
+                InteractionFailureReason.AlreadyExecuting,
+                5,
+                "I don't need to do that twice."
+            ));
+        }
+        // Return the status object.
+        return interactionStatus;
     }
     
     /// <summary>
@@ -204,57 +164,68 @@ public class PlayerControlTrigger : MonoBehaviour
     /// </summary>
     /// <param name="context">Contextual information needed to generate the graph (especially for custom actions).</param>
     /// <returns>A StateGraph representing the sequence of states, or null if generation fails.</returns>
-    public AbstractGraphFactory GetGraphDefinition(NpcContext initiator)
-    {
-        PlayerActionContext context = new PlayerActionContext(initiator, targetInteractableObject, this);
-        if (useCustomAction)
-        {
-            // If using a custom action, delegate graph generation to the CustomPlayerActionSO.
-            if (customAction == null)
-            {
-                Debug.LogError($"PlayerControlTrigger on {gameObject.name}: Trying to GetGraphDefinition for a custom action, but no CustomPlayerActionSO is assigned.", this);
-                return null; // Cannot generate graphs without the definition.
-            }
-            // Generate the graph using the custom action's logic, passing the provided context.
-            AbstractGraphFactory customGraph = customAction.GenerateGraph(context);
-            if (!string.IsNullOrEmpty(StateGraphGUID))
-            {
-                customGraph.SetGraphId(StateGraphGUID);
-            }
-            return customGraph;
-        }
-        else
-        {
-            MoveAndUseGraphFactory graphFactory = new MoveAndUseGraphFactory(new MoveAndUseGraphConfiguration()
-            {
-                MoveToTargetTransform = moveToTargetTransform,
-                RequireExactPosition = requireExactPosition,
-                RequireFinalAlignment = requireFinalAlignment,
-                TargetInteractable = targetInteractableObject,
-                TargetInteractionDefinition = targetInteractionDefinition,
-            }, StateGraphGUID);
-            return graphFactory;
-        }
-    }
+    // public AbstractGraphFactory GetGraphDefinition(NpcContext initiator)
+    // {
+    //     PlayerActionContext context = new PlayerActionContext(initiator, targetInteractableObject, this);
+    //     if (useCustomAction)
+    //     {
+    //         // If using a custom action, delegate graph generation to the CustomPlayerActionSO.
+    //         if (customAction == null)
+    //         {
+    //             Debug.LogError($"PlayerControlTrigger on {gameObject.name}: Trying to GetGraphDefinition for a custom action, but no CustomPlayerActionSO is assigned.", this);
+    //             return null; // Cannot generate graphs without the definition.
+    //         }
+    //         // Generate the graph using the custom action's logic, passing the provided context.
+    //         AbstractGraphFactory customGraph = customAction.GenerateGraph(context);
+    //         if (!string.IsNullOrEmpty(StateGraphGUID))
+    //         {
+    //             customGraph.SetGraphId(StateGraphGUID);
+    //         }
+    //         return customGraph;
+    //     }
+    //     else
+    //     {
+    //         MoveAndUseGraphFactory graphFactory = new MoveAndUseGraphFactory(new MoveAndUseGraphConfiguration()
+    //         {
+    //             MoveToTargetTransform = moveToTargetTransform,
+    //             RequireExactPosition = requireExactPosition,
+    //             RequireFinalAlignment = requireFinalAlignment,
+    //             TargetInteractable = targetInteractableObject,
+    //             TargetInteractionDefinition = targetInteractionDefinition,
+    //         }, StateGraphGUID);
+    //         return graphFactory;
+    //     }
+    // }
 
     public InterruptBehaviorDefinition GetBehaviorInterruptDefinition(GameObject initiatorGO)
     {
-        var parameters = new MoveAndUseBehaviorParameters()
+        if (useCustomAction)
         {
-            initiatorGO = initiatorGO,
-            standPoint = moveToTargetTransform,
-            interactionDefinition = targetInteractionDefinition,
-            Interactable = targetInteractableObject?.gameObject,
-            desiredSpeed = MovementSpeed.NpcSpeed,
-            ExactPosition = requireExactPosition,
-            FinalAlignment = requireFinalAlignment,
-        };
-        
-        InterruptBehaviorFactory<MoveAndUseBehaviorParameters> factory = useCustomAction ?
-            customBehaviorFactory :
-            GlobalData.Instance.defaultAggInterruptBehaviorFactory.MoveAndUseBehaviorFactory;
-
-        return factory.GetInterruptDefinition(parameters);
+            return customBehaviorFactory.GetInterruptDefinition(new CustomActionBehaviorParameters
+            {
+                InitiatorGO = initiatorGO,
+                TargetGO = targetInteractableObject?.gameObject,
+                
+                AgentId = StateGraphGUID
+            });
+        }
+        else
+        {
+            var parameters = new MoveAndUseBehaviorParameters()
+            {
+                initiatorGO = initiatorGO,
+                standPoint = moveToTargetTransform,
+                interactionDefinition = targetInteractionDefinition,
+                Interactable = targetInteractableObject?.gameObject,
+                desiredSpeed = MovementSpeed.NpcSpeed,
+                ExactPosition = requireExactPosition,
+                FinalAlignment = requireFinalAlignment,
+                
+                AgentId = StateGraphGUID
+            };
+            return GlobalData.Instance.defaultAggInterruptBehaviorFactory.MoveAndUseBehaviorFactory
+                .GetInterruptDefinition(parameters);
+        }
     }
     
     void AutoSetInteractable()
@@ -351,7 +322,7 @@ public class PlayerControlTrigger : MonoBehaviour
             // --- Original Validation Logic ---
             if (useCustomAction)
             {
-                if (customAction == null)
+                if (customAction == null && customBehaviorFactory == null)
                 {
                     Debug.LogWarning($"PlayerControlTrigger on {gameObject.name}: 'Use Custom Action' is checked, but no Custom Action SO is assigned.", this);
                 }

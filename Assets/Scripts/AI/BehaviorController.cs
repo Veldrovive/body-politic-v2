@@ -79,10 +79,6 @@ public class BehaviorController : SaveableGOConsumer
 
     // Tracks all behavior graphs to ensure that only one is ever enabled at a time.
     private List<SaveableBehaviorGraphAgent> existingBehaviorGraphAgents;
-
-    [SerializeField] private bool disableRoutine = false;
-    [FormerlySerializedAs("testInterruptFactory")] [SerializeField] private AggInterruptBehaviorFactory testAggInterruptFactory;
-    [SerializeField] private bool shouldInterrupt = false;
     [SerializeField] private bool pauseOnInterrupt = false;
     
     private UnityObjectResolver unityObjectResolver = new();
@@ -254,65 +250,6 @@ public class BehaviorController : SaveableGOConsumer
             {
                 if (savedContext == null) continue;
 
-                // if (!savedContext.IsRuntimeAdded)
-                // {
-                //     // Then we should be able to find the agent in the existing agents.
-                //     var existingAgent = existingBehaviorGraphAgents.FirstOrDefault(a => a.AgentId == savedContext.AgentId);
-                //     if (existingAgent != null)
-                //     {
-                //         // Restore its state from the saved data.
-                //         existingAgent.enabled = savedContext.enabled; // Restore enabled state
-                //         existingAgent.Graph = savedContext.BehaviorGraph;
-                //         existingAgent.SetId(savedContext.AgentId);
-                //         existingAgent.SetPriority(savedContext.Priority);
-                //         existingAgent.SetDisplayData(savedContext.DisplayName, ""); // Description is not saved.
-                //         
-                //         // Manually initialize the agent before deserializing its state.
-                //         existingAgent.Init();
-                //
-                //         // Restore its blackboard and execution state from the serialized string.
-                //         existingAgent.Deserialize(savedContext.SerializedAgentData, behaviorSerializer, unityObjectResolver);
-                //
-                //         // Wrap the existing agent in a context and add it to the queue.
-                //         var behaviorContext = new BehaviorAgentContext
-                //         {
-                //             Agent = existingAgent,
-                //             IsRuntimeAdded = savedContext.IsRuntimeAdded,
-                //             SaveContext = savedContext.SaveContext
-                //         };
-                //         executionDequeue.Add(behaviorContext);
-                //     }
-                //     else
-                //     {
-                //         Debug.LogWarning($"BehaviorController: Could not find existing agent with ID '{savedContext.AgentId}'. It may have been removed or renamed.", this);
-                //     }
-                // }
-                // else
-                // {
-                //     // Create a new agent component and configure it from the saved data.
-                //     var newAgent = gameObject.AddComponent<SaveableBehaviorGraphAgent>();
-                //     newAgent.enabled = false; // Keep it disabled until it's time to run.
-                //     newAgent.Graph = savedContext.BehaviorGraph;
-                //     newAgent.SetId(savedContext.AgentId);
-                //     newAgent.SetPriority(savedContext.Priority);
-                //     newAgent.SetDisplayData(savedContext.DisplayName, ""); // Description is not saved.
-                //
-                //     // Manually initialize the agent before deserializing its state.
-                //     newAgent.Init();
-                //
-                //     // Restore its blackboard and execution state from the serialized string.
-                //     newAgent.Deserialize(savedContext.SerializedAgentData, behaviorSerializer, unityObjectResolver);
-                //
-                //     // Wrap the newly created agent in a context and add it to the queue.
-                //     var newBehaviorContext = new BehaviorAgentContext
-                //     {
-                //         Agent = newAgent,
-                //         IsRuntimeAdded = savedContext.IsRuntimeAdded,
-                //         SaveContext = savedContext.SaveContext
-                //     };
-                //     executionDequeue.Add(newBehaviorContext);
-                // }
-                
                 var behaviorContext = DeserializeAgentContext(savedContext);
                 if (behaviorContext.Agent == null)
                 {
@@ -347,16 +284,14 @@ public class BehaviorController : SaveableGOConsumer
     {
         if (interruptFinishedEvent == null)
         {
-            Debug.LogError(
-                "BehaviorController: interruptFinishedEvent is not set. Cannot detect when an interrupt finishes.");
+            Debug.LogError("BehaviorController: interruptFinishedEvent is not set. Cannot detect when an interrupt finishes.");
             return;
         }
 
         interruptFinishedEvent.Event += HandleInterruptFinished;
 
         existingBehaviorGraphAgents = GetComponents<SaveableBehaviorGraphAgent>().ToList();
-        Debug.Log(
-            $"BehaviorController: Found {existingBehaviorGraphAgents.Count} existing BehaviorGraphAgents on {gameObject.name}.");
+        // Debug.Log($"BehaviorController: Found {existingBehaviorGraphAgents.Count} existing BehaviorGraphAgents on {gameObject.name}.");
         foreach (var behavior in existingBehaviorGraphAgents)
         {
             behavior.enabled = false;
@@ -376,34 +311,6 @@ public class BehaviorController : SaveableGOConsumer
         if (currentBehaviorContext == null && !IdleOnExit)
         {
             BeginRoutine();
-        }
-
-        if (shouldInterrupt)
-        {
-            shouldInterrupt = false;
-            Debug.Log("Testing interrupt behavior.");
-            if (testAggInterruptFactory == null)
-            {
-                Debug.LogError("BehaviorController: testInterruptFactory is not set. Cannot test interrupt.");
-            }
-            else
-            {
-                InterruptBehaviorDefinition moveToOriginInterruptDef = testAggInterruptFactory.MoveToBehaviorFactory.GetInterruptDefinition(
-                    new MoveToBehaviorParameters()
-                    {
-                        targetPosition = new Vector3(1, 0, -1),
-                        Priority = 1, SaveContext = true
-                    }
-                );
-                if (TryInterrupt(moveToOriginInterruptDef))
-                {
-                    Debug.Log("BehaviorController: interrupt behavior has been interrupted.");
-                }
-                else
-                {
-                    Debug.Log("BehaviorController: interrupt behavior could not be interrupted.");
-                }
-            }
         }
     }
 
@@ -495,7 +402,7 @@ public class BehaviorController : SaveableGOConsumer
         }
 #endif
 
-        Debug.Log($"BehaviorController: Successfully interrupted current behavior with {newAgent.name}.");
+        // Debug.Log($"BehaviorController: Successfully interrupted current behavior with {newAgent.name}.");
         return true;
     }
 
@@ -542,8 +449,7 @@ public class BehaviorController : SaveableGOConsumer
 
         executionDequeue.Insert(0, context); // We execute last to first, so we add to the front of the list
 
-        Debug.Log(
-            $"BehaviorController: Enqueued interrupt behavior {newAgent.name} with priority {newAgent.Priority}.");
+        // Debug.Log($"BehaviorController: Enqueued interrupt behavior {newAgent.name} with priority {newAgent.Priority}.");
 
         // Step 2: If we are idle or running routine, start the behavior immediately
         if (currentBehaviorContext == null || IsInRoutine)
@@ -714,7 +620,7 @@ public class BehaviorController : SaveableGOConsumer
 
     private void HandleCurrentInterruptFinished()
     {
-        Debug.Log($"BehaviorController: Handling current interrupt finished for {gameObject.name}.");
+        // Debug.Log($"BehaviorController: Handling current interrupt finished for {gameObject.name}.");
         // Step 1: Stop the behavior so that it does not restart
         BehaviorGraphAgent agent = currentBehaviorContext.Agent;
         StopBehavior(agent);
@@ -767,12 +673,12 @@ public class BehaviorController : SaveableGOConsumer
             // No behaviors to process, check if we should go to idle or routine
             if (IdleOnExit)
             {
-                Debug.Log("BehaviorController: Queue is empty, going to idle state.");
+                // Debug.Log("BehaviorController: Queue is empty, going to idle state.");
                 return; // We are idle
             }
             else
             {
-                Debug.Log("BehaviorController: Queue is empty, going to routine state.");
+                // Debug.Log("BehaviorController: Queue is empty, going to routine state.");
                 if (!IsInRoutine)
                 {
                     BeginRoutine();
@@ -798,8 +704,7 @@ public class BehaviorController : SaveableGOConsumer
         var nextContext = executionDequeue[^1];
         executionDequeue.RemoveAt(executionDequeue.Count - 1);
         currentBehaviorContext = nextContext;
-        Debug.Log(
-            $"BehaviorController: Starting behavior {currentBehaviorContext.Agent.name} with priority {currentBehaviorContext.Agent.Priority}.");
+        // Debug.Log($"BehaviorController: Starting behavior {currentBehaviorContext.Agent.name} with priority {currentBehaviorContext.Agent.Priority}.");
         if (!StartBehavior(currentBehaviorContext.Agent))
         {
             Debug.LogError($"BehaviorController: Failed to start behavior {currentBehaviorContext.Agent.name}.");
@@ -893,6 +798,15 @@ public class BehaviorController : SaveableGOConsumer
 
         public string Map(Object obj)
         {
+            Debug.Log($"Serailizing something");
+            if (obj == null)
+            {
+                Debug.Log("Null object");
+                return "null";
+            }
+
+            Debug.Log($"Not null object {obj}");
+            
             Debug.Log($"BeahviorController: Serializing Unity object: {obj?.name} of type {obj?.GetType()}");
 
             // We can serialize GameObjects, Transforms, SOs that derive from IdentifiableSO, and BehaviorGraphs
@@ -1137,6 +1051,18 @@ public class BehaviorController : SaveableGOConsumer
                     $"UnityObjectResolver: Cannot resolve Unity object of type {typeof(TSerializedType)}. Only GameObjects, Transforms, IdentifiableSOs, and BehaviorGraphs are supported.");
             }
             return null; // We cannot resolve this object
+        }
+    }
+
+    public void RemoveBehaviorById(string interruptGraphId, bool includeCurrent = true)
+    {
+        // Step 1: Remove all agents with the given ID from the execution queue
+        executionDequeue.RemoveAll(context => context.Agent.AgentId == interruptGraphId);
+        
+        // Step 2: If the current behavior context has the same ID, proceed
+        if (includeCurrent && currentBehaviorContext != null && currentBehaviorContext.Agent.AgentId == interruptGraphId)
+        {
+            TryProceed();
         }
     }
 }

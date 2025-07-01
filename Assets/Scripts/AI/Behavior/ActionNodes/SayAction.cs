@@ -21,6 +21,7 @@ public partial class SayAction : SaveableAction
     {
         if (string.IsNullOrEmpty(Message.Value))
         {
+            // We use a blank message to skip the action. So we don't want to wait or show a bubble.
             return Status.Success;
         }
         _waitTimer = WaitDuration.Value;
@@ -42,6 +43,12 @@ public partial class SayAction : SaveableAction
     protected override Status OnUpdate()
     {
         base.OnUpdate();
+        
+        if (string.IsNullOrEmpty(Message.Value))
+        {
+            // We use a blank message to skip the action. So we don't want to wait or show a bubble.
+            return Status.Success;
+        }
         
         _waitTimer -= Time.deltaTime;
         if (_waitTimer <= 0)

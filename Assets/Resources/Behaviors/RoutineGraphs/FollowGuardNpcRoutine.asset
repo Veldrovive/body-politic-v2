@@ -1,0 +1,1274 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8710952274572524171
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd922ae02c94c87a66e46a10a7319b9, type: 3}
+  m_Name: FollowGuardNpcRoutine Blackboard
+  m_EditorClassIdentifier: 
+  AssetID:
+    m_Value0: 5310882332200500239
+    m_Value1: 14223204048893310522
+  m_Variables:
+  - rid: 8345543503549825099
+  - rid: 8345543503549825148
+  - rid: 8345543503549825302
+  - rid: 8345543503549825273
+  - rid: 8345543503549825347
+  - rid: 8345543503549825380
+  - rid: 8345543503549825431
+  m_VersionTimestamp: 638867944931543150
+  m_CommandBuffer:
+    m_Commands: []
+  m_RuntimeBlackboardAsset: {fileID: -2215567265984549335}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8345543503549825099
+      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825148
+      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 3223084659890748338
+          m_Value1: 1753242740021778892
+        Name: FollowTarget
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825273
+      type: {class: 'TypedVariableModel`1[[FollowActionDistanceConfiguration, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 13791300094930992270
+          m_Value1: 8687451424888295144
+        Name: Distance config
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 0
+    - rid: 8345543503549825302
+      type: {class: 'TypedVariableModel`1[[System.Single, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 8757443882318267087
+          m_Value1: 14178839202154325949
+        Name: FollowDistance
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 0
+    - rid: 8345543503549825347
+      type: {class: 'TypedVariableModel`1[[FollowActionLoSConfiguration, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 13011716220106579431
+          m_Value1: 14225679827055821217
+        Name: LoS Config
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 0
+    - rid: 8345543503549825380
+      type: {class: 'TypedVariableModel`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 6325351037645353827
+          m_Value1: 3787621796879803588
+        Name: FaceTarget
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 1
+    - rid: 8345543503549825431
+      type: {class: 'TypedVariableModel`1[[System.Single, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 7034205464548427269
+          m_Value1: 13772306119312274755
+        Name: Duration
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: -1
+--- !u!114 &-6000844898494472832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b27bb6d9a2c8d540a10dff10acc543e, type: 3}
+  m_Name: FollowGuardNpcRoutine Debug Info
+  m_EditorClassIdentifier: 
+  m_CodeBreakPointsList: []
+--- !u!114 &-2215567265984549335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
+  m_Name: FollowGuardNpcRoutine Blackboard
+  m_EditorClassIdentifier: 
+  VersionTimestamp: 638867944931543150
+  AssetID:
+    m_Value0: 5310882332200500239
+    m_Value1: 14223204048893310522
+  m_Blackboard:
+    m_Variables:
+    - rid: 8345543503549825140
+    - rid: 8345543503549825149
+    - rid: 8345543503549825303
+    - rid: 8345543503549825274
+    - rid: 8345543503549825348
+    - rid: 8345543503549825381
+    - rid: 8345543503549825432
+  m_SharedBlackboardVariableGuids: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8345543503549825140
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825149
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 3223084659890748338
+          m_Value1: 1753242740021778892
+        Name: FollowTarget
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825274
+      type: {class: 'BlackboardVariable`1[[FollowActionDistanceConfiguration, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 13791300094930992270
+          m_Value1: 8687451424888295144
+        Name: Distance config
+        m_Value: 0
+    - rid: 8345543503549825303
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 8757443882318267087
+          m_Value1: 14178839202154325949
+        Name: FollowDistance
+        m_Value: 0
+    - rid: 8345543503549825348
+      type: {class: 'BlackboardVariable`1[[FollowActionLoSConfiguration, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 13011716220106579431
+          m_Value1: 14225679827055821217
+        Name: LoS Config
+        m_Value: 0
+    - rid: 8345543503549825381
+      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 6325351037645353827
+          m_Value1: 3787621796879803588
+        Name: FaceTarget
+        m_Value: 1
+    - rid: 8345543503549825432
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7034205464548427269
+          m_Value1: 13772306119312274755
+        Name: Duration
+        m_Value: -1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad8f2220607dac4db5082ff333fafb8, type: 3}
+  m_Name: FollowGuardNpcRoutine
+  m_EditorClassIdentifier: 
+  Blackboard: {fileID: -8710952274572524171}
+  m_Description: 
+  m_Nodes:
+  - rid: 8345543503549825092
+  - rid: 8345543503549825100
+  - rid: 8345543503549825192
+  m_VersionTimestamp: 638867944931564960
+  m_DebugInfo: {fileID: -6000844898494472832}
+  m_RuntimeGraph: {fileID: 4471091490519531480}
+  AssetID:
+    m_Value0: 5310882332200500239
+    m_Value1: 14223204048893310522
+  Story:
+    Story: 
+    StoryVariableNames: []
+    Variables: []
+  m_NodeModelsInfo:
+  - Name: On Start
+    Story: 
+    RuntimeTypeID:
+      m_Value0: 3335272451348827663
+      m_Value1: 11549843281177505721
+    Variables: []
+    NamedChildren: []
+  - Name: Follow
+    Story: '[Self] follows [Target]'
+    RuntimeTypeID:
+      m_Value0: 15519152151142916587
+      m_Value1: 2605430633436066748
+    Variables:
+    - Name: Self
+      Type:
+        m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: Outcome
+      Type:
+        m_SerializableType: FollowActionOutcome, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: TargetingType
+      Type:
+        m_SerializableType: FollowActionTargetingType, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: TargetTransform
+      Type:
+        m_SerializableType: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: TargetPosition
+      Type:
+        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: DistanceConfiguration
+      Type:
+        m_SerializableType: FollowActionDistanceConfiguration, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: HorizontalDistanceParameter
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: VerticalDistanceParameter
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: LoSConfiguration
+      Type:
+        m_SerializableType: FollowActionLoSConfiguration, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: LoSObstacleLayerMask
+      Type:
+        m_SerializableType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: ConditionCombination
+      Type:
+        m_SerializableType: FollowActionExitConditionCombination, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: FaceTargetWhenStopped
+      Type:
+        m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: DesiredSpeed
+      Type:
+        m_SerializableType: MovementSpeed, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+      Tooltip: 
+    - Name: AlignmentAngularSpeed
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: AlignmentAngleTolerance
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: MaxDuration
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: MaxDurationWithoutLoS
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    NamedChildren: []
+  - Name: Say
+    Story: '[Self] says [Message]'
+    RuntimeTypeID:
+      m_Value0: 9275093692542079719
+      m_Value1: 1125679392640830156
+    Variables:
+    - Name: Self
+      Type:
+        m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: Message
+      Type:
+        m_SerializableType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: TextDuration
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: WaitDuration
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    NamedChildren: []
+  m_Blackboards: []
+  m_MainBlackboardAuthoringAsset: {fileID: -8710952274572524171}
+  m_CommandBuffer:
+    m_Commands: []
+  m_SubgraphsInfo: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8345543503549825092
+      type: {class: StartNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 0, y: 0}
+        ID:
+          m_Value0: 2555545245528345823
+          m_Value1: 5550206559949532170
+        Parents: []
+        PortModels:
+        - rid: 8345543503549825093
+        NodeType:
+          m_SerializableType: Unity.Behavior.Start, Unity.Behavior, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 3335272451348827663
+          m_Value1: 11549843281177505721
+        m_FieldValues: []
+        Repeat: 1
+        AllowMultipleRepeatsPerTick: 0
+    - rid: 8345543503549825093
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 8345543503549825092
+        m_Connections:
+        - rid: 8345543503549825101
+    - rid: 8345543503549825100
+      type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 0, y: 103}
+        ID:
+          m_Value0: 3268393013087394402
+          m_Value1: 17034679056151430694
+        Parents: []
+        PortModels:
+        - rid: 8345543503549825101
+        - rid: 8345543503549825102
+        NodeType:
+          m_SerializableType: FollowAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 15519152151142916587
+          m_Value1: 2605430633436066748
+        m_FieldValues:
+        - rid: 8345543503549825103
+        - rid: 8345543503549825105
+        - rid: 8345543503549825106
+        - rid: 8345543503549825107
+        - rid: 8345543503549825108
+        - rid: 8345543503549825109
+        - rid: 8345543503549825110
+        - rid: 8345543503549825111
+        - rid: 8345543503549825112
+        - rid: 8345543503549825113
+        - rid: 8345543503549825114
+        - rid: 8345543503549825115
+        - rid: 8345543503549825116
+        - rid: 8345543503549825117
+        - rid: 8345543503549825118
+        - rid: 8345543503549825119
+        - rid: 8345543503549825120
+    - rid: 8345543503549825101
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 8345543503549825100
+        m_Connections:
+        - rid: 8345543503549825093
+    - rid: 8345543503549825102
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 8345543503549825100
+        m_Connections:
+        - rid: 8345543503549825193
+    - rid: 8345543503549825103
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: Self
+        Type:
+          m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825121
+        LinkedVariable:
+          rid: 8345543503549825122
+    - rid: 8345543503549825105
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: Outcome
+        Type:
+          m_SerializableType: FollowActionOutcome, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825124
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825106
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: TargetingType
+        Type:
+          m_SerializableType: FollowActionTargetingType, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825125
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825107
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: TargetTransform
+        Type:
+          m_SerializableType: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825126
+        LinkedVariable:
+          rid: 8345543503549825242
+    - rid: 8345543503549825108
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: TargetPosition
+        Type:
+          m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825127
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825109
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: DistanceConfiguration
+        Type:
+          m_SerializableType: FollowActionDistanceConfiguration, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825128
+        LinkedVariable:
+          rid: 8345543503549825288
+    - rid: 8345543503549825110
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: HorizontalDistanceParameter
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825129
+        LinkedVariable:
+          rid: 8345543503549825318
+    - rid: 8345543503549825111
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: VerticalDistanceParameter
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825130
+        LinkedVariable:
+          rid: 8345543503549825318
+    - rid: 8345543503549825112
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: LoSConfiguration
+        Type:
+          m_SerializableType: FollowActionLoSConfiguration, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825131
+        LinkedVariable:
+          rid: 8345543503549825364
+    - rid: 8345543503549825113
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: LoSObstacleLayerMask
+        Type:
+          m_SerializableType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825132
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825114
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: ConditionCombination
+        Type:
+          m_SerializableType: FollowActionExitConditionCombination, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825133
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825115
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: FaceTargetWhenStopped
+        Type:
+          m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825134
+        LinkedVariable:
+          rid: 8345543503549825414
+    - rid: 8345543503549825116
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: DesiredSpeed
+        Type:
+          m_SerializableType: MovementSpeed, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825135
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825117
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: AlignmentAngularSpeed
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825136
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825118
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: AlignmentAngleTolerance
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825137
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825119
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: MaxDuration
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825138
+        LinkedVariable:
+          rid: 8345543503549825450
+    - rid: 8345543503549825120
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: MaxDurationWithoutLoS
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825139
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825121
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825122
+      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825124
+      type: {class: 'BlackboardVariable`1[[FollowActionOutcome, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825125
+      type: {class: 'BlackboardVariable`1[[FollowActionTargetingType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825126
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825127
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Vector3, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {x: 0, y: 0, z: 0}
+    - rid: 8345543503549825128
+      type: {class: 'BlackboardVariable`1[[FollowActionDistanceConfiguration, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825129
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1.5
+    - rid: 8345543503549825130
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1.5
+    - rid: 8345543503549825131
+      type: {class: 'BlackboardVariable`1[[FollowActionLoSConfiguration, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825132
+      type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825133
+      type: {class: 'BlackboardVariable`1[[FollowActionExitConditionCombination, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825134
+      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825135
+      type: {class: 'BlackboardVariable`1[[MovementSpeed, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825136
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 360
+    - rid: 8345543503549825137
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825138
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: -1
+    - rid: 8345543503549825139
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: -1
+    - rid: 8345543503549825192
+      type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 0, y: 191}
+        ID:
+          m_Value0: 7914802069707744958
+          m_Value1: 11111984266529756008
+        Parents: []
+        PortModels:
+        - rid: 8345543503549825193
+        - rid: 8345543503549825194
+        NodeType:
+          m_SerializableType: SayAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 9275093692542079719
+          m_Value1: 1125679392640830156
+        m_FieldValues:
+        - rid: 8345543503549825195
+        - rid: 8345543503549825196
+        - rid: 8345543503549825197
+        - rid: 8345543503549825198
+    - rid: 8345543503549825193
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 8345543503549825192
+        m_Connections:
+        - rid: 8345543503549825102
+    - rid: 8345543503549825194
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 8345543503549825192
+        m_Connections: []
+    - rid: 8345543503549825195
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: Self
+        Type:
+          m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 8345543503549825199
+        LinkedVariable:
+          rid: 8345543503549825122
+    - rid: 8345543503549825196
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: Message
+        Type:
+          m_SerializableType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825200
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825197
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: TextDuration
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825201
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825198
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: WaitDuration
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8345543503549825202
+        LinkedVariable:
+          rid: -2
+    - rid: 8345543503549825199
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825200
+      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: Done with follow action
+    - rid: 8345543503549825201
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 3
+    - rid: 8345543503549825202
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 3
+    - rid: 8345543503549825242
+      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 3223084659890748338
+          m_Value1: 1753242740021778892
+        Name: FollowTarget
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825288
+      type: {class: 'TypedVariableModel`1[[FollowActionDistanceConfiguration, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 13791300094930992270
+          m_Value1: 8687451424888295144
+        Name: Distance config
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 0
+    - rid: 8345543503549825318
+      type: {class: 'TypedVariableModel`1[[System.Single, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 8757443882318267087
+          m_Value1: 14178839202154325949
+        Name: FollowDistance
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 0
+    - rid: 8345543503549825364
+      type: {class: 'TypedVariableModel`1[[FollowActionLoSConfiguration, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 13011716220106579431
+          m_Value1: 14225679827055821217
+        Name: LoS Config
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 0
+    - rid: 8345543503549825414
+      type: {class: 'TypedVariableModel`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 6325351037645353827
+          m_Value1: 3787621796879803588
+        Name: FaceTarget
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: 1
+    - rid: 8345543503549825450
+      type: {class: 'TypedVariableModel`1[[System.Single, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 7034205464548427269
+          m_Value1: 13772306119312274755
+        Name: Duration
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: -1
+--- !u!114 &4471091490519531480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db920e62f70f420bb33c771449926fa4, type: 3}
+  m_Name: FollowGuardNpcRoutine
+  m_EditorClassIdentifier: 
+  Graphs:
+  - rid: 8345543503549825468
+  RootGraph:
+    rid: 8345543503549825468
+  m_DebugInfo: {fileID: -6000844898494472832}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8345543503549825254
+      type: {class: 'BlackboardVariable`1[[FollowActionOutcome, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825255
+      type: {class: 'BlackboardVariable`1[[FollowActionTargetingType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825257
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Vector3, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {x: 0, y: 0, z: 0}
+    - rid: 8345543503549825262
+      type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825263
+      type: {class: 'BlackboardVariable`1[[FollowActionExitConditionCombination, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8345543503549825265
+      type: {class: 'BlackboardVariable`1[[MovementSpeed, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825266
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 360
+    - rid: 8345543503549825267
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 8345543503549825269
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: -1
+    - rid: 8345543503549825270
+      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: Done with follow action
+    - rid: 8345543503549825271
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 3
+    - rid: 8345543503549825272
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 3
+    - rid: 8345543503549825468
+      type: {class: BehaviorGraphModule, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        AuthoringAssetID:
+          m_Value0: 5310882332200500239
+          m_Value1: 14223204048893310522
+        m_DebugInfo: {fileID: 0}
+        BlackboardReference:
+          rid: 8345543503549825469
+        BlackboardGroupReferences: []
+        Root:
+          rid: 8345543503549825470
+        m_ActiveNodes: []
+        m_NodesToTick: []
+        m_NodesToEnd:
+          rid: 8345543503549825471
+        m_EndedNodes:
+          rid: 8345543503549825472
+        m_VersionTimestamp: 638867944931564960
+    - rid: 8345543503549825469
+      type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        m_Blackboard:
+          rid: 8345543503549825473
+        m_Source: {fileID: -2215567265984549335}
+    - rid: 8345543503549825470
+      type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 2555545245528345823
+          m_Value1: 5550206559949532170
+        Graph:
+          rid: 8345543503549825468
+        m_Parent:
+          rid: -2
+        m_Child:
+          rid: 8345543503549825474
+        Repeat: 1
+        AllowMultipleRepeatsPerTick: 0
+    - rid: 8345543503549825471
+      type: {class: 'Stack`1[[Unity.Behavior.Node, Unity.Behavior]]', ns: System.Collections.Generic, asm: mscorlib}
+      data: 
+    - rid: 8345543503549825472
+      type: {class: 'HashSet`1[[Unity.Behavior.Node, Unity.Behavior]]', ns: System.Collections.Generic, asm: System.Core}
+      data: 
+    - rid: 8345543503549825473
+      type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        m_Variables:
+        - rid: 8345543503549825475
+        - rid: 8345543503549825476
+        - rid: 8345543503549825477
+        - rid: 8345543503549825478
+        - rid: 8345543503549825479
+        - rid: 8345543503549825480
+        - rid: 8345543503549825481
+    - rid: 8345543503549825474
+      type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 3268393013087394402
+          m_Value1: 17034679056151430694
+        Graph:
+          rid: 8345543503549825468
+        m_Parent:
+          rid: 8345543503549825470
+        m_Children:
+        - rid: 8345543503549825482
+        - rid: 8345543503549825483
+    - rid: 8345543503549825475
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825476
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 3223084659890748338
+          m_Value1: 1753242740021778892
+        Name: FollowTarget
+        m_Value: {fileID: 0}
+    - rid: 8345543503549825477
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 8757443882318267087
+          m_Value1: 14178839202154325949
+        Name: FollowDistance
+        m_Value: 0
+    - rid: 8345543503549825478
+      type: {class: 'BlackboardVariable`1[[FollowActionDistanceConfiguration, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 13791300094930992270
+          m_Value1: 8687451424888295144
+        Name: Distance config
+        m_Value: 0
+    - rid: 8345543503549825479
+      type: {class: 'BlackboardVariable`1[[FollowActionLoSConfiguration, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 13011716220106579431
+          m_Value1: 14225679827055821217
+        Name: LoS Config
+        m_Value: 0
+    - rid: 8345543503549825480
+      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 6325351037645353827
+          m_Value1: 3787621796879803588
+        Name: FaceTarget
+        m_Value: 1
+    - rid: 8345543503549825481
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7034205464548427269
+          m_Value1: 13772306119312274755
+        Name: Duration
+        m_Value: -1
+    - rid: 8345543503549825482
+      type: {class: FollowAction, ns: , asm: Assembly-CSharp}
+      data:
+        ID:
+          m_Value0: 3268393013087394402
+          m_Value1: 17034679056151430694
+        Graph:
+          rid: 8345543503549825468
+        m_Parent:
+          rid: 8345543503549825474
+        Self:
+          rid: 8345543503549825475
+        Outcome:
+          rid: 8345543503549825254
+        TargetingType:
+          rid: 8345543503549825255
+        TargetTransform:
+          rid: 8345543503549825484
+        TargetPosition:
+          rid: 8345543503549825257
+        DistanceConfiguration:
+          rid: 8345543503549825478
+        HorizontalDistanceParameter:
+          rid: 8345543503549825477
+        VerticalDistanceParameter:
+          rid: 8345543503549825477
+        LoSConfiguration:
+          rid: 8345543503549825479
+        LoSObstacleLayerMask:
+          rid: 8345543503549825262
+        ConditionCombination:
+          rid: 8345543503549825263
+        FaceTargetWhenStopped:
+          rid: 8345543503549825480
+        DesiredSpeed:
+          rid: 8345543503549825265
+        AlignmentAngularSpeed:
+          rid: 8345543503549825266
+        AlignmentAngleTolerance:
+          rid: 8345543503549825267
+        MaxDuration:
+          rid: 8345543503549825481
+        MaxDurationWithoutLoS:
+          rid: 8345543503549825269
+    - rid: 8345543503549825483
+      type: {class: SayAction, ns: , asm: Assembly-CSharp}
+      data:
+        ID:
+          m_Value0: 7914802069707744958
+          m_Value1: 11111984266529756008
+        Graph:
+          rid: 8345543503549825468
+        m_Parent:
+          rid: 8345543503549825474
+        Self:
+          rid: 8345543503549825475
+        Message:
+          rid: 8345543503549825270
+        TextDuration:
+          rid: 8345543503549825271
+        WaitDuration:
+          rid: 8345543503549825272
+    - rid: 8345543503549825484
+      type: {class: 'GameObjectToComponentBlackboardVariable`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: {fileID: 0}
+        m_LinkedVariable:
+          rid: 8345543503549825476

@@ -38,20 +38,20 @@ public partial class FindControlTriggerSequence : Composite
         if (FeasibleAreaGO == null)
         {
             Debug.LogError("FindControlTriggerGateState: FeasibleAreaGO is null");
-            FoundGameObject = null;
+            FoundGameObject.Value = null;
             return StartNode(NotFound);
         }
         Collider feasibleArea = FeasibleAreaGO.Value.GetComponent<Collider>();
         if (feasibleArea == null)
         {
             Debug.LogWarning($"Zone for find control trigger state on {FeasibleAreaGO.Value.name} is null.");
-            FoundGameObject = null;
+            FoundGameObject.Value = null;
             return StartNode(NotFound);
         }
         else if (!feasibleArea.isTrigger)
         {
             Debug.LogWarning($"Zone for find control trigger state on {FeasibleAreaGO.Value.name} is not a trigger collider.");
-            FoundGameObject = null;
+            FoundGameObject.Value = null;
             return StartNode(NotFound);
         }
         else if (feasibleArea.GetType() != typeof(BoxCollider))
@@ -115,7 +115,7 @@ public partial class FindControlTriggerSequence : Composite
             // Ensure the variable is cleared if nothing is found, maintaining a consistent state for the variable.
             // interactableVariable.Value = null; 
             // TriggerExit(FindControlTriggerGateStateOutcome.TriggerNotFound);
-            FoundGameObject = null;
+            FoundGameObject.Value = null;
             return StartNode(NotFound);
         }
         else // interactables.Count > 0
@@ -129,7 +129,11 @@ public partial class FindControlTriggerSequence : Composite
             // As per the requirement, always set the interactable variable if one (or more) is found.
             // This makes the found item available to subsequent states even if this state "fails" to skip.
             // FoundGameObject = closestInteractable.gameObject;
-            FoundGameObject.ObjectValue = closestInteractable.gameObject;
+            if (FoundGameObject != null)
+            {
+                FoundGameObject.Value = closestInteractable.gameObject;
+            }
+            // else: This node is just telling us that a game object was found, but is not providing a reference to it.
             // TriggerExit(FindControlTriggerGateStateOutcome.TriggerFound);
             return StartNode(Found);
         }

@@ -6,10 +6,21 @@ public class VariableSOSaveableData<T> : SaveableData
     public T Value;
 }
 
-public abstract class AbstractVariableSO<T> : SaveableSO
+public interface IVariableSOValueProvider
+{
+    object GetValueAsObject();
+}
+
+public abstract class AbstractVariableSO<T> : SaveableSO, IVariableSOValueProvider
 {
     [SerializeField] private T value;
     public virtual T Value { get => value; set => this.value = value; }
+
+    public object GetValueAsObject()
+    {
+        return value;
+    }
+    
     // From https://www.reddit.com/r/Unity3D/comments/182ija3/comment/kaj2nhv/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
     #if UNITY_EDITOR
     T _startValue;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum SoundReactionType
@@ -66,13 +67,11 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
     [Header("Configration")] [SerializeField]
     public LayerMask LoSObstacleLayerMask;
     
+    [Header("Look At Reaction Configuration")]
+    [SerializeField] private CuriousBehaviorFactory curiousBehaviorFactory;
+    
     [Header("Inspect Reaction Configuration")]
-    [SerializeField] private float inspectDistance = 2f;  // The distance at which the NPC will inspect the sound emanation point
-    [SerializeField] private float inspectMaxDuration = 20f; // The maximum duration for which the NPC will inspect the sound emanation point
-    [SerializeField] private float inspectMaxDurationWithoutLoS = 20f; // The maximum duration for which the NPC will inspect the sound emanation point without line of sight
-    [SerializeField] private MovementSpeed inspectMovementSpeed = MovementSpeed.Run; // The movement speed at which the NPC will inspect the sound emanation point
-    [SerializeField] private string inspectEntryMessage = "Huh?"; // The message that the NPC will say when it starts inspecting the sound emanation point
-    [SerializeField] private float inspectEntryMessageDuration = 1f; // The duration for which the NPC will say the entry message
+    [SerializeField] private InspectBehaviorFactory inspectBehaviorFactory;
 
     private void AutoSet()
     {
@@ -178,85 +177,125 @@ public class NpcSoundReactionDefinitionSO : ScriptableObject
         return bestReaction;
     }
 
-    public (AbstractGraphFactory reactionGraph, int priority) GetReactionFactory(NpcContext reactingNpc, SoundData soundData)
+    // public (AbstractGraphFactory reactionGraph, int priority) GetReactionFactory(NpcContext reactingNpc, SoundData soundData)
+    // {
+    //     SoundReactionDefinition reaction = GetReaction(soundData.Suspiciousness, soundData.SType);
+    //     if (reaction == null)
+    //     {
+    //         // Then there was not an appropriate reaction defined for this sound
+    //         return (null, -1);
+    //     }
+    //
+    //     
+    //     AbstractGraphFactory factory = reaction.ReactionType switch 
+    //     {
+    //         SoundReactionType.Test => GetTestReactionFactory(reactingNpc, soundData),
+    //         SoundReactionType.LookAtEmanationPoint => GetLookAtEmanationPointFactory(reactingNpc, soundData),
+    //         SoundReactionType.InspectEmanationPoint => GetInspectEmanationPointFactory(reactingNpc, soundData),
+    //         _ => throw new ArgumentOutOfRangeException(nameof(reaction.ReactionType), $"Unhandled reaction type: {reaction.ReactionType}")
+    //     };
+    //     if (factory == null)
+    //     {
+    //         // There was a problem creating the factory
+    //         return (null, -1);
+    //     }
+    //
+    //     if (reaction.CanInterruptSelf)
+    //     {
+    //         // Then we include the current time in the graph ID to ensure that it is unique
+    //         // Non-unique graph IDs will cause the SoundHandler to not interrupt the current graph
+    //         factory.SetGraphId($"{reaction.ReactionType.ToString()}-{SaveableDataManager.Instance.time}");
+    //     }
+    //     else
+    //     {
+    //         // Then we just use the reaction type as the graph ID so that we do not interrupt the current reaction
+    //         // with a new one of the same type.
+    //         factory.SetGraphId(reaction.ReactionType.ToString());
+    //     }
+    //     
+    //     return (factory, reaction.Priority);
+    // }
+
+    public InterruptBehaviorDefinition GetBehaviorDefinition(NpcContext reactingNpc, SoundData soundData)
     {
         SoundReactionDefinition reaction = GetReaction(soundData.Suspiciousness, soundData.SType);
         if (reaction == null)
         {
             // Then there was not an appropriate reaction defined for this sound
-            return (null, -1);
+            return null;
         }
-
         
-        AbstractGraphFactory factory = reaction.ReactionType switch 
+        AbstractCustomActionBehaviorFactory factory = reaction.ReactionType switch
         {
-            SoundReactionType.Test => GetTestReactionFactory(reactingNpc, soundData),
-            SoundReactionType.LookAtEmanationPoint => GetLookAtEmanationPointFactory(reactingNpc, soundData),
-            SoundReactionType.InspectEmanationPoint => GetInspectEmanationPointFactory(reactingNpc, soundData),
+            SoundReactionType.Test => null,
+            SoundReactionType.LookAtEmanationPoint => curiousBehaviorFactory,
+            SoundReactionType.InspectEmanationPoint => inspectBehaviorFactory,
             _ => throw new ArgumentOutOfRangeException(nameof(reaction.ReactionType), $"Unhandled reaction type: {reaction.ReactionType}")
         };
         if (factory == null)
         {
-            // There was a problem creating the factory
-            return (null, -1);
-        }
-
-        if (reaction.CanInterruptSelf)
-        {
-            // Then we include the current time in the graph ID to ensure that it is unique
-            // Non-unique graph IDs will cause the SoundHandler to not interrupt the current graph
-            factory.SetGraphId($"{reaction.ReactionType.ToString()}-{SaveableDataManager.Instance.time}");
-        }
-        else
-        {
-            // Then we just use the reaction type as the graph ID so that we do not interrupt the current reaction
-            // with a new one of the same type.
-            factory.SetGraphId(reaction.ReactionType.ToString());
+            throw new ArgumentOutOfRangeException(nameof(reaction), $"Unhandled reaction type: {reaction.ReactionType}.");
         }
         
-        return (factory, reaction.Priority);
-    }
-
-    #region Factory Helpers
-
-    private AbstractGraphFactory GetTestReactionFactory(NpcContext reactingNpc, SoundData soundData)
-    {
-        Debug.LogWarning("Test reaction is not implemented yet. This is a placeholder for testing purposes.", reactingNpc.gameObject);
-        return null;
-    }
-    
-    private AbstractGraphFactory GetLookAtEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
-    {
-        return new LookTowardGraphFactory(new LookTowardGraphConfiguration()
+        CustomActionBehaviorParameters parameters = new CustomActionBehaviorParameters()
         {
-            TargetingType = FollowStateTargetingType.Position,
-            TargetPosition = new(soundData.EmanationPoint),
-
-            SightDistance = 10f,
-            MaxDuration = 5f,
-            MaxDurationWithoutLoS = 2f,
-
-            EntryMessage = "Huh?",
-            EntryMessageDuration = 1f,
-        });
-    }
-    
-    private AbstractGraphFactory GetInspectEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
-    {
-        var config = new FollowGraphConfiguration()
-        {
-            TargetingType = FollowStateTargetingType.Position,
-            TargetPosition = new(soundData.EmanationPoint),
-            FollowDistance = inspectDistance,
-            MaxDuration = inspectMaxDuration,
-            MaxDurationWithoutLoS = inspectMaxDurationWithoutLoS,
-            Speed = inspectMovementSpeed,
-            EntryMessage = inspectEntryMessage,
-            EntryMessageDuration = inspectEntryMessageDuration,
-            EntryWaitDuration = inspectEntryMessageDuration
+            InitiatorGO = reactingNpc.gameObject,
+            TargetGO = null,  // No game object target for sound reactions
+            TargetType = CustomActionTargetType.Position,
+            TargetPosition = soundData.EmanationPoint
         };
-        return new FollowGraphFactory(config);
+        InterruptBehaviorDefinition behaviorDefinition = factory.GetInterruptDefinition(parameters);
+        if (behaviorDefinition == null)
+        {
+            // There was a problem creating the behavior definition
+            return null;
+        }
+        behaviorDefinition.Priority = reaction.Priority;
+        behaviorDefinition.Id = $"{reactingNpc.name}_{soundData.Suspiciousness}_{reaction.ReactionType}";
+        
+        return behaviorDefinition;
     }
-
-    #endregion
+    
+    // #region Factory Helpers
+    //
+    // private AbstractGraphFactory GetTestReactionFactory(NpcContext reactingNpc, SoundData soundData)
+    // {
+    //     Debug.LogWarning("Test reaction is not implemented yet. This is a placeholder for testing purposes.", reactingNpc.gameObject);
+    //     return null;
+    // }
+    //
+    // private AbstractGraphFactory GetLookAtEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
+    // {
+    //     return new LookTowardGraphFactory(new LookTowardGraphConfiguration()
+    //     {
+    //         TargetingType = FollowStateTargetingType.Position,
+    //         TargetPosition = new(soundData.EmanationPoint),
+    //
+    //         SightDistance = 10f,
+    //         MaxDuration = 5f,
+    //         MaxDurationWithoutLoS = 2f,
+    //
+    //         EntryMessage = "Huh?",
+    //         EntryMessageDuration = 1f,
+    //     });
+    // }
+    //
+    // private AbstractGraphFactory GetInspectEmanationPointFactory(NpcContext reactingNpc, SoundData soundData)
+    // {
+    //     var config = new FollowGraphConfiguration()
+    //     {
+    //         TargetingType = FollowStateTargetingType.Position,
+    //         TargetPosition = new(soundData.EmanationPoint),
+    //         FollowDistance = inspectDistance,
+    //         MaxDuration = inspectMaxDuration,
+    //         MaxDurationWithoutLoS = inspectMaxDurationWithoutLoS,
+    //         Speed = inspectMovementSpeed,
+    //         EntryMessage = inspectEntryMessage,
+    //         EntryMessageDuration = inspectEntryMessageDuration,
+    //         EntryWaitDuration = inspectEntryMessageDuration
+    //     };
+    //     return new FollowGraphFactory(config);
+    // }
+    //
+    // #endregion
 }

@@ -37,7 +37,7 @@ public partial class MoveToPositionAction : SaveableAction
 
     protected override Status OnLoad()
     {
-        Debug.Log("Starting MoveToPositionAction for " + Self.Value.name);
+        // Debug.Log("Starting MoveToPositionAction for " + Self.Value.name);
         if (!Self.Value.TryGetComponent(out npcContext))
         {
             Debug.LogError("MoveToTransformAction: Self does not have a NpcContext component.");
@@ -216,7 +216,7 @@ public partial class MoveToPositionAction : SaveableAction
     {
         base.OnEnd();
         
-        Debug.Log("Stopping MoveToPositionAction for " + Self.Value.name);
+        // Debug.Log("Stopping MoveToPositionAction for " + Self.Value.name);
         npcContext.MovementManager.InterruptCurrentRequest();
     }
 }

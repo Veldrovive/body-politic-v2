@@ -462,66 +462,24 @@ public class PlayerManager : SaveableGOConsumer
              // Optionally provide UI feedback here
              return;
         }
-
-        if (currentFocusedNpc.BehaviorController == null)
+        
+        InterruptBehaviorDefinition moveAndUseInterruptDefinition = clickedTrigger.GetBehaviorInterruptDefinition(currentFocusedNpc.gameObject);
+        if (moveAndUseInterruptDefinition == null)
         {
-            AbstractGraphFactory factory = clickedTrigger.GetGraphDefinition(currentFocusedNpc);
-            if (factory == null)
-            {
-                Debug.LogError($"Trigger '{clickedTrigger.gameObject.name}' failed to generate a valid graph definition.", clickedTrigger);
-                return;
-            }
+            Debug.LogError($"Trigger '{clickedTrigger.gameObject.name}' failed to generate a valid interrupt definition.", clickedTrigger);
+            return;
+        }
         
-            StateGraphController controller = currentFocusedNpc.StateGraphController;
-        
-            bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
-            bool interrupt = controller.IsInRoutine || overwrite;
-            bool clearDeque = overwrite;
-            if (interrupt)
-            {
-                bool didInterrupt = controller.TryInterrupt(
-                    factory,
-                    saveThisGraphIfItGetsInterrupted: false,
-                    clearDequeOnSuccess: clearDeque
-                );
-                if (didInterrupt)
-                {
-                    // If we interrupted, we swap the controller to use player control
-                    controller.IdleOnExit = true;  // Tells it not to resume routine on state exit
-                }
-            }
-            else
-            {
-                controller.EnqueueStateGraph(
-                    factory,
-                    interruptCurrent: false,
-                    saveThisGraphIfItGetsInterrupted: false,
-                    clearDeque: clearDeque
-                );
-            }
+        BehaviorController controller = currentFocusedNpc.BehaviorController;
+        bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
+        if (overwrite)
+        {
+            controller.TryInterrupt(moveAndUseInterruptDefinition, clearQueue: true);
         }
         else
         {
-            InterruptBehaviorDefinition moveAndUseInterruptDefinition = clickedTrigger.GetBehaviorInterruptDefinition(currentFocusedNpc.gameObject);
-            if (moveAndUseInterruptDefinition == null)
-            {
-                Debug.LogError($"Trigger '{clickedTrigger.gameObject.name}' failed to generate a valid interrupt definition.", clickedTrigger);
-                return;
-            }
-            
-            BehaviorController controller = currentFocusedNpc.BehaviorController;
-            bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
-            if (overwrite)
-            {
-                controller.TryInterrupt(moveAndUseInterruptDefinition, clearQueue: true);
-            }
-            else
-            {
-                controller.EnqueueInterrupt(moveAndUseInterruptDefinition);
-            }
+            controller.EnqueueInterrupt(moveAndUseInterruptDefinition);
         }
-
-        
     }
 
     /// <summary>
@@ -564,90 +522,41 @@ public class PlayerManager : SaveableGOConsumer
 
         if (mouseHoverMovementDestination.HasValue)
         {
-            if (currentFocusedNpc.BehaviorController == null)
+            if (GlobalData.Instance?.defaultAggInterruptBehaviorFactory == null)
             {
-                // Generate the MoveTo graph
-                MoveGraphConfiguration config = new MoveGraphConfiguration()
+                Debug.LogError("PlayerManager: InterruptBehaviorFactory is not set. Cannot interrupt behavior.", this);
+                return;
+            }
+            AggInterruptBehaviorFactory factory = GlobalData.Instance.defaultAggInterruptBehaviorFactory;
+            
+            InterruptBehaviorDefinition moveInterrupt = factory.MoveToBehaviorFactory.GetInterruptDefinition(
+                new MoveToBehaviorParameters()
                 {
-                    GraphId = "PlayerMoveToCommandGraph",
-                    moveToStateConfig = new MoveToStateConfiguration(mouseHoverMovementDestination.Value)
-                    {
-                        DesiredSpeed = defaultMovementSpeed,
-                        RequireExactPosition = true
-                    }
-                };
-                MoveGraphFactory factory = new MoveGraphFactory(config);
-                
-                StateGraphController controller = currentFocusedNpc.StateGraphController;
-                
-                // If the player is holding the key to overwrite the queue, we want to interrupt and clear the current queue
-                bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
-                // If the graph is currently running a MoveTo command from the player, we want to overwrite it instead of
-                // adding to the queue
-                // Also if we are in the routine graph we want to interrupt it
-                bool interrupt = controller.IsInRoutine || controller.CurrentStateGraph?.id == config.GraphId || overwrite;
-                if (interrupt)
-                {
-                    bool didInterrupt = controller.TryInterrupt(
-                        factory,
-                        saveThisGraphIfItGetsInterrupted: false,
-                        clearDequeOnSuccess: overwrite
-                    );
-                    if (didInterrupt)
-                    {
-                        // If we interrupted, we swap the controller to use player control
-                        controller.IdleOnExit = true;  // Tells it not to resume routine on state exit
-                    }
+                    targetPosition = mouseHoverMovementDestination.Value,
+                    AgentId = "PlayerMoveToCommand",
+                    desiredSpeed = MovementSpeed.NpcSpeed,
+                    exactPosition = true,
+                    finalAlignment = false,
+                    Priority = 0f,
+                    SaveContext = false,
                 }
-                else
-                {
-                    controller.EnqueueStateGraph(
-                        factory,
-                        interruptCurrent: false,
-                        saveThisGraphIfItGetsInterrupted: false,
-                        clearDeque: overwrite
-                    );
-                }
+            );
+
+            if (moveInterrupt == null)
+            {
+                Debug.LogError("Failed to create MoveTo interrupt behavior. Cannot set move target.", this);
+                return;
+            }
+            
+            bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
+            if (overwrite)
+            {
+                currentFocusedNpc.BehaviorController.TryInterrupt(moveInterrupt, clearQueue: true);
             }
             else
             {
-                if (GlobalData.Instance?.defaultAggInterruptBehaviorFactory == null)
-                {
-                    Debug.LogError("PlayerManager: InterruptBehaviorFactory is not set. Cannot interrupt behavior.", this);
-                    return;
-                }
-                AggInterruptBehaviorFactory factory = GlobalData.Instance.defaultAggInterruptBehaviorFactory;
-                
-                InterruptBehaviorDefinition moveInterrupt = factory.MoveToBehaviorFactory.GetInterruptDefinition(
-                    new MoveToBehaviorParameters()
-                    {
-                        targetPosition = mouseHoverMovementDestination.Value,
-                        AgentId = "PlayerMoveToCommand",
-                        desiredSpeed = MovementSpeed.NpcSpeed,
-                        exactPosition = true,
-                        finalAlignment = false,
-                        Priority = 0f,
-                        SaveContext = false,
-                    }
-                );
-
-                if (moveInterrupt == null)
-                {
-                    Debug.LogError("Failed to create MoveTo interrupt behavior. Cannot set move target.", this);
-                    return;
-                }
-                
-                bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
-                if (overwrite)
-                {
-                    currentFocusedNpc.BehaviorController.TryInterrupt(moveInterrupt, clearQueue: true);
-                }
-                else
-                {
-                    currentFocusedNpc.BehaviorController.EnqueueInterrupt(moveInterrupt);
-                }
+                currentFocusedNpc.BehaviorController.EnqueueInterrupt(moveInterrupt);
             }
-            
         }
     }
 
@@ -788,6 +697,6 @@ public class PlayerManager : SaveableGOConsumer
     private void HandleReturnToRoutineCommand() // [cite: 1090]
     {
         // Inform the StateGraphController that it should revert to routine control when the state queue is empty
-        currentFocusedNpc.StateGraphController.IdleOnExit = false;
+        currentFocusedNpc.BehaviorController.IdleOnExit = false;
     }
 }
