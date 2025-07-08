@@ -67,13 +67,20 @@ public partial class CheckInventorySequence : Composite
     [SerializeReference] public BlackboardVariable<NpcRoleSO> DesiredConsumedRole;
 
     [SerializeReference] public Node Found;
+    public static int FOUND_CHILD_INDEX = 0;
     [SerializeReference] public Node NotFound;
+    public static int NOT_FOUND_CHILD_INDEX = 1;
+    
+    // IMPORTANT NOTE: For serialization purposes we need to keep track of the current child index. This is so that
+    // we can correctly return the status of the child node that was started.
+    [CreateProperty] private int m_CurrentChild = -1;
 
     private NpcContext selfContext;
     private InventoryData invData;
     
     protected override Status OnStart()
     {
+        
         // BUG IN UNITY BEHAVIOR: Nodes are not properly deserialized so we need to grab them from the children.
         Found = Children[0];
         NotFound = Children[1];
@@ -82,7 +89,8 @@ public partial class CheckInventorySequence : Composite
         if (selfContext == null)
         {
             Debug.LogError($"CheckInventorySequence: Self does not have a NpcContext component.");
-            return StartNode(NotFound);
+            Status childStatus = StartChild(NOT_FOUND_CHILD_INDEX);
+            return childStatus;
         }
 
         invData = selfContext.Inventory.GetInventoryData();
@@ -117,11 +125,12 @@ public partial class CheckInventorySequence : Composite
         if (MoveToDesiredPosition)
         {
             bool filterMet = MoveToMeetFilter(invData, heldMeetsFilter, filteredInventorySlots);
-            return StartNode(filterMet ?
+            Status childStatus = StartChild(filterMet ?
                 // Then we found the desired item and moved it to the desired position
-                Found :
+                FOUND_CHILD_INDEX :
                 // Then we didn't find the desired item or couldn't move it to the desired position
-                NotFound);
+                NOT_FOUND_CHILD_INDEX);
+            return childStatus;
         }
         else
         {
@@ -132,11 +141,12 @@ public partial class CheckInventorySequence : Composite
                 {
                     FoundGameObject.Value = invData.HeldItem.gameObject;
                 }
-                return StartNode(heldMeetsFilter ?
+                Status childStatus = StartChild(heldMeetsFilter ?
                     // Then we found the desired item in the held slot
-                    Found :
+                    FOUND_CHILD_INDEX :
                     // Then we didn't find the desired item in the held slot
-                    NotFound);
+                    NOT_FOUND_CHILD_INDEX);
+                return childStatus;
             }
             else if (DesiredPosition == InventoryDesiredPosition.Inventory)
             {
@@ -144,18 +154,37 @@ public partial class CheckInventorySequence : Composite
                 {
                     FoundGameObject.Value = filteredInventorySlots[0].gameObject;
                 }
-                return StartNode(filteredInventorySlots.Count > 0 ?
+                Status childStatus = StartChild(filteredInventorySlots.Count > 0 ?
                     // Then we found the desired item in the inventory
-                    Found :
+                    FOUND_CHILD_INDEX :
                     // Then we didn't find the desired item in the inventory
-                    NotFound);
+                    NOT_FOUND_CHILD_INDEX);
+                return childStatus;
             }
             else
             {
                 Debug.LogError($"CheckInventorySequence: DesiredPosition is not set to a valid value: {DesiredPosition.Value}");
-                return StartNode(NotFound);
+                Status childStatus = StartChild(NOT_FOUND_CHILD_INDEX);
+                return childStatus;
             }
         }
+    }
+
+    private Status StartChild(int childIndex)
+    {
+        m_CurrentChild = childIndex;
+        var childStatus = StartNode(Children[childIndex]);
+        return childStatus switch
+        {
+            // Since this is a sequence we need to map running to waiting or else this node will be interpreted as having finished early
+            Status.Running => Status.Waiting,
+            _ => childStatus
+        };
+    }
+    
+    protected override Status OnUpdate()
+    {
+        return Children[m_CurrentChild].CurrentStatus;
     }
 
     private bool MoveToMeetFilter(InventoryData inventoryData, bool heldMeetsFilter, List<Holdable> filteredInventorySlots)
