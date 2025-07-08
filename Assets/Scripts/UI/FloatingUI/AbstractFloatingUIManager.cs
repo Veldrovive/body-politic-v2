@@ -102,6 +102,10 @@ public abstract class AbstractFloatingUIManager<TConfig> : MonoBehaviour
         {
             uiDocument = GetComponent<UIDocument>();
         }
+        else if (uiDocument.panelSettings == null)
+        {
+            Debug.LogError("FloatingUIManager: UIDocument has no panel settings assigned.", this);
+        }
         
         if (viewCamera == null)
         {

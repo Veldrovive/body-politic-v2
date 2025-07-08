@@ -1,0 +1,173 @@
+using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[Serializable]
+public class AnnouncementBubbleDefinition
+{
+    public string ToSay;
+    public float Duration;
+}
+
+
+public class AnnouncementBubbleFloatingUIConfig : AbstractFloatingUIConfig
+{
+    public AnnouncementBubbleDefinition bubbleDefinition;
+    
+    // Internal variables
+    public float StartTime = -1;
+    
+    public AnnouncementBubbleFloatingUIConfig(VisualTreeAsset template, UnityEngine.Object lifetimeOwner) : base(template, lifetimeOwner) { }
+}
+
+public class AnnouncementBubbleFloatingUIManager : AbstractFloatingUIManager<AnnouncementBubbleFloatingUIConfig>
+{
+    [SerializeField] private VisualTreeAsset announcementBubbleTemplate;
+    
+    [SerializeField] [Tooltip("The element to position the bubble on.")]
+    private Transform trackedTransform;
+    
+    [SerializeField] [Tooltip("The time it takes to transition in a bubble.")]
+    private float transitionInTime = 0.4f;
+
+    [SerializeField] [Tooltip("The time it takes to transition out a bubble.")]
+    private float transitionOutTime = 0.2f;
+    
+    [SerializeField] [Tooltip("Anchor point for the bubble.")]
+    private FloatingUIAnchor anchor = FloatingUIAnchor.BottomRight;
+    
+    [SerializeField] [Tooltip("Screen space offset for the bubble.")]
+    private Vector2 screenSpaceOffset = new Vector2(0, 0);
+
+    [SerializeField] private float maxWidth = 40f;
+    
+    private FloaterData currentFloaterData;
+
+    public string ShowBubble(string toSay, float duration, Action onFinishCallback = null)
+    {
+        if (currentFloaterData != null)
+        {
+            // New overwrites old. Remove the current floater.
+            RemoveFloater(currentFloaterData.Id);
+        }
+
+        AnnouncementBubbleDefinition def = new AnnouncementBubbleDefinition()
+        {
+            ToSay = toSay,
+            Duration = duration
+        };
+
+        AnnouncementBubbleFloatingUIConfig config = new AnnouncementBubbleFloatingUIConfig(announcementBubbleTemplate, this)
+        {
+            PositionType = FloatingUIPositionType.Transform,
+            TargetTransform = trackedTransform,
+            
+            Anchor = anchor,
+            ScreenSpaceOffset = screenSpaceOffset,
+            
+            OnRemovalComplete = onFinishCallback,
+            
+            ContainerMaxWidthPercent = maxWidth,
+            KeepOnScreen = true,
+            
+            bubbleDefinition = def
+        };
+
+        var floaterData = CreateFloater(config);
+        if (floaterData == null)
+        {
+            // Failed to create floater, log an error
+            Debug.LogError("Failed to create Announcement Bubble floater.", this);
+            return null;
+        }
+        
+        // Otherwise, store the floater data
+        currentFloaterData = floaterData;
+        return currentFloaterData.Id;
+    }
+
+    public void RemoveBubble(string floaterId = null)
+    {
+        if (floaterId == null)
+        {
+            // Then we remove whatever is currently active
+            if (currentFloaterData != null)
+            {
+                // Remove the current floater
+                RemoveFloater(currentFloaterData.Id);
+                currentFloaterData = null;
+            }
+        }
+        else
+        {
+            // We check if this is the current floater. If not, then we don't do anything
+            if (currentFloaterData != null && currentFloaterData.Id == floaterId)
+            {
+                // Remove the current floater
+                RemoveFloater(currentFloaterData.Id);
+                currentFloaterData = null;
+            }
+        }
+        
+    }
+    
+    protected override bool OnSetupFloater(VisualElement floaterRoot, AnnouncementBubbleFloatingUIConfig floaterConfig)
+    {
+        // Ensure that nothing here can be interacted with
+        floaterRoot.Query<VisualElement>().ForEach(element => element.pickingMode = PickingMode.Ignore);
+        
+        // We also need to apply this to the parent container
+        floaterRoot.parent.pickingMode = PickingMode.Ignore;
+        
+        // Ensure the element exists and is a Label
+        Label bubbleTextLabel = floaterRoot.Q<Label>("SpeechText");
+        if (bubbleTextLabel == null)
+        {
+            Debug.LogError("SpeechText Label element not found in the UI Document.", this);
+            return false;
+        }
+        bubbleTextLabel.text = floaterConfig.bubbleDefinition.ToSay;
+        
+        floaterConfig.StartTime = SaveableDataManager.Instance.time;
+
+        floaterRoot.style.opacity = 0f;  // Start with the bubble invisible
+
+        return true;
+    }
+
+    protected override void OnUpdateFloater(VisualElement floaterRoot, AnnouncementBubbleFloatingUIConfig floaterConfig)
+    {
+        float timeSinceStart = SaveableDataManager.Instance.time - floaterConfig.StartTime;
+        float timeTillEnd = floaterConfig.bubbleDefinition.Duration - timeSinceStart;
+
+        if (timeTillEnd > floaterConfig.bubbleDefinition.Duration)
+        {
+            // Then we can remove the floater
+            Debug.Log("Announcement bubble duration exceeded, removing floater.");
+            RemoveFloater(currentFloaterData.Id);
+            return;
+        }
+        
+        // Update the opacity based on the time
+        if (timeTillEnd < transitionOutTime)
+        {
+            float currentOpacity = Mathf.Clamp01(timeTillEnd / transitionOutTime);
+            floaterRoot.style.opacity = currentOpacity;
+        }
+        else if (timeSinceStart < transitionInTime)
+        {
+            float currentOpacity = Mathf.Clamp01(timeSinceStart / transitionInTime);
+            floaterRoot.style.opacity = currentOpacity;
+        }
+        else
+        {
+            floaterRoot.style.opacity = 1f;
+        }
+    }
+
+    protected override void OnRemoveFloater(VisualElement floaterRoot, AnnouncementBubbleFloatingUIConfig floaterConfig)
+    {
+        currentFloaterData = null;
+    }
+}
