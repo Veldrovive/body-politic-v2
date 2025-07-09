@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8171dd5d7faad437a9b087959af907db, type: 3}
-  m_Name: V_IsDeshipping
+  m_Script: {fileID: 11500000, guid: a2bb3135f56f144868048b35eeaf9c15, type: 3}
+  m_Name: R_Passenger
   m_EditorClassIdentifier: 
-  identifierId: d911898eebc63425fb78606fabf667d8
-  ActiveSceneIds: 
-  value: 0
-  _resetOnPlay: 1
+  identifierId: bb2a961df6842458cad964e7e79316b1
+  RoleName: Passenger
+  RoleDescription: This being was on the ship with you.
+  RoleWeight: 0
+  RoleType: 1
+  Sticky: 0

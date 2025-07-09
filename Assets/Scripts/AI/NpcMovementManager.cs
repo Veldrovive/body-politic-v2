@@ -241,18 +241,20 @@ public class NpcMovementManager : SaveableGOConsumer
                 return;
             }
         
-            // It's recommended to disable the agent before warping
-            navMeshAgent.enabled = false;
-
-            transform.position = npcMovementData.Position;
-            transform.rotation = npcMovementData.Rotation;
-            transform.localScale = npcMovementData.Scale;
-
-            // Re-enable the agent to allow Warp to correctly place it on the NavMesh
-            navMeshAgent.enabled = true;
-
-            // Warp the agent to the new position
-            navMeshAgent.Warp(npcMovementData.Position);
+            // // It's recommended to disable the agent before warping
+            // navMeshAgent.enabled = false;
+            //
+            // transform.position = npcMovementData.Position;
+            // transform.rotation = npcMovementData.Rotation;
+            // transform.localScale = npcMovementData.Scale;
+            //
+            // // Re-enable the agent to allow Warp to correctly place it on the NavMesh
+            // navMeshAgent.enabled = true;
+            //
+            // // Warp the agent to the new position
+            // navMeshAgent.Warp(npcMovementData.Position);
+            
+            WarpToPosition(npcMovementData.Position, npcMovementData.Rotation);
             // If there is an active request, pass it through SetMovementTarget again to recalculate the path
             if (currentMovementRequest != null)
             {
@@ -263,6 +265,31 @@ public class NpcMovementManager : SaveableGOConsumer
                 }
             }
         }
+    }
+    
+    public void WarpToPosition(Vector3 position, Quaternion? rotation = null)
+    {
+        if (navMeshAgent == null)
+        {
+            Debug.LogError($"NpcMovementManager: NavMeshAgent on {gameObject.name} is null", this);
+            return;
+        }
+        
+        // Disable the agent before warping
+        navMeshAgent.enabled = false;
+
+        // Set the position and rotation
+        transform.position = position;
+        if (rotation.HasValue)
+        {
+            transform.rotation = rotation.Value;
+        }
+
+        // Re-enable the agent to allow Warp to correctly place it on the NavMesh
+        navMeshAgent.enabled = true;
+
+        // Warp the agent to the new position
+        navMeshAgent.Warp(position);
     }
 
     void Awake()

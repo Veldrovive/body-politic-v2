@@ -64,6 +64,7 @@ public class BehaviorController : SaveableGOConsumer
 {
     [Tooltip("The behavior graph to start with and return to on queue empty")] [SerializeField]
     SaveableBehaviorGraphAgent routineBehavior;
+    public SaveableBehaviorGraphAgent RoutineBehavior => routineBehavior;
 
     [Tooltip(
         "If true, when the queue empties, the controller will go to idle state instead of the to routine state graph")]
@@ -497,6 +498,48 @@ public class BehaviorController : SaveableGOConsumer
         return true;
     }
 
+    /// <summary>
+    /// Clears the entire queue and destroys all runtime-added agents.
+    /// Ends either in idle state or routine state depending on IdleOnExit.
+    /// </summary>
+    public void ClearAll()
+    {
+        // Step 1: Handle the currently executing behavior.
+        if (currentBehaviorContext != null)
+        {
+            // Stop the behavior from running.
+            StopBehavior(currentBehaviorContext.Agent);
+
+            // If it was a behavior added at runtime, destroy its component.
+            if (currentBehaviorContext.IsRuntimeAdded && currentBehaviorContext.Agent != null)
+            {
+                Destroy(currentBehaviorContext.Agent);
+            }
+            
+            // Null out the current context.
+            currentBehaviorContext = null;
+        }
+
+        // Step 2: Clear the execution queue and destroy all runtime-added agents within it.
+        foreach (var context in executionDequeue)
+        {
+            if (context.IsRuntimeAdded && context.Agent != null)
+            {
+                // Destroy the component associated with this queued behavior.
+                Destroy(context.Agent);
+            }
+        }
+        executionDequeue.Clear();
+
+        // Step 3: Determine the final state of the controller.
+        if (!IdleOnExit)
+        {
+            // If we are not supposed to be idle on exit, start the routine behavior.
+            BeginRoutine();
+        }
+        // Otherwise, we do nothing and remain in an idle state (since currentBehaviorContext is null).
+    }
+    
     /// <summary>
     /// If ever two or more agents in the queue that are adjacent have the same AgentId, we remove the one with lower
     /// priority or the one later in the queue. This naturally has the desired behavior for player interaction.

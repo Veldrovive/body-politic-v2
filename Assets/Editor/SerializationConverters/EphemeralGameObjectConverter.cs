@@ -91,7 +91,7 @@ public class EphemeralGameObjectConverter : JsonConverter
 
             writer.WriteEndObject();
         }
-        catch (NullReferenceException e)
+        catch (NullReferenceException)
         {
             // For some reason the null check above doesn't always work
             Debug.LogWarning("EphemeralGameObjectConverter: null check passed but null reference exception happened"); 
