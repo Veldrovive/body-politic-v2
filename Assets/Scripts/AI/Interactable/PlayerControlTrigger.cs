@@ -38,8 +38,8 @@ public class PlayerControlTrigger : MonoBehaviour
     // --- Custom Action ---
     [Header("Custom Action (If Use Custom Action is true)")]
     [Tooltip("The Custom Action Scriptable Object defining the sequence.")]
-    [SerializeField] private AbstractCustomPlayerAction customAction;
     [SerializeField] private AbstractCustomActionBehaviorFactory customBehaviorFactory;
+    // [SerializeField] private AbstractCustomPlayerAction customAction;
 
     // --- Standard Action Parameters (If Use Custom Action is false) ---
     [Header("Standard Action Parameters")]
@@ -51,8 +51,10 @@ public class PlayerControlTrigger : MonoBehaviour
     
     [Tooltip("Whether to require that position is exact when moving to the target.")]
     [SerializeField] private bool requireExactPosition = true;
+    public bool RequireExactPosition => requireExactPosition;
     [Tooltip("Whether to require that rotation is exact when moving to the target.")]
     [SerializeField] private bool requireFinalAlignment = true;
+    public bool RequireFinalAlignment => requireFinalAlignment;
     
     // --- Public Accessors ---
 
@@ -80,7 +82,7 @@ public class PlayerControlTrigger : MonoBehaviour
     /// <summary>
     /// Gets the Custom Action SO assigned to this trigger. Returns null if IsCustomAction is false or if none is assigned.
     /// </summary>
-    public AbstractCustomPlayerAction CustomAction => useCustomAction ? customAction : null;
+    // public AbstractCustomPlayerAction CustomAction => useCustomAction ? customAction : null;
 
     public List<InteractionAvailableFrom> InteractionAvailableFroms => targetInteractionDefinition.InteractionAvailableFroms;
 
@@ -322,7 +324,7 @@ public class PlayerControlTrigger : MonoBehaviour
             // --- Original Validation Logic ---
             if (useCustomAction)
             {
-                if (customAction == null && customBehaviorFactory == null)
+                if (customBehaviorFactory == null)
                 {
                     Debug.LogWarning($"PlayerControlTrigger on {gameObject.name}: 'Use Custom Action' is checked, but no Custom Action SO is assigned.", this);
                 }

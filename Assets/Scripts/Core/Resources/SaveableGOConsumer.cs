@@ -89,7 +89,7 @@ public abstract class SaveableGOConsumer : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"Cannot register consumer {name} because no linked producer is set.");
+            Debug.LogWarning($"Cannot register consumer {name} from {GetType()} because no linked producer is set.");
         }
     }
     

@@ -19,6 +19,18 @@ public class NPCIdentity : SaveableGOConsumer, IRoleProvider
     /// </summary>
     [Tooltip("The roles that this NPC starts with.")]
     [SerializeField] private List<NpcRoleSO> DefaultRoles = new();
+    
+    public void AddDefaultRole(NpcRoleSO role)
+    {
+        if (role != null && !DefaultRoles.Contains(role))
+        {
+            DefaultRoles.Add(role);
+            // Notify the editor that the default roles have changed
+#if UNITY_EDITOR
+            EditorNotifyDefaultRolesChanged();
+#endif
+        }
+    }
 
     /// <summary>
     /// Add other components/ScriptableObjects that implement IRoleProvider here.

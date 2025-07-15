@@ -27,8 +27,8 @@ public class FixableManager : MonoBehaviour
     [Tooltip("The SO used to denote that this NPC will receive fix requests.")]
     [SerializeField] private NpcRoleSO fixerRole;
     
-    [Tooltip("The amount of time the action camera should linger on the fixer.")]
-    [SerializeField] private float actionCameraDuration = 10f;
+    // [Tooltip("The amount of time the action camera should linger on the fixer.")]
+    // [SerializeField] private float actionCameraDuration = 10f;
     
     private HashSet<NpcContext> inUseFixers = new HashSet<NpcContext>();
     private Dictionary<Fixable, (FixingContext, Coroutine)> currentFixOperations = new Dictionary<Fixable, (FixingContext, Coroutine)>();

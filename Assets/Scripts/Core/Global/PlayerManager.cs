@@ -52,8 +52,8 @@ public class PlayerManager : SaveableGOConsumer
     [Tooltip("Key to hold to overwrite the player controller queue instead of appending.")]
     [SerializeField] private KeyCode overwriteQueueModifier = KeyCode.LeftShift;
     
-    [Header("Configuration")]
-    [SerializeField] MovementSpeed defaultMovementSpeed = MovementSpeed.NpcSpeed;
+    // [Header("Configuration")]
+    // [SerializeField] MovementSpeed defaultMovementSpeed = MovementSpeed.NpcSpeed;
 
 
     // --- Events ---
@@ -463,8 +463,8 @@ public class PlayerManager : SaveableGOConsumer
              return;
         }
         
-        InterruptBehaviorDefinition moveAndUseInterruptDefinition = clickedTrigger.GetBehaviorInterruptDefinition(currentFocusedNpc.gameObject);
-        if (moveAndUseInterruptDefinition == null)
+        InterruptBehaviorDefinition interruptDefinition = clickedTrigger.GetBehaviorInterruptDefinition(currentFocusedNpc.gameObject);
+        if (interruptDefinition == null)
         {
             Debug.LogError($"Trigger '{clickedTrigger.gameObject.name}' failed to generate a valid interrupt definition.", clickedTrigger);
             return;
@@ -474,11 +474,11 @@ public class PlayerManager : SaveableGOConsumer
         bool overwrite = inputManager != null && inputManager.IsModifierKeyHeld(overwriteQueueModifier);
         if (overwrite)
         {
-            controller.TryInterrupt(moveAndUseInterruptDefinition, clearQueue: true);
+            controller.TryInterrupt(interruptDefinition, clearQueue: true);
         }
         else
         {
-            controller.EnqueueInterrupt(moveAndUseInterruptDefinition);
+            controller.EnqueueInterrupt(interruptDefinition);
         }
     }
 

@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bb3135f56f144868048b35eeaf9c15, type: 3}
   m_Name: R_PetOwner
   m_EditorClassIdentifier: 
+  identifierId: e538d7d4597f94e389da4ae120bf33b0
   RoleName: Pet Owner
-  RoleDescription: 
+  RoleDescription: This being appears distraught. They lost a friend?
   RoleWeight: 10
   RoleType: 2
+  Sticky: 0
