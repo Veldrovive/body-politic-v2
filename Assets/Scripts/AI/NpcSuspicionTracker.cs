@@ -23,7 +23,7 @@ public class NpcSuspicionTrackerSaveableData : SaveableData
 /// Manages suspicion levels for an NPC based on various timed sources.
 /// Calculates the current suspicion level as the maximum level from all active sources.
 /// </summary>
-[RequireComponent(typeof(Outline))]
+// [RequireComponent(typeof(Outline))]
 public class NpcSuspicionTracker : SaveableGOConsumer
 {
     // --- Internal State Class ---
@@ -49,8 +49,7 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     private struct OutlineThreshold
     {
         public int MinSuspicionLevel;
-        public Color OutlineColor;
-        public float OutlineWidth;
+        public RenderingLayerMask OutlineLayer;
     }
     [SerializeField] private List<OutlineThreshold> outlineThresholds;
 
@@ -82,7 +81,8 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     // Buffer list to avoid modifying dictionary during iteration in Update
     private List<string> sourcesToRemove = new List<string>();
     
-    private Outline outline;
+    private Renderer[] renderers;  
+    private uint[] originalRendererLayers;
     
     // --- Saveable Data Handling ---
     /// <summary>
@@ -104,7 +104,12 @@ public class NpcSuspicionTracker : SaveableGOConsumer
     /// <param name="data">The save data to set.</param>
     public override void LoadSaveData(SaveableData data, bool blankLoad)
     {
-        outline = GetComponent<Outline>();
+        // outline = GetComponent<Outline>();
+        renderers = TryGetComponent<Renderer>(out var meshRenderer)  
+            ? new[] {meshRenderer}  
+            : GetComponentsInChildren<Renderer>();  
+        // originalRendererLayer = renderers[0].renderingLayerMask;
+        originalRendererLayers = renderers.Select(r => r.renderingLayerMask).ToArray();
         
         if (!blankLoad)
         {
@@ -243,17 +248,34 @@ public class NpcSuspicionTracker : SaveableGOConsumer
         // Step 2: If a matching threshold was found, update the outline properties
         if (matchingThreshold.HasValue)
         {
-            outline.OutlineColor = matchingThreshold.Value.OutlineColor;
-            outline.OutlineWidth = matchingThreshold.Value.OutlineWidth;
-            outline.enabled = true; // Ensure the outline is enabled
+            // outline.OutlineColor = matchingThreshold.Value.OutlineColor;
+            // outline.OutlineWidth = matchingThreshold.Value.OutlineWidth;
+            // outline.enabled = true; // Ensure the outline is enabled
+            SetRenderersLayer(matchingThreshold.Value.OutlineLayer);
         }
         else
         {
-            outline.enabled = false; // Disable outline if no thresholds match
+            // outline.enabled = false; // Disable outline if no thresholds match
+            SetRenderersLayer(null);
         }
         
 
         this.SetName($"Suspicion: {currentMaxSuspicion}"); // Update the GameObject name for debugging
+    }
+
+    private void SetRenderersLayer(RenderingLayerMask? mask)
+    {
+        foreach (var renderer in renderers)
+        {
+            // First, reset to the original layer so that we do not double up layers
+            renderer.renderingLayerMask = originalRendererLayers[Array.IndexOf(renderers, renderer)];
+            
+            // If a mask is provided, apply it
+            if (mask.HasValue)
+            {
+                renderer.renderingLayerMask |= mask.Value; // Combine with the original layer
+            }
+        }
     }
 
     /// <summary>

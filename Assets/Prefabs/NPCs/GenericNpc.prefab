@@ -50,7 +50,6 @@ GameObject:
   - component: {fileID: 4776853135727818125}
   - component: {fileID: 5412603953881350774}
   - component: {fileID: 1802905592461804675}
-  - component: {fileID: 7404719884324654939}
   - component: {fileID: 3065160016559865694}
   - component: {fileID: 177197453923943728}
   - component: {fileID: 576656727529733126}
@@ -287,32 +286,17 @@ MonoBehaviour:
     LoadOrder: 0
   outlineThresholds:
   - MinSuspicionLevel: 1
-    OutlineColor: {r: 0, g: 1, b: 0.08090758, a: 1}
-    OutlineWidth: 2
+    OutlineLayer:
+      serializedVersion: 0
+      m_Bits: 2
   - MinSuspicionLevel: 5
-    OutlineColor: {r: 1, g: 0.92572093, b: 0, a: 1}
-    OutlineWidth: 3
+    OutlineLayer:
+      serializedVersion: 0
+      m_Bits: 4
   - MinSuspicionLevel: 10
-    OutlineColor: {r: 1, g: 0.008203061, b: 0, a: 1}
-    OutlineWidth: 5
---- !u!114 &7404719884324654939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945626931996106311}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 4
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+    OutlineLayer:
+      serializedVersion: 0
+      m_Bits: 8
 --- !u!114 &3065160016559865694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +651,6 @@ MonoBehaviour:
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
   targetInteractionDefinition: {fileID: 11400000, guid: 590f4289fdd0f4f60a32b2d18c3a84a2, type: 2}
-  customAction: {fileID: 0}
   customBehaviorFactory: {fileID: 0}
   targetInteractableObject: {fileID: 1384171195896954992}
   moveToTargetTransform: {fileID: 2810805423157551732}
@@ -690,7 +673,6 @@ MonoBehaviour:
   StateGraphGUID: eb0c4d4a-0b03-4371-bab7-0c57309a5deb
   PreventDuplicates: 1
   targetInteractionDefinition: {fileID: 11400000, guid: 5bacbc975c6fd4aad9b4d1a6ec8b17d4, type: 2}
-  customAction: {fileID: 0}
   customBehaviorFactory: {fileID: 11400000, guid: a3c9f7096ba6b4a01a4ed0efa7e673ba, type: 2}
   targetInteractableObject: {fileID: 1384171195896954992}
   moveToTargetTransform: {fileID: 0}
@@ -897,7 +879,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

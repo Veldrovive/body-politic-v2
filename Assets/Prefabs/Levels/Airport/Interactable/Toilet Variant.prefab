@@ -134,7 +134,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -528,7 +528,6 @@ MonoBehaviour:
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
   targetInteractionDefinition: {fileID: 11400000, guid: 59732e0ba9acc4d18b561d1b7030b09d, type: 2}
-  customAction: {fileID: 0}
   customBehaviorFactory: {fileID: 0}
   targetInteractableObject: {fileID: 4732811922983418733}
   moveToTargetTransform: {fileID: 38689355573022055}
@@ -551,7 +550,6 @@ MonoBehaviour:
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
   targetInteractionDefinition: {fileID: 11400000, guid: 66d0168f2fa5c478d9d49fad264e3f1e, type: 2}
-  customAction: {fileID: 0}
   customBehaviorFactory: {fileID: 0}
   targetInteractableObject: {fileID: 4732811922983418733}
   moveToTargetTransform: {fileID: 38689355573022055}

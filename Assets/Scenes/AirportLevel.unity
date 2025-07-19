@@ -6631,6 +6631,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8170615613729731750, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_LocalScale.z
       value: 4
@@ -9593,6 +9597,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: StealShipNorthDoor
@@ -15217,6 +15225,10 @@ PrefabInstance:
     - target: {fileID: 4732811922983418733, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
       propertyPath: saveableConfig.SaveableId
       value: adaa8c98-56f1-47c1-bf2e-42d34cc278f8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6178372938755580082, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7318802750299848805, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22678,7 +22690,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -23780,6 +23792,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8170615613729731750, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_LocalScale.z
       value: 4
@@ -27256,7 +27272,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -33922,6 +33938,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: b107dd69d2e894c0194db52fe573190c, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: ScannerRoomExit
@@ -43006,6 +43026,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: GenericDoor
@@ -43830,6 +43854,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: b0b11c3f44ba94b3896a954fca3d5467, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: LaunchControlRoomDoor
@@ -49201,7 +49229,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -52371,7 +52399,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -61859,6 +61887,10 @@ PrefabInstance:
       propertyPath: saveableConfig.SaveableId
       value: cb9cc642-9f26-4fad-a0c7-431c95280e37
       objectReference: {fileID: 0}
+    - target: {fileID: 6178372938755580082, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7318802750299848805, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
       propertyPath: m_LocalPosition.x
       value: 40.75
@@ -63746,7 +63778,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -74484,6 +74516,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: BathroomEnteranceDoor
@@ -77171,6 +77207,10 @@ PrefabInstance:
       propertyPath: doorOpenMode
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: ScannerEntranceDoor
@@ -77410,6 +77450,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 1cfd57c9f0c5940c5b60ea6803c63825, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: MaintenanceRoomDoor
@@ -79890,6 +79934,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: NorthSecurityRoomDoor
@@ -81808,6 +81856,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[4]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: VIPRoomNorthDoor
@@ -81879,6 +81931,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8170615613729731750, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_LocalScale.z
       value: 4
@@ -85356,7 +85412,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89172,6 +89228,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: StartWalkwayNorthDoor
@@ -99770,6 +99830,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: bff622ce3d9ff4498b3f4fc221da8115, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: PetRoomDoor
@@ -100033,7 +100097,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100902,6 +100966,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: 1cfd57c9f0c5940c5b60ea6803c63825, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: JammerRoomDoor
@@ -104513,7 +104581,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109558,7 +109626,7 @@ PrefabInstance:
       objectReference: {fileID: 1992241341}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3020
+      value: 3023
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -117813,7 +117881,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -124572,6 +124640,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: EastSecurityRoomDoor
@@ -125628,7 +125700,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125722,6 +125794,10 @@ PrefabInstance:
       propertyPath: doorOpenMode
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: ScannerExitDoor
@@ -129535,6 +129611,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[4]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: VIPRoomSouthDoor
@@ -137717,6 +137797,10 @@ PrefabInstance:
       propertyPath: 'rolesCanEnter.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: 403234db5add047c29f88f80b9af8e43, type: 2}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: StealShipSouthDoor
@@ -145494,6 +145578,10 @@ PrefabInstance:
       propertyPath: rolesCanEnter.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6737791142753582046, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 8382846529101867629, guid: 2247b8db303648ec8f053915995c1f4e, type: 3}
       propertyPath: m_Name
       value: StartWalkwaySouthDoor
@@ -157735,6 +157823,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5162142792501450668}
     m_Modifications:
+    - target: {fileID: 3456458027781369345, guid: d0f35d0b7529843fda99fb8455a4941f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 3469394159493633558, guid: d0f35d0b7529843fda99fb8455a4941f, type: 3}
       propertyPath: targetInteractionDefinition
       value: 
@@ -161035,7 +161127,7 @@ PrefabInstance:
       objectReference: {fileID: 80833608}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -161112,7 +161204,7 @@ PrefabInstance:
       objectReference: {fileID: 912502299}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -161335,7 +161427,7 @@ PrefabInstance:
       objectReference: {fileID: 66935507}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -161818,6 +161910,10 @@ PrefabInstance:
     - target: {fileID: 4732811922983418733, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
       propertyPath: interactionInstances.Array.data[0].DisabledImpliesHidden.UseConstant
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6178372938755580082, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7318802750299848805, guid: fcf79227a66fc47709ab80741e3fde87, type: 3}
       propertyPath: m_LocalPosition.x
@@ -167558,7 +167654,7 @@ PrefabInstance:
       objectReference: {fileID: 968329017}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -167862,7 +167958,7 @@ PrefabInstance:
       objectReference: {fileID: 405287619}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -176530,7 +176626,7 @@ PrefabInstance:
       objectReference: {fileID: 1344136182}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -186711,7 +186807,7 @@ PrefabInstance:
       objectReference: {fileID: 1241945998}
     - target: {fileID: 5569000918619209570, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3245
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 6121636117153187553, guid: 1a8c00906ea344847938c8567d66aeb9, type: 3}
       propertyPath: m_LocalPosition.x
