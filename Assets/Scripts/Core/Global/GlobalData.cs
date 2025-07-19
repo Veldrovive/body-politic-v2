@@ -11,6 +11,9 @@ public class GlobalData : MonoBehaviour
     [Tooltip("The SO that defines default interrupt behavior.")]
     [SerializeField] public AggInterruptBehaviorFactory defaultAggInterruptBehaviorFactory;
     
+    [Tooltip("The SO that defines the default reading rate for the player.")]
+    [SerializeField] public ReadingTimeEstimatorSO defaultReadingTimeEstimator;
+    
     [Header("Default Events")]
     // TODO: XXX Uncomment when interrupts brought back
     // [Tooltip("The event used to trigger interrupts.")]

@@ -21,12 +21,14 @@ public partial class SayMultiAction : SaveableAction
     [SerializeReference] public BlackboardVariable<List<string>> Messages;
     
     [SerializeReference] public BlackboardVariable<SayMultiActionType> Type;
-    [SerializeReference] public BlackboardVariable<float> TextDuration = new(3f);
-    [SerializeReference] public BlackboardVariable<float> WaitDuration = new(3f);
+    [SerializeReference] public BlackboardVariable<ReadingTimeEstimatorSO> DurationEstimator;
+    [SerializeReference] public BlackboardVariable<SayActionWaitMode> WaitMode = new(SayActionWaitMode.WaitForBubble);
+    [SerializeReference] public BlackboardVariable<float> WaitDuration = new(1f);
     
     // Stores the index of the last message displayed to support Sequential and NonRepeating types.
     [CreateProperty] private int currentMessageIndex = -1;
     
+    private float _textDuration = 0f;
     private float _waitTimer;
     private NpcContext _npcContext;
 
@@ -69,18 +71,38 @@ public partial class SayMultiAction : SaveableAction
         }
         
         string message = Messages.Value[currentMessageIndex];
-        if (string.IsNullOrEmpty(message))
+        if (DurationEstimator == null || DurationEstimator.Value == null)
         {
-            return Status.Success;
+            if (GlobalData.Instance.defaultReadingTimeEstimator == null)
+            {
+                Debug.LogWarning("No ReadingTimeEstimatorSO set in GlobalData. Skipping SayAction.");
+                return Status.Success;
+            }
+            DurationEstimator = new BlackboardVariable<ReadingTimeEstimatorSO>(GlobalData.Instance.defaultReadingTimeEstimator);
         }
-        
-        _waitTimer = WaitDuration.Value;
+        _textDuration = DurationEstimator.Value.Estimate(message);
+
+        switch (WaitMode.Value)
+        {
+            case SayActionWaitMode.WaitForBubble:
+                _waitTimer = _textDuration;
+                break;
+            case SayActionWaitMode.WaitForDuration:
+                _waitTimer = WaitDuration.Value;
+                break;
+            case SayActionWaitMode.WaitForBubbleAndDuration:
+                _waitTimer = _textDuration + WaitDuration.Value;
+                break;
+            case SayActionWaitMode.None:
+                _waitTimer = 0f;  // No waiting, just show the bubble and return immediately.
+                break;
+        }
         if (!Self.Value.TryGetComponent<NpcContext>(out _npcContext))
         {
             return Status.Failure;
         }
-        _npcContext.SpeechBubbleManager.ShowBubble(message, TextDuration.Value);
-        return TextDuration.Value > 0 ? Status.Running : Status.Success;
+        _npcContext.SpeechBubbleManager.ShowBubble(message, _textDuration);
+        return _waitTimer > 0 ? Status.Running : Status.Success;
     }
 
     protected override Status OnStart()

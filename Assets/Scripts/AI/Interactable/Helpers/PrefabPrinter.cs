@@ -27,6 +27,9 @@ public class PrefabPrinter : AbstractInteractionReactor
     [Tooltip("Whether to disable the interaction if there is already a prefab present.")]
     [SerializeField] private bool disableIfPresent = true;
     
+    [Tooltip("Whether to automatically print when there is no existing prefab present.")]
+    [SerializeField] private bool autoPrint = false;
+    
     [Header("Interaction Definitions")]
     [Tooltip("The print interaction definition used on the associated interactable.")]
     [SerializeField] private InteractionDefinitionSO printInteractionDefinition;
@@ -34,7 +37,7 @@ public class PrefabPrinter : AbstractInteractionReactor
     [Header("Infection")]
     [Tooltip("Whether produced consumables should be infected (Only relevant if prefab is a consumable)")]
     [SerializeField] private BoolReference infectConsumable = new (false);
-
+    
     #endregion
 
     #region Internal Fields
@@ -99,8 +102,9 @@ public class PrefabPrinter : AbstractInteractionReactor
         }
         
         // Otherwise we are good to link up the events
-        bool registered = SafelyRegisterInteractionLifecycleCallback(InteractionLifecycleEvent.OnEnd, printInteractionDefinition,
-            TryPrint);
+        bool registered = SafelyRegisterInteractionLifecycleCallback(InteractionLifecycleEvent.OnEnd, printInteractionDefinition, HandleTryPrint);
+        
+        HandleInteractionEnable();
     }
 
     protected override void OnValidate()
@@ -123,13 +127,24 @@ public class PrefabPrinter : AbstractInteractionReactor
             HandleInteractionEnable();
             lastProducedItemCount = trackedProducedItems.Count;
         }
+        
+        // If auto-print is on and there are no items, print one.
+        if (autoPrint && trackedProducedItems.Count == 0)
+        {
+            TryPrint();
+        }
     }
 
     #endregion
 
     #region Event Handlers
 
-    public void TryPrint(InteractionContext context)
+    private void HandleTryPrint(InteractionContext context)
+    {
+        TryPrint();
+    }
+    
+    private void TryPrint()
     {
         // Plan: Create the prefab and add it to the tracked produced items. Try cast to Consumable and infect if not null.
         Debug.Log($"Prefab printer got called to print {prefabToPrint} at {printLocation.position}", this);
@@ -157,12 +172,7 @@ public class PrefabPrinter : AbstractInteractionReactor
 
     private void HandleInteractionEnable()
     {
-        bool shouldBeEnabled = true;
-        int numTrackedItems = trackedProducedItems.Count;
-        if (disableIfPresent && numTrackedItems > 0)
-        {
-            shouldBeEnabled = false;
-        }
+        bool shouldBeEnabled = !(autoPrint || (disableIfPresent && trackedProducedItems.Count > 0));
 
         if (printDefEnabled && !shouldBeEnabled)
         {

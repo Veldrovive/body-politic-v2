@@ -13,7 +13,8 @@ using Unity.Behavior;
 [BlackboardEnum]
 public enum HoldableType {
     None,               // Wasn't a dynamically generated prefab.
-    GenericConsumable,  // A generic consumable item.
+    GenericConsumable,
+    GenericMedicine,
 }
 
 [Serializable]
