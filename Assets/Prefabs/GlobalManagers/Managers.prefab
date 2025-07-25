@@ -187,6 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerIdentity: {fileID: 11400000, guid: c5f214389aac7473f8304ce6b401d3fb, type: 2}
   defaultAggInterruptBehaviorFactory: {fileID: 11400000, guid: bf926044d0aae4f4198ae0827757393f, type: 2}
+  defaultReadingTimeEstimator: {fileID: 11400000, guid: ddda3e1a7fccd4b98b9ec2a1dbe72121, type: 2}
   InfectionEvent: {fileID: 11400000, guid: b2d0179eea23a4d389a3d13be4f6f1f3, type: 2}
   SoundEvent: {fileID: 11400000, guid: 7d0544ca3d89e485c96c5955407f130f, type: 2}
 --- !u!114 &8917888051748937010
@@ -269,7 +270,6 @@ MonoBehaviour:
   quickSaveKey: 286
   quickLoadKey: 290
   overwriteQueueModifier: 304
-  defaultMovementSpeed: 4
 --- !u!114 &8989966879260291349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,8 +300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4198bd5a9e7046f78248866f4b390c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveAndUseBehaviorFactory: {fileID: 0}
   fixerRole: {fileID: 11400000, guid: 4cf2f2f8875944372a5f1024c5133a0e, type: 2}
-  actionCameraDuration: 10
 --- !u!114 &983456098727416866
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ using UnityEditor;
 
 public class CameraManagerSaveableData : SaveableData
 {
+    public CameraMode Mode;
     public float ViewCurveParam = 0f;
     public float ViewRotParam = 0.75f;
     public Vector3 FocusCenter = Vector3.zero;

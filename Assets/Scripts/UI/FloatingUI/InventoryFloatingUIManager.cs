@@ -18,7 +18,7 @@ public class InventoryFloatingUIManager : AbstractFloatingUIManager<InteractionM
     private Sprite transferToInventorySprite;
     
     
-    private NpcInventory focusedNpcInventory => PlayerManager.Instance.CurrentFocusedNpc?.Inventory;
+    private NpcInventory focusedNpcInventory;
     
     private VisualElement rootVisualElement;
     private InventoryData curInventoryData = null;
@@ -90,10 +90,10 @@ public class InventoryFloatingUIManager : AbstractFloatingUIManager<InteractionM
         // Initially hide the inventory UI
         rootVisualElement.style.display = DisplayStyle.None;
         
-        PlayerManager.Instance.OnFocusChanged += HandleFocusedNpcChange;
-        if (PlayerManager.Instance.CurrentFocusedNpc != null)
+        PlayerManagerV2.Instance.OnControlledNpcChange += HandleControlledNpcChange;
+        if (PlayerManagerV2.Instance.ControlledNpc != null)
         {
-            HandleFocusedNpcChange(null, PlayerManager.Instance.CurrentFocusedNpc);
+            HandleControlledNpcChange(PlayerManagerV2.Instance.ControlledNpc);
         }
     }
 
@@ -157,9 +157,9 @@ public class InventoryFloatingUIManager : AbstractFloatingUIManager<InteractionM
     void OnDestroy()
     {
         // Unsubscribe from events to prevent memory leaks
-        if (PlayerManager.Instance != null)
+        if (PlayerManagerV2.Instance != null)
         {
-            PlayerManager.Instance.OnFocusChanged -= HandleFocusedNpcChange;
+            PlayerManagerV2.Instance.OnControlledNpcChange -= HandleControlledNpcChange;
         }
         // Clean up any open menus if the object is destroyed
         RemoveControlMenus();
@@ -168,16 +168,16 @@ public class InventoryFloatingUIManager : AbstractFloatingUIManager<InteractionM
     /// <summary>
     /// Handles the change in the NPC the player is focused on. Updates the inventory display accordingly.
     /// </summary>
-    /// <param name="previousFocusedNpcContext">The context of the previously focused NPC.</param>
     /// <param name="npcContext">The context of the newly focused NPC.</param>
-    void HandleFocusedNpcChange(NpcContext previousFocusedNpcContext, NpcContext npcContext)
+    void HandleControlledNpcChange(NpcContext npcContext)
     {
         // Unsubscribe from the previous inventory's events
         if (focusedNpcInventory != null)
         {
             focusedNpcInventory.OnInventoryChanged -= HandleInventoryUpdated;
         }
-        
+
+        focusedNpcInventory = npcContext.Inventory;
         if (focusedNpcInventory != null)
         {
             focusedNpcInventory.OnInventoryChanged += HandleInventoryUpdated;

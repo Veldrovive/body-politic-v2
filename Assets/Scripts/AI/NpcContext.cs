@@ -124,6 +124,15 @@ public class NpcContext : SaveableGOConsumer
         {
             Debug.LogError("InfectionManager instance not found. NPC will not be registered.", this);
         }
+
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterNpc(this);
+        }
+        else
+        {
+            Debug.LogError("LevelManager not found. NPC will not be registered.", this);
+        }
     }
     
     /// <summary>

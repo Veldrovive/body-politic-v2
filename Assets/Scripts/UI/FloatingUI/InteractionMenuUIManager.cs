@@ -168,6 +168,34 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
         }
     }
 
+    private void ShowHighlight(GameObject triggerParent)
+    {
+        // Get the visual definition component for icon details
+        PlayerControlTriggerVisualDefinition visualDef = triggerParent.GetComponent<PlayerControlTriggerVisualDefinition>();
+        // Require a visual definition and a valid transform to position the icon
+        if (visualDef == null)
+        {
+            Debug.LogError($"WSCMM: Cannot add highlight for '{triggerParent.transform.parent.name}' - missing PlayerControlTriggerVisualDefinition.", triggerParent);
+            return;
+        }
+        
+        visualDef.SetHighlightEnabled(true);
+    }
+    
+    private void HideHighlight(GameObject triggerParent)
+    {
+        // Get the visual definition component for icon details
+        PlayerControlTriggerVisualDefinition visualDef = triggerParent.GetComponent<PlayerControlTriggerVisualDefinition>();
+        // Require a visual definition
+        if (visualDef == null)
+        {
+            Debug.LogError($"WSCMM: Cannot remove highlight for '{triggerParent.transform.parent.name}' - missing PlayerControlTriggerVisualDefinition.", triggerParent);
+            return;
+        }
+        
+        visualDef.SetHighlightEnabled(false);
+    }
+
     private void Update()
     {
         // Step 1: Handle Icons
@@ -211,6 +239,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
         {
             // Open a menu for this trigger. OpenNewMenu already handles closing any old menu.
             OpenNewMenu(closestTriggerGO);
+            
         }
         // Case 3: We are not hovering any trigger.
         else
@@ -261,6 +290,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
         
         currentFloaterData = floaterData;
         activeMenuTriggerGO = newActiveMenuTriggerGO;
+        ShowHighlight(newActiveMenuTriggerGO);
 
         return true;
     }
@@ -268,6 +298,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
     private void CloseMenu()
     {
         RemoveFloater(currentFloaterData.Id);
+        HideHighlight(activeMenuTriggerGO);
         
         currentFloaterData = null;
         activeMenuTriggerGO = null;
@@ -284,6 +315,12 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
     /// <returns></returns>
     private List<GameObject> GetActiveIconTriggers()
     {
+        if (!PlayerManagerV2.Instance.CanControlNpc)
+        {
+            // If the player cannot control an NPC, return an empty list.
+            return new List<GameObject>();
+        }
+        
         // Create a ray from the camera through the mouse position.
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -294,7 +331,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
             .Select(hit => hit.collider.transform.parent.gameObject)
             // Filter out any hits where the collider has no parent.
             .Where(parent => parent != null)
-            .Where(triggerGO => triggerGO.transform.parent != PlayerManager.Instance.CurrentFocusedNpc?.gameObject.transform)
+            .Where(triggerGO => triggerGO.transform.parent != PlayerManagerV2.Instance.ControlledNpc.gameObject.transform)
             // Ensure the list contains only unique triggers, in case multiple child colliders
             // of the same trigger were hit.
             .Distinct()
@@ -310,6 +347,12 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
     /// <returns></returns>
     private List<GameObject> GetActiveMenuTriggers()
     {
+        if (!PlayerManagerV2.Instance.CanControlNpc)
+        {
+            // Then we cannot interact with any menu triggers.
+            return new List<GameObject>();
+        }
+        
         // Create a ray from the camera through the mouse position.
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
         
@@ -321,7 +364,7 @@ public class InteractionMenuUIManager : AbstractFloatingUIManager<InteractionMen
             .Select(hit => hit.collider.transform.parent.gameObject)
             // Filter out any hits where the collider has no parent.
             .Where(parent => parent != null)
-            .Where(triggerGO => triggerGO.transform.parent != PlayerManager.Instance.CurrentFocusedNpc.gameObject.transform)
+            .Where(triggerGO => triggerGO.transform.parent != PlayerManagerV2.Instance.ControlledNpc.gameObject.transform)
             // Because we sorted by distance *before* processing, Distinct() will keep the *first*
             // instance it finds of each trigger, which corresponds to the closest one.
             .Distinct()

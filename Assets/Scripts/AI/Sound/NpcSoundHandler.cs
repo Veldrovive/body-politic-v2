@@ -51,7 +51,7 @@ public class NpcSoundHandler : GameEventListenerBase<SoundData, SoundEventSO>
         }
         
         // At this point we have decided that the NPC can hear the sound.
-        if (PlayerManager.Instance.CurrentFocusedNpc == npcContext && data.Clip != null)
+        if (PlayerManagerV2.Instance.ControlledNpc == npcContext && data.Clip != null)
         {
             // This is the focused NPC. We should actually play the sound clip.
             AudioSource.PlayClipAtPoint(data.Clip, data.EmanationPoint, soundReactionDefinition.GetSoundVolume(data));

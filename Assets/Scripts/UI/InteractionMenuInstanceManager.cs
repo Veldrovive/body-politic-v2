@@ -202,7 +202,7 @@ public class InteractionMenuInstanceManager
         foreach (var trigger in triggers)
         {
             Interactable interactable = trigger.TargetInteractable;
-            GameObject initiator = PlayerManager.Instance.CurrentFocusedNpc.gameObject;
+            GameObject initiator = PlayerManagerV2.Instance.ControlledNpc.gameObject;
             
             InteractionStatus interactionStatus = trigger.GetActionStatus(initiator);
             InteractionButtonData buttonData = new InteractionButtonData()
@@ -265,7 +265,7 @@ public class InteractionMenuInstanceManager
                     if (buttonData.CanInteract)
                     {
                         // Execute the interaction logic.
-                        PlayerManager.Instance?.HandleTriggerInteraction(buttonData.Trigger);
+                        PlayerManagerV2.Instance?.HandleTriggerInteraction(buttonData.Trigger);
             
                         // Close the menu after a successful interaction.
                         onActionClicked?.Invoke();

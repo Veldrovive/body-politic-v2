@@ -265,15 +265,15 @@ public class NpcSuspicionTracker : SaveableGOConsumer
 
     private void SetRenderersLayer(RenderingLayerMask? mask)
     {
-        foreach (var renderer in renderers)
+        for (int i = 0; i < renderers.Length; i++)
         {
             // First, reset to the original layer so that we do not double up layers
-            renderer.renderingLayerMask = originalRendererLayers[Array.IndexOf(renderers, renderer)];
+            renderers[i].renderingLayerMask = originalRendererLayers[i];
             
             // If a mask is provided, apply it
             if (mask.HasValue)
             {
-                renderer.renderingLayerMask |= mask.Value; // Combine with the original layer
+                renderers[i].renderingLayerMask |= mask.Value; // Combine with the original layer
             }
         }
     }

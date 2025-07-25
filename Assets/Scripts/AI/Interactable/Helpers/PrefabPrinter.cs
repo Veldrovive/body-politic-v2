@@ -147,10 +147,10 @@ public class PrefabPrinter : AbstractInteractionReactor
     private void TryPrint()
     {
         // Plan: Create the prefab and add it to the tracked produced items. Try cast to Consumable and infect if not null.
-        Debug.Log($"Prefab printer got called to print {prefabToPrint} at {printLocation.position}", this);
+        // Debug.Log($"Prefab printer got called to print {prefabToPrint} at {printLocation.position}", this);
         // GameObject printedObject = Instantiate(prefabToPrint, printLocation.position, printLocation.rotation);
         GameObject printedObject = SaveableDataManager.Instance.InstantiateHoldable(prefabToPrint, printLocation.position, printLocation.rotation);
-        Debug.Log($"Prefab printer created {printedObject.name} at {printLocation.position}", this);
+        // Debug.Log($"Prefab printer created {printedObject.name} at {printLocation.position}", this);
         trackedProducedItems.Add(printedObject);
         
         // Check if the printed object is a consumable and infect it if so
@@ -177,7 +177,7 @@ public class PrefabPrinter : AbstractInteractionReactor
         if (printDefEnabled && !shouldBeEnabled)
         {
             // We need to disable the interaction
-            Debug.Log($"{gameObject.name} print interaction disabled due to item presence.", this);
+            // Debug.Log($"{gameObject.name} print interaction disabled due to item presence.", this);
             if (SetInteractionEnabled(printInteractionDefinition, false, false, "Item already present."))
             {
                 printDefEnabled = false;

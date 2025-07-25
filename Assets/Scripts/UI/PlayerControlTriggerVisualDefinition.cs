@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class PlayerControlTriggerVisualDefinition : MonoBehaviour
@@ -5,7 +6,12 @@ public class PlayerControlTriggerVisualDefinition : MonoBehaviour
     // --- Feedback ---
     [Header("Feedback")]
     [Tooltip("The Renderer component used for visual highlighting feedback. If null, attempts to find one on this or child GameObjects.")]
-    [SerializeField] private Renderer meshForHighlighting;
+    [SerializeField] private GameObject highlightObject;
+    [Tooltip("The layer mask used for highlighting.")]
+    [SerializeField] private RenderingLayerMask highlightLayerMask;
+    public GameObject HighlightObject => highlightObject;
+    private Renderer[] highlightRenderers;  
+    private uint[] originalRendererLayers;
 
     // --- UI ---
     [Header("UI")]
@@ -17,32 +23,40 @@ public class PlayerControlTriggerVisualDefinition : MonoBehaviour
     [SerializeField] private Transform iconPositionTransform;
     public Transform IconPositionTransform => iconPositionTransform;
 
-    /// <summary>
-    /// Gets the Renderer component intended for highlighting this interactable.
-    /// </summary>
-    /// <returns>The Renderer component, or null if none is available.</returns>
-    public Renderer GetHighlightRenderer()
-    {
-        return meshForHighlighting;
-    }
-
-    void AutoSetHighlightMesh()
+    void AutoSetHighlightObject()
     {
         // Similarly, we try the parent first and then default to this object
-        if (meshForHighlighting == null)
+        if (highlightObject == null)
         {
-            meshForHighlighting = GetComponentInParent<Renderer>();
-            if (meshForHighlighting == null)
-            {
-                meshForHighlighting = GetComponent<Renderer>();
-            }
-            #if UNITY_EDITOR
-            if (meshForHighlighting == null)
-            {
-                // Debug.LogWarning($"PlayerControlTrigger on {gameObject.name}: No Renderer component found for highlighting. Please assign one in the Inspector or ensure it's on this GameObject or its parent.", this);
-            }
-            #endif
+            highlightObject = transform.parent.gameObject;
         }
+        
+        highlightRenderers = highlightObject.TryGetComponent<Renderer>(out var meshRenderer)  
+            ? new[] {meshRenderer}  
+            : highlightObject.GetComponentsInChildren<Renderer>();  
+        originalRendererLayers = highlightRenderers.Select(r => r.renderingLayerMask).ToArray();
+    }
+
+    public void SetHighlightEnabled(bool enabled)
+    {
+        if (highlightObject == null)
+        {
+            Debug.LogWarning("Highlight object is not set. Please assign a highlight object in the inspector or ensure it is set in code.");
+            return;
+        }
+        
+        Debug.Log($"Setting highlight enabled: {enabled} for {highlightObject.name} with layer mask {highlightLayerMask} on {highlightRenderers.Length} renderers.");
+        for (int i = 0; i < highlightRenderers.Length; i++)
+        {
+            var highlightRenderer = highlightRenderers[i];
+            if (highlightRenderer != null)
+            {
+                highlightRenderer.renderingLayerMask = enabled ? 
+                    highlightLayerMask | originalRendererLayers[i] : 
+                    originalRendererLayers[i];
+            }
+        }
+        
     }
 
     void AutoSetIconTransform()
@@ -57,7 +71,7 @@ public class PlayerControlTriggerVisualDefinition : MonoBehaviour
     void Awake()
     {
         // Auto-assign renderer if not set
-        AutoSetHighlightMesh();
+        AutoSetHighlightObject();
 
         // Auto-assign icon position transform if not set
         AutoSetIconTransform();
@@ -70,7 +84,7 @@ public class PlayerControlTriggerVisualDefinition : MonoBehaviour
     /// </summary>
     void Reset()
     {
-        AutoSetHighlightMesh();
+        AutoSetHighlightObject();
         AutoSetIconTransform();
     }
     #endif

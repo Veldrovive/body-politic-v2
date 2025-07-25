@@ -102,7 +102,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e210a80c7e34c119b0252e1cc0ac77f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshForHighlighting: {fileID: 0}
+  highlightObject: {fileID: 0}
+  highlightLayerMask:
+    serializedVersion: 0
+    m_Bits: 16
   overrideIconPrefab: {fileID: 8061070640119769494, guid: e0d7608a657043f99b6b43893500d9d7, type: 3}
   iconPositionTransform: {fileID: 1058932700429700094}
 --- !u!135 &4356862262370761874
@@ -142,10 +145,9 @@ MonoBehaviour:
   useCustomAction: 0
   StateGraphGUID: 246f993a-54e7-4c2e-8465-dac14491da91
   PreventDuplicates: 1
-  customAvailableFroms: 00000000
-  customAction: {fileID: 0}
-  targetInteractableObject: {fileID: 4102933364882050337}
   targetInteractionDefinition: {fileID: 0}
+  customBehaviorFactory: {fileID: 0}
+  targetInteractableObject: {fileID: 4102933364882050337}
   moveToTargetTransform: {fileID: 8779675895918541611}
   requireExactPosition: 1
   requireFinalAlignment: 1

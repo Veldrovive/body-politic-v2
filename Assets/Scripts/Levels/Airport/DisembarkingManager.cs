@@ -79,12 +79,12 @@ public class DisembarkingManager : SaveableGOConsumer
 
     private void DisembarkPassengers()
     {
-        Debug.Log($"DisembarkPassengers (was {nextDisembarkTime} - Time: {SaveableDataManager.Instance.time})");
+        // Debug.Log($"DisembarkPassengers (was {nextDisembarkTime} - Time: {SaveableDataManager.Instance.time})");
 
         int numCanDisembark = passengerNpcPool.NpcPool.Count(npcContext => passengerNpcPool.IsNpcReadyForReset(npcContext));
         if (numCanDisembark != passengerNpcPool.NpcPool.Count())
         {
-            Debug.Log("Not all passengers are ready to disembark. Cannot proceed with disembarking.");
+            // Debug.Log("Not all passengers are ready to disembark. Cannot proceed with disembarking.");
             return;
         }
         
