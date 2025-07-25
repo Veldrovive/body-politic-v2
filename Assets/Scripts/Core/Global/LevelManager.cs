@@ -42,7 +42,6 @@ class LevelManager : SaveableGOConsumer
     public IReadOnlyCollection<NpcContext> InfectedNpcs => _infectedNpcs;
     
     private NpcContext _currentlyControlledNpc = null;
-    public NpcContext CurrentlyControlledNpc => _currentlyControlledNpc;
 
     public override SaveableData GetSaveData()
     {
@@ -63,12 +62,13 @@ class LevelManager : SaveableGOConsumer
             if (initiallyInfectedNpcs.Count > 0)
             {
                 _infectedNpcs.AddRange(initiallyInfectedNpcs);
-                _currentlyControlledNpc = initiallyInfectedNpcs.FirstOrDefault();
+                SetCurrentlyControlledNpc(initiallyInfectedNpcs.FirstOrDefault(), immediate: true);
             }
             else
             {
                 Debug.LogWarning($"No initially infected NPCs found. Fallback to null controlled NPC.", this);
                 _currentlyControlledNpc = null;
+                NullCurrentlyControlledNpc(immediate: true);
             }
         }
         else
@@ -98,16 +98,13 @@ class LevelManager : SaveableGOConsumer
             if (levelData.LastControlledNpcIndex >= 0 && 
                 levelData.LastControlledNpcIndex < _infectedNpcs.Count)
             {
-                _currentlyControlledNpc = _infectedNpcs.ElementAt(levelData.LastControlledNpcIndex);
+                SetCurrentlyControlledNpc(_infectedNpcs.ElementAt(levelData.LastControlledNpcIndex), immediate: true);
             }
             else
             {
-                _currentlyControlledNpc = null;
+                NullCurrentlyControlledNpc(immediate: true);
             }
         }
-        
-        // Set the camera to look at the controlled NPC
-        SetViewToNpc(_currentlyControlledNpc, immediate: true);  // This automatically handles the case where the controlled NPC is null by setting the view to fallback.
     }
 
     private void Awake()
@@ -119,6 +116,34 @@ class LevelManager : SaveableGOConsumer
         }
 
         Instance = this;
+
+        if (controlledCameraManager == null)
+        {
+            // Find the main camera manager in the scene.
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                controlledCameraManager = mainCamera.GetComponent<CameraManager_v2>();
+                if (controlledCameraManager == null)
+                {
+                    Debug.LogError("Main camera does not have CameraManager_v2 component.");
+                }
+            }
+            else
+            {
+                Debug.LogError("No main camera found in the scene. Please ensure there is a camera with CameraManager_v2 component.");
+            }
+        }
+
+        if (controlledPlayerManager == null)
+        {
+            // It should be on this GameObject.
+            controlledPlayerManager = GetComponent<PlayerManagerV2>();
+            if (controlledPlayerManager == null)
+            {
+                Debug.LogError("No PlayerManagerV2 found on this GameObject. Please ensure it is attached.");
+            }
+        }
     }
 
     protected override void OnEnable()
@@ -180,6 +205,18 @@ class LevelManager : SaveableGOConsumer
         SetCameraViewTransform(fallbackView, immediate);
     }
     
+    private void SetViewToTemporaryObject(bool immediate = false)
+    {
+        if (_tempObject == null)
+        {
+            Debug.LogError("Temporary object is not initialized. Cannot set camera view to temporary object.");
+            SetViewToFallback(immediate);
+            return;
+        }
+        
+        SetCameraViewTransform(_tempObject.transform, immediate);
+    }
+    
     private void SetViewToNpc(NpcContext npcContext, bool immediate = false)
     {
         if (npcContext == null)
@@ -192,8 +229,9 @@ class LevelManager : SaveableGOConsumer
         SetCameraViewTarget(npcContext.transform, immediate);
     }
 
-    private bool SetCurrentlyControlledNpc(NpcContext npcContext)
+    private bool SetCurrentlyControlledNpc(NpcContext npcContext, bool immediate = false)
     {
+        Debug.Log($"Setting currently controlled NPC to {npcContext?.name ?? "null"}");
         if (npcContext == null)
         {
             Debug.LogWarning("NpcContext is null. Cannot set currently controlled NPC.");
@@ -215,19 +253,16 @@ class LevelManager : SaveableGOConsumer
         // Otherwise we actually have to change the controlled NPC.
         _currentlyControlledNpc = npcContext;
         controlledPlayerManager.SetControlledNpc(_currentlyControlledNpc);
-        controlledCameraManager.SetCameraMode(
-            CameraMode.Orbital,
-            orbitalTarget: _currentlyControlledNpc.transform
-        );
+        SetViewToNpc(npcContext, immediate);
 
         return true;
     }
 
-    private void NullCurrentlyControlledNpc()
+    private void NullCurrentlyControlledNpc(bool immediate = false)
     {
         if (_currentlyControlledNpc == null)
         {
-            // Done
+            SetViewToFallback(immediate);
             return;
         }
         
@@ -238,19 +273,13 @@ class LevelManager : SaveableGOConsumer
         {
             Debug.LogError("Temporary object is not initialized. Save camera position.");
             // Instead, we move to the fallback view position.
-            controlledCameraManager.SetCameraMode(
-                CameraMode.FixedFollow,
-                fixedTarget: fallbackView
-            );
+            SetViewToFallback(immediate);
         }
         else
         {
             _tempObject.transform.position = controlledCameraManager.transform.position;
             _tempObject.transform.rotation = controlledCameraManager.transform.rotation;
-            controlledCameraManager.SetCameraMode(
-                CameraMode.FixedFollow,
-                fixedTarget: _tempObject.transform
-            );
+            SetViewToTemporaryObject(immediate);
         }
         
         _currentlyControlledNpc = null;

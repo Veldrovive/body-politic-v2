@@ -92705,10 +92705,11 @@ MonoBehaviour:
   saveableConfig:
     ConsumerId: ebd68591-e345-439e-8be5-92b448062bce
     LoadOrder: 0
-  controlledCameraManager: {fileID: 392546909}
+  controlledCameraManager: {fileID: 0}
   controlledPlayerManager: {fileID: 1366538880}
   fallbackView: {fileID: 1477166129}
   initiallyInfectedNpcs:
+  - {fileID: 1870112119}
   - {fileID: 243856687}
   - {fileID: 1049298817}
 --- !u!114 &1366538880
@@ -126331,6 +126332,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10bbfed830b64ff8b11d04aaf657e3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1870112119 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6658198896699952685, guid: 4d0ab240c094c498e8211cf54fba1e10, type: 3}
+  m_PrefabInstance: {fileID: 1436614251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f022e1850c46d2976032156abc4eb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!43 &1870840835

@@ -212,8 +212,12 @@ public class NpcMovementManager : SaveableGOConsumer
     private float replanAtTargetMoveDistanceSqr;
     private float lastRemainingDistance = 0f;
     private Vector3? lastTargetPosition;
+
+    private Vector3? currentTargetPosition;
+    public Vector3? CurrentTargetPosition => currentTargetPosition;
     
     public bool HasMovementRequest => currentMovementRequest != null;
+    public NpcMovementRequest CurrentMovementRequest => currentMovementRequest;
     
     public event Action OnRequestCompleted;
     public event Action<MovementFailureReason, object> OnRequestFailed;  // Raised when the request fails. Or when it is interrupted.
@@ -377,6 +381,7 @@ public class NpcMovementManager : SaveableGOConsumer
 
         // This request is valid and can be completed
         currentMovementRequest = request;
+        currentTargetPosition = targetPosition;
         
         // Cache the replan distance
         replanAtTargetMoveDistanceSqr = request.ReplanAtTargetMoveDistance.HasValue ? request.ReplanAtTargetMoveDistance.Value * request.ReplanAtTargetMoveDistance.Value : -1f;
@@ -552,6 +557,7 @@ public class NpcMovementManager : SaveableGOConsumer
                     return;
                 }
                 navMeshAgent.SetDestination(newDestination.Value);
+                currentTargetPosition = newDestination;
                 // We are now in the waiting for planning state. We expect to move out of this next frame.
                 currentState = NpcMovementStateMachineState.WaitingForPlanning;
                 // Debug.Log("MovementStateMachineUpdate: WaitingForPlanning", this);
@@ -711,6 +717,7 @@ public class NpcMovementManager : SaveableGOConsumer
                     if (targetPos.HasValue && navMeshAgent.SetDestination(targetPos.Value))
                     {
                         currentState = NpcMovementStateMachineState.WaitingForPlanning;
+                        currentTargetPosition = targetPos;
                         // Debug.Log("MovementStateMachineUpdate: WaitingForPlanning (post-link, replan needed)", this);
                     }
                     else
